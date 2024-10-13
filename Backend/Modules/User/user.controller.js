@@ -8,8 +8,8 @@ import fs from 'fs'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const deleteImage = file => {
-  const filePath = path.join(__dirname, '../../images/User/image/', file)
+const deleteImage = (type, file) => {
+  const filePath = path.join(__dirname, `../../images/User/${type}/`, file)
   fs.unlink(filePath, unlinkError => {
     if (unlinkError) {
       console.error('Failed to delete the uploaded file:', unlinkError)
@@ -67,7 +67,7 @@ export const updateImage = async (req, res) => {
 
     if (user.photo) {
       const fileName = user.photo.split('/')[6]
-      deleteImage(fileName)
+      deleteImage('image', fileName)
     }
     const updateUser = await Users.updateOne(
       { _id: user?.id },
@@ -84,12 +84,51 @@ export const updateImage = async (req, res) => {
     })
   } catch (error) {
     if (req.file) {
-      deleteImage(req.file.filename)
+      deleteImage('image', req.file.filename)
     }
     res.status(400).json({
       status: 'Failed',
       message: error
     })
+  }
+}
+
+export const userResumeUpdate = async (req, res, next) => {
+  try {
+    const resume =
+      req.protocol +
+      '://' +
+      req.get('host') +
+      '/images/User/resume/' +
+      req?.file.filename
+
+    const { email } = req.body
+    const user = await Users.findOne({ email })
+
+    if (user?.resume) {
+      const fileName = user.photo.resume('/')[6]
+      deleteImage('resume', fileName)
+    }
+    const updateUser = await Users.updateOne(
+      { _id: user?.id },
+      {
+        $set: {
+          resume: resume
+        }
+      }
+    )
+    res.status(200).json({
+      status: 'Success',
+      message: 'User resume updated successfully',
+    })
+  } catch (error) {
+    if (req.file) {
+        deleteImage('resume', req.file.filename)
+      }
+      res.status(400).json({
+        status: 'Failed',
+        message: error.message
+      })
   }
 }
 
@@ -106,18 +145,16 @@ export const updateUser = async (req, res, next) => {
         message: 'User not found'
       })
     }
-
     const result = await Users.updateOne(
-        { _id: id },
-        {
-          $set: data
-        }
+      { _id: id },
+      {
+        $set: data
+      }
     )
-
     res.status(200).json({
-        status: 'Success',
-        message: 'User updated successfully',
-        data: result
+      status: 'Success',
+      message: 'User updated successfully',
+      data: result
     })
   } catch (error) {
     res.status(400).json({
