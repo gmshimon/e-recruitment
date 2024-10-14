@@ -16,7 +16,7 @@ const jobSchema = mongoose.Schema({
     },
     createdBy:{
         type:ObjectId,
-        ref:Users
+        ref:'users'
     }
 })
 

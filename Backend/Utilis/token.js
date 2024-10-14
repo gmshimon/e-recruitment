@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const generateToken = userInfo => {
   const playLoad = {
+    _id: userInfo?._id,
     name: userInfo.name,
     email: userInfo.email,
     role: userInfo.role

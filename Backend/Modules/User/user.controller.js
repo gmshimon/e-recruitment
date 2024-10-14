@@ -26,7 +26,13 @@ export const createUser = async (req, res, next) => {
 
     const user = await Users.findOne({ email })
     if (user) {
-      const token = generateToken(userData)
+      const data ={
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+      const token = generateToken(data)
       return res.status(200).json({
         status: 'Success',
         message: 'User already exists',
@@ -35,7 +41,7 @@ export const createUser = async (req, res, next) => {
       })
     } else {
       const result = await Users.create(userData)
-      const token = generateToken(userData)
+      const token = generateToken({_id:result?._id,...userData})
 
       return res.status(200).json({
         status: 'Success',

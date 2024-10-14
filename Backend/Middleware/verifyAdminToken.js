@@ -12,7 +12,7 @@ const verifyAdminToken = async (req, res, next) => {
       })
     }
 
-    const decoded = promisify(jwt.verify)(token, process.env.TOKEN_SECRET)
+    const decoded = await promisify(jwt.verify)(token, process.env.TOKEN_SECRET)
 
     if (decoded.role !== 'admin') {
       return res.status(403).json({
@@ -30,3 +30,5 @@ const verifyAdminToken = async (req, res, next) => {
     })
   }
 }
+
+export default verifyAdminToken
