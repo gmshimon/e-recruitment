@@ -32,9 +32,11 @@ mongoose.connect(uri).then(()=>{
 
 import UserRouter from './Modules/User/user.routes.js'
 import jobRouter from './Modules/Job/job.routes.js'
+import applicationRouter from './Modules/Application/application.routes.js'
 
 app.use('/api/v1/user',UserRouter)
 app.use('/api/v1/job',jobRouter)
+app.use('/api/v1/app',applicationRouter)
 
 app.get('/',(req,res)=>{
     res.send("Hello World!")
