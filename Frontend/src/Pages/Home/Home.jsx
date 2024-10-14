@@ -1,7 +1,14 @@
+import Banner from "../../Component/Banner/Banner";
+import CategorySection from "../../Component/CategorySection/CategorySection";
+import Navbar from "../../Component/Navbar/Navbar";
+
 const Home = () => {
     return (
         <div>
-            <h1>Hello from home</h1>
+            <Navbar/>
+            <Banner/>
+            <div className="divider"></div>
+            <CategorySection/>
         </div>
     );
 };
