@@ -64,7 +64,7 @@ const CategorySection = () => {
       <div className='mt-8 flex justify-center '>
         <div className='grid md:grid-cols-4 lg:grid-cols-6 grid-cols-2 gap-y-4 gap-x-5'>
           {categories.map(category => (
-            <div key={category.id} className="flex items-center justify-around w-[200px] border rounded-md px-2 py-4 hover:shadow-lg cursor-pointer">
+            <div key={category.id} className="flex items-center justify-around w-[180px] border rounded-md px-2 py-4 hover:shadow-lg cursor-pointer">
               <div className="text-3xl text-blue-700">{category?.icon}</div>
               <div>
                 <span className="font-semibold">{category.name}</span>
