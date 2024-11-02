@@ -1,5 +1,6 @@
 import Banner from "../../Component/Banner/Banner";
 import CategorySection from "../../Component/CategorySection/CategorySection";
+import DetailsBanner from "../../Component/DetailsBanner/DetailsBanner";
 import HiringBanner from "../../Component/HiringBanner/HiringBanner";
 import LatestJob from "../../Component/LatestJob/LatestJob";
 import Navbar from "../../Component/Navbar/Navbar";
@@ -13,6 +14,7 @@ const Home = () => {
             <CategorySection/>
             <HiringBanner/>
             <LatestJob/>
+            <DetailsBanner/>
         </div>
     );
 };
