@@ -13,7 +13,6 @@ import { TfiHeadphoneAlt } from 'react-icons/tfi'
 import { BsBank } from 'react-icons/bs'
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { CiClock2, CiLocationOn } from 'react-icons/ci'
-import { useState } from 'react'
 
 const LatestJob = () => {
   const tabs = [
