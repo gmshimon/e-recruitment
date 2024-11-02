@@ -1,13 +1,19 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
 
-import { FaRegFileAlt, FaRegFolderOpen, FaSearchengin } from 'react-icons/fa'
+import {
+  FaAngleRight,
+  FaRegFileAlt,
+  FaRegFolderOpen,
+  FaSearchengin
+} from 'react-icons/fa'
 import { GrCloudSoftware, GrPersonalComputer } from 'react-icons/gr'
 import { MdProductionQuantityLimits } from 'react-icons/md'
 import { TfiHeadphoneAlt } from 'react-icons/tfi'
 import { BsBank } from 'react-icons/bs'
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { CiClock2, CiLocationOn } from 'react-icons/ci'
+import { useState } from 'react'
 
 const LatestJob = () => {
   const tabs = [
@@ -67,15 +73,15 @@ const LatestJob = () => {
         Search and connect with the right candidates faster{' '}
       </p>
       <Tabs>
-        <TabList className='grid md:grid-cols-8 grid-cols-3 md:space-x-4 border-b'>
+        <TabList className='grid md:grid-cols-8 grid-cols-3 md:space-x-4  border-b pb-1'>
           {tabs.map((tab, index) => (
             <Tab
-              className='px-1 py-1 md:px-2 md:py-2 border-l border-r border-t rounded-md text-sm md:text-base w-full md:w-auto text-center cursor-pointer'
+              className='px-1 py-1 md:px-2 md:py-2 border-l border-b border-r border-t border-black rounded-md text-sm md:text-base w-full md:w-auto text-center cursor-pointer'
               key={index}
             >
               <p className='flex items-center justify-evenly'>
                 <span className='text-blue-700'>{tab.icon}</span>
-                {tab.name}
+                <p className='text-[10px] md:text-[16px]'>{tab.name}</p>
               </p>
             </Tab>
           ))}
@@ -83,7 +89,7 @@ const LatestJob = () => {
         {tabs.map((tab, index) => (
           <TabPanel key={index}>
             <div className='flex justify-center mt-10'>
-              <div className='grid grid-cols-4 gap-x-10 gap-y-10'>
+              <div className='grid grid-cols-1 md:grid-cols-4  gap-x-10 gap-y-10'>
                 {tabs.map((tab, index) => (
                   <div
                     key={index}
@@ -126,6 +132,12 @@ const LatestJob = () => {
           </TabPanel>
         ))}
       </Tabs>
+
+      <div className='flex justify-center mt-10'>
+        <button className='btn btn-active btn-neutral btn-md'>
+          See More <FaAngleRight />
+        </button>
+      </div>
     </section>
   )
 }
