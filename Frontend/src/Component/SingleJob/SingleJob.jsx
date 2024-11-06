@@ -29,8 +29,13 @@ const SingleJob = () => {
       <div className='my-5 px-3'>
         <hr />
       </div>
-      <div className='flex items-center pl-2 text-gray-600 mb-2'>
-        <CiLocationOn /> <span className='ml-2'>Denmark</span>
+      <div className='flex justify-between items-center'>
+        <div className='flex items-center pl-2 text-gray-600 mb-2'>
+          <CiLocationOn /> <span className='ml-2'>Denmark</span>
+        </div>
+        <div className='mb-2 pr-2'>
+          <button className='btn btn-outline btn-primary btn-sm'>Apply</button>
+        </div>
       </div>
     </div>
   )

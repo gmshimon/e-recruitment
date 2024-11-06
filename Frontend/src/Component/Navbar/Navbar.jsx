@@ -1,3 +1,4 @@
+import { MdLogin } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 
 const Navbar = () => {
@@ -47,7 +48,9 @@ const Navbar = () => {
         <ul className='menu menu-horizontal px-1'>{navbarOptions}</ul>
       </div>
       <div className='navbar-end'>
-        <a className='btn'>Button</a>
+      <li className='text-xl md:mr-5 list-none'>
+        <Link to="/login"><MdLogin/></Link>
+      </li>
       </div>
     </div>
   )
