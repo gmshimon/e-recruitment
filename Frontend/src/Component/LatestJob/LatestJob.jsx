@@ -1,6 +1,5 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
-
 import {
   FaAngleRight,
   FaRegFileAlt,
@@ -11,8 +10,6 @@ import { GrCloudSoftware, GrPersonalComputer } from 'react-icons/gr'
 import { MdProductionQuantityLimits } from 'react-icons/md'
 import { TfiHeadphoneAlt } from 'react-icons/tfi'
 import { BsBank } from 'react-icons/bs'
-import { IoBagHandleOutline } from 'react-icons/io5'
-import { CiClock2, CiLocationOn } from 'react-icons/ci'
 import SingleJob from '../SingleJob/SingleJob'
 
 const LatestJob = () => {

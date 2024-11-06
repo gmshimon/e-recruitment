@@ -1,5 +1,6 @@
 import { CiClock2, CiLocationOn } from 'react-icons/ci'
 import { IoBagHandleOutline } from 'react-icons/io5'
+import { Link } from 'react-router-dom'
 
 const SingleJob = () => {
   return (
@@ -34,7 +35,9 @@ const SingleJob = () => {
           <CiLocationOn /> <span className='ml-2'>Denmark</span>
         </div>
         <div className='mb-2 pr-2'>
-          <button className='btn btn-outline btn-primary btn-sm'>Apply</button>
+          <Link to="/apply-job/2">
+          <button className='btn btn-outline btn-primary btn-sm'>Apply</button> 
+          </Link>
         </div>
       </div>
     </div>
