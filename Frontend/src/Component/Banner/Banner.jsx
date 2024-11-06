@@ -2,7 +2,8 @@ import { FaArrowRight } from "react-icons/fa"
 
 const Banner = () => {
   return (
-    <section className='md:flex items-center justify-evenly mt-14'>
+    <div>
+      <section className='md:flex items-center justify-evenly pt-20'>
       <div className='w-full md:w-1/2 md:ml-24'>
         <div className='text-4xl font-semibold'>
           <h1>
@@ -35,6 +36,7 @@ const Banner = () => {
         />
       </div>
     </section>
+    </div>
   )
 }
 

@@ -9,8 +9,7 @@ import NewsBlogs from "../../Component/NewsBlogs/NewsBlogs";
 const Home = () => {
     return (
         <div>
-            <Navbar/>
-             <Banner/>
+            <Banner/>
             <div className="divider"></div>
             <CategorySection/>
             <HiringBanner/>

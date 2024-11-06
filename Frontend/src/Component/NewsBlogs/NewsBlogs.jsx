@@ -7,6 +7,7 @@ import 'swiper/css/pagination'
 import './newsblogs.css'
 
 import { EffectCoverflow, Pagination } from 'swiper/modules'
+import { FaAngleRight } from 'react-icons/fa'
 const NewsBlogs = () => {
   const text =
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut quasi, adipisci natus culpa consequuntur quos Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut quasi, adipisci natus culpa consequuntur quos'
@@ -263,6 +264,11 @@ const NewsBlogs = () => {
           </SwiperSlide>
         
         </Swiper>
+      </div>
+      <div className='flex justify-center '>
+        <button className='btn btn-active btn-neutral btn-md'>
+          See More <FaAngleRight />
+        </button>
       </div>
     </section>
   )
