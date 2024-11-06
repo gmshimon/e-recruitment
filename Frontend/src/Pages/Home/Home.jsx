@@ -3,8 +3,8 @@ import CategorySection from "../../Component/CategorySection/CategorySection";
 import DetailsBanner from "../../Component/DetailsBanner/DetailsBanner";
 import HiringBanner from "../../Component/HiringBanner/HiringBanner";
 import LatestJob from "../../Component/LatestJob/LatestJob";
-import Navbar from "../../Component/Navbar/Navbar";
 import NewsBlogs from "../../Component/NewsBlogs/NewsBlogs";
+import NewsLetter from "../../Component/NewsLetter/NewsLetter";
 
 const Home = () => {
     return (
@@ -16,6 +16,7 @@ const Home = () => {
             <LatestJob/>
             <DetailsBanner/>
             <NewsBlogs/>
+            <NewsLetter/>
         </div>
     );
 };
