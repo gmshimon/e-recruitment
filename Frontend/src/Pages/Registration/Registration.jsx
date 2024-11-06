@@ -1,10 +1,24 @@
-import { Link } from "react-router-dom"
+import { FaPhoneAlt } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
 
-const Login = () => {
+const Registration = () => {
   return (
     <section className='flex justify-center items-center h-screen bg-gray-200'>
       <div className='bg-white md:w-1/3 rounded-lg md:px-0 px-4'>
-        <h1 className='text-3xl text-center mt-5'>Login</h1>
+        <h1 className='text-3xl text-center mt-5'>Registration</h1>
+        <div className='mt-10 flex justify-center'>
+          <label className='input input-bordered flex items-center gap-2 md:w-3/4 w-full'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 16 16'
+              fill='currentColor'
+              className='h-4 w-4 opacity-70'
+            >
+              <path d='M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z' />
+            </svg>
+            <input type='text' className='grow' placeholder='Name' />
+          </label>
+        </div>
         <div className='mt-10 flex justify-center'>
           <label className='input input-bordered flex items-center gap-2 md:w-3/4 w-full'>
             <svg
@@ -21,6 +35,12 @@ const Login = () => {
         </div>
         <div className='mt-10 flex justify-center'>
           <label className='input input-bordered flex items-center gap-2 md:w-3/4 w-full'>
+          <FaPhoneAlt/>
+            <input type='text' className='grow' placeholder='Phone Number' />
+          </label>
+        </div>
+        <div className='mt-10 flex justify-center'>
+          <label className='input input-bordered flex items-center gap-2 md:w-3/4 w-full'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 16 16'
@@ -33,22 +53,22 @@ const Login = () => {
                 clipRule='evenodd'
               />
             </svg>
-            <input type='password' className='grow' placeholder="Password"/>
+            <input type='password' className='grow' placeholder='Password' />
           </label>
         </div>
         <div className='text-center mt-3'>
-          <Link to="/register">
-          <span>
-            Don&apos;t have an Account?{' '}
-            <span className='underline cursor-pointer text-blue-700'>
-              Register
+          <Link to='/login'>
+            <span>
+              Already have account{' '}
+              <span className='underline cursor-pointer text-blue-700'>
+                Login
+              </span>
             </span>
-          </span> 
           </Link>
         </div>
         <div className='flex justify-center mt-5 mb-5'>
           <button className='btn btn-active btn-primary btn-sm md:w-1/5  w-1/2'>
-            Login
+            Sign up
           </button>
         </div>
       </div>
@@ -56,4 +76,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Registration
