@@ -5,7 +5,7 @@ import CompanyDetails from '../../Component/CompanyDetails/CompanyDetails'
 
 const ApplyJob = () => {
   return (
-    <section className='pt-20'>
+    <section className='pt-20 md:px-0 px-2'>
       <div className='mt-8'>
         <div className='flex justify-center mb-5'>
           <img
@@ -28,8 +28,8 @@ const ApplyJob = () => {
         <div className='my-5 mx-24'>
           <hr />
         </div>
-        <div className='flex justify-around max-w-full'>
-          <div className='w-[900px] ml-20'>
+        <div className='md:flex justify-around max-w-full'>
+          <div className='md:w-[700px] ml-15'>
             <div>
               <h1 className='text-3xl font-semibold'>
                 Welcome to Jthemes Team
@@ -100,7 +100,7 @@ const ApplyJob = () => {
             <div className='my-5'>
               <hr />
             </div>
-            <div>
+            <div className='mb-5'>
               <button className='btn btn-primary w-[100px] text-lg'>
                 Apply
               </button>
