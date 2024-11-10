@@ -2,6 +2,7 @@
 import { CiClock2 } from 'react-icons/ci'
 import { IoBagHandleOutline } from 'react-icons/io5'
 import CompanyDetails from '../../Component/CompanyDetails/CompanyDetails'
+import ApplicationJob from '../../Component/ApplicationJob/ApplicationJob'
 
 const ApplyJob = () => {
   return (
@@ -9,7 +10,7 @@ const ApplyJob = () => {
       <div className='mt-8'>
         <div className='flex justify-center mb-5'>
           <img
-          className='rounded-md'
+            className='rounded-md'
             src='https://jthemes.com/themes/wp/jobbox/wp-content/uploads/2023/02/job-single.svg'
             alt=''
           />
@@ -101,13 +102,30 @@ const ApplyJob = () => {
               <hr />
             </div>
             <div className='mb-5'>
-              <button className='btn btn-primary w-[100px] text-lg'>
+              <button
+                className='btn btn-primary w-[100px] text-lg'
+                onClick={() =>
+                  document.getElementById('my_modal_3').showModal()
+                }
+              >
                 Apply
               </button>
             </div>
+            {/* modal for job application */}
+            <dialog id='my_modal_3' className='modal'>
+              <div className='modal-box w-11/12 max-w-xl'>
+                <form method='dialog'>
+                  {/* if there is a button in form, it will close the modal */}
+                  <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
+                    ✕
+                  </button>
+                </form>
+                <ApplicationJob />
+              </div>
+            </dialog>
           </div>
           <div className='mt-2 '>
-            <CompanyDetails/>
+            <CompanyDetails />
           </div>
         </div>
       </div>
