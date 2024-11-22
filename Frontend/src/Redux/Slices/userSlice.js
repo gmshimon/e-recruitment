@@ -99,7 +99,7 @@ export const updateUserImage = createAsyncThunk(
 
 export const updateUser = createAsyncThunk('updateUser',async data=>{
   const response = await axiosSecure.put('/user/update-user', data)
-  return data
+  return response.data.data
 })
 
 export const logOut = createAsyncThunk('logOut', async () => {

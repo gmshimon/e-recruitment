@@ -54,9 +54,9 @@ const MyProfile = () => {
         state: user?.address?.state || ''
       })
       setSocialLink({
-        linkedin: user?.social_links?.linkedin || '',
-        github: user?.social_links?.github || '',
-        social: user?.social_links?.social || ''
+        linkedin: user?.social?.linkedin || '',
+        github: user?.social?.github || '',
+        social: user?.social?.social || ''
       })
     }
   }, [user])

@@ -16,7 +16,7 @@ const navbarOptions = [
   },
   {
     label: 'Profile',
-    to: '/profile',
+    to: '/dashboard/profile',
     icon: <MdOutlinePerson />
   },
   {
