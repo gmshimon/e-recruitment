@@ -30,6 +30,12 @@ const initialState = {
   isGetUsersLoading: false,
   isGetUsersSuccess: false,
   isGetUsersError: false,
+  isUpdateUserLoading: false,
+  isUpdateUserError: false,
+  isUpdateUserSuccess: false,
+  isUserImageUpdateLoading: false,
+  isUserImageUpdateError: false,
+  isUserImageUpdateSuccess: false,
   isAdminDataLoading: false,
   isAdminDataSuccess: false,
   isAdminDataError: false
@@ -83,6 +89,19 @@ export const createUser = createAsyncThunk(
   }
 )
 
+export const updateUserImage = createAsyncThunk(
+  'updateUserImage',
+  async data => {
+    const response = await axios.post('/user/update-image', data)
+    return response.data.data
+  }
+)
+
+export const updateUser = createAsyncThunk('updateUser',async data=>{
+  const response = await axiosSecure.put('/user/update-user', data)
+  return data
+})
+
 export const logOut = createAsyncThunk('logOut', async () => {
   const response = await signOut(auth)
   localStorage.removeItem('userToken')
@@ -112,6 +131,12 @@ const userSlice = createSlice({
       state.isAdminDataLoading = false
       state.isAdminDataSuccess = false
       state.isAdminDataError = false
+      state.isUserImageUpdateLoading = false
+      state.isUserImageUpdateError = false
+      state.isUserImageUpdateSuccess = false
+      state.isUpdateUserLoading=false
+      state.isUpdateUserError=false
+      state.isUpdateUserSuccess=false
     },
     startLoading: (state, action) => {
       state.isLoading = true
@@ -176,6 +201,37 @@ const userSlice = createSlice({
         state.isGetUserDataLoading = false
         state.isGetUserDataError = true
         state.isGetUserDataSuccess = false
+      })
+      .addCase(updateUserImage.pending, state => {
+        state.isUserImageUpdateLoading = true
+        state.isUserImageUpdateError = false
+        state.isUserImageUpdateSuccess = false
+      })
+      .addCase(updateUserImage.fulfilled, (state, action) => {
+        state.isUserImageUpdateError = false
+        state.isUserImageUpdateSuccess = true
+        state.isUserImageUpdateLoading = false
+      })
+      .addCase(updateUserImage.rejected, (state, action) => {
+        state.isUserImageUpdateLoading = false
+        state.isUserImageUpdateError = true
+        state.isUserImageUpdateSuccess = false
+      })
+      .addCase(updateUser.pending, state => {
+        state.isUpdateUserLoading = true
+        state.isUpdateUserError = false
+        state.isUpdateUserSuccess = false
+      })
+      .addCase(updateUser.fulfilled,(state,action)=>{
+        state.isUpdateUserError = false
+        state.isUpdateUserSuccess = true
+        state.isUpdateUserLoading = false
+        state.user = action.payload
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isUpdateUserLoading = false
+        state.isUpdateUserError = true
+        state.isUpdateUserSuccess = false
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.user = null

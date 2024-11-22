@@ -7,6 +7,7 @@ import Registration from '../Pages/Registration/Registration'
 import ApplyJob from '../Pages/ApplyJob/ApplyJob'
 import Dashboard from '../Layout/Dashboard'
 import DashboardHome from '../Pages/Dashboard/DashboardHome/DashboardHome'
+import MyProfile from '../Pages/Dashboard/MyProfile/MyProfile'
 
 export const router = createBrowserRouter([
     {
@@ -40,8 +41,12 @@ export const router = createBrowserRouter([
         element:<Dashboard/>,
         children:[
             {
-                path: '',
+                path: 'home',
                 element:<DashboardHome/>
+            },
+            {
+                path:'profile',
+                element:<MyProfile/>
             }
         ]
     }

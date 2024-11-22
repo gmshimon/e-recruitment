@@ -17,7 +17,7 @@ const Home = () => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (isCreateUserSuccess || isLoginSuccess) {
+    if (isCreateUserSuccess) {
       Swal.fire({
         position: 'top-end',
         icon: 'success',

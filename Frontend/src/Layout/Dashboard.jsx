@@ -6,6 +6,7 @@ import {
   MdOutlineSettingsApplications
 } from 'react-icons/md'
 import { Outlet } from 'react-router-dom'
+import CurrentUser from '../utilis/CurrentUser'
 
 const navbarOptions = [
   {
@@ -36,6 +37,7 @@ const navbarOptions = [
 ]
 
 const Dashboard = () => {
+    CurrentUser()
   return (
     <div className='drawer lg:drawer-open'>
       <input id='my-drawer-3' type='checkbox' className='drawer-toggle' />
@@ -66,7 +68,7 @@ const Dashboard = () => {
           <div className='mx-2 flex-1 px-2'>Navbar Title</div>
         </div>
         {/* Page content here */}
-        <div className='bg-base-200'>
+        <div className='bg-base-300'>
           <Outlet />
         </div>
       </div>
@@ -83,7 +85,7 @@ const Dashboard = () => {
           aria-label='close sidebar'
           className='drawer-overlay'
         ></label>
-        <div className='menu  min-h-full w-60 p-4 '>
+        <div className='menu bg-white min-h-full w-60 p-4 '>
           <div className='text-3xl text-center my-10 '>
             <p>XXX</p>
           </div>
