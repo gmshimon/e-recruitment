@@ -161,6 +161,22 @@ const userSlice = createSlice({
         state.isCreateUserError = true
         state.isCreateUserSuccess = false
       })
+      .addCase(fetchUser.pending, state => {
+        state.isGetUserDataLoading = true
+        state.isGetUserDataError = false
+        state.isGetUserDataSuccess = false
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload
+        state.isGetUserDataLoading = false
+        state.isGetUserDataSuccess = true
+        state.isGetUserDataError = false
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.isGetUserDataLoading = false
+        state.isGetUserDataError = true
+        state.isGetUserDataSuccess = false
+      })
       .addCase(logOut.fulfilled, (state, action) => {
         state.user = null
       })

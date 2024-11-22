@@ -1,9 +1,40 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { loginUser } from '../../Redux/Slices/userSlice'
+import Swal from 'sweetalert2'
 
 const Login = () => {
+  const {isLoginSuccess,isLoginError} = useSelector(state=>state.user)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    if(isLoginError){
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "Something went wrong",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+    if(isLoginSuccess){
+      navigate('/')
+    }
+  },[isLoginError, isLoginSuccess, navigate])
+
+  const handleLogin =() =>{
+    const data = {
+      email,
+      password
+    }
+
+    dispatch(loginUser(data))
+  }
   return (
     <section className='h-screen lg:flex'>
       <div className='lg:w-1/2 hidden lg:block'>
@@ -42,6 +73,7 @@ const Login = () => {
                   className='grow'
                   name='email'
                   placeholder='Email'
+                  onChange={e=>setEmail(e.target.value)}
                 />
               </label>
               <div className='flex justify-between'>
@@ -74,9 +106,10 @@ const Login = () => {
                   className='grow'
                   name='password'
                   placeholder='Password'
+                  onChange={e=>setPassword(e.target.value)}
                 />
               </label>
-              <button className='btn btn-info text-white w-full mt-5 mb-3'>
+              <button className='btn btn-info text-white w-full mt-5 mb-3' onClick={handleLogin}>
                 Login
               </button>
 

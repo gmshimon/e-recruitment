@@ -1,5 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from '../Component/Navbar/Navbar'
+import CurrentUser from '../utilis/CurrentUser'
 // import { useDispatch } from 'react-redux'
 
 const Main = () => {
@@ -8,7 +9,8 @@ const Main = () => {
   const isLoginPage =
     location.pathname.includes('login') ||
     location.pathname.includes('register')
-  return (
+    CurrentUser()
+    return (
     <div>
       {isLoginPage || <Navbar></Navbar>}
       <Outlet />

@@ -1,17 +1,21 @@
 import { MdLogin } from 'react-icons/md'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { logOut } from '../../Redux/Slices/userSlice'
 
 const Navbar = () => {
+  const { user } = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const navbarOptions = (
     <>
       <li className='text-lg md:mr-5'>
-        <Link to={"/jobs/?category=content Writer"}>Jobs</Link>
+        <Link to={'/jobs/?category=content Writer'}>Jobs</Link>
       </li>
       <li className='text-lg md:mr-5'>
-        <Link to="/blogs">Blogs</Link>
+        <Link to='/blogs'>Blogs</Link>
       </li>
       <li className='text-lg md:mr-5'>
-        <Link to="/contact">Contact</Link>
+        <Link to='/contact'>Contact</Link>
       </li>
     </>
   )
@@ -39,20 +43,56 @@ const Navbar = () => {
             tabIndex={0}
             className='menu menu-sm dropdown-content bg-blue-800 text-white rounded-box z-[1] mt-3 w-52 p-2 shadow'
           >
-            {navbarOptions} 
+            {navbarOptions}
           </ul>
         </div>
-       <Link to="/">
-       <a className='btn btn-ghost text-xl'>daisyUI</a>
-       </Link>
+        <Link to='/'>
+          <a className='btn btn-ghost text-xl'>daisyUI</a>
+        </Link>
       </div>
       <div className='navbar-center hidden lg:flex'>
         <ul className='menu menu-horizontal px-1'>{navbarOptions}</ul>
       </div>
-      <div className='navbar-end'>
-      <li className='text-xl md:mr-5 list-none'>
-        <Link to="/login"><MdLogin/></Link>
-      </li>
+      <div className=' navbar-end'>
+        {user ? (
+          <div className='dropdown dropdown-end'>
+            <div
+              tabIndex={0}
+              role='button'
+              className='btn btn-ghost btn-circle avatar'
+            >
+              <div className='w-10 rounded-full'>
+                <img
+                  alt='Tailwind CSS Navbar component'
+                  src={user?.imag?user?.image: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'}
+                />
+              </div>
+            </div>
+            <ul
+              tabIndex={0}
+              className='menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow text-black'
+            >
+              <li>
+                <a className='justify-between'>
+                  Profile
+                  <span className='badge'>New</span>
+                </a>
+              </li>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li onClick={()=>dispatch(logOut())}>
+                <a>Logout</a>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <Link to='/login'>
+            <div className='text-xl'>
+              <MdLogin />
+            </div>
+          </Link>
+        )}
       </div>
     </div>
   )
