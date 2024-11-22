@@ -5,6 +5,8 @@ import Jobs from '../Pages/Jobs/Jobs'
 import Login from '../Pages/Login/Login'
 import Registration from '../Pages/Registration/Registration'
 import ApplyJob from '../Pages/ApplyJob/ApplyJob'
+import Dashboard from '../Layout/Dashboard'
+import DashboardHome from '../Pages/Dashboard/DashboardHome/DashboardHome'
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +32,16 @@ export const router = createBrowserRouter([
             {
                 path:'/register',
                 element:<Registration/>
+            }
+        ]
+    },
+    {
+        path: 'dashboard/',
+        element:<Dashboard/>,
+        children:[
+            {
+                path: '',
+                element:<DashboardHome/>
             }
         ]
     }
