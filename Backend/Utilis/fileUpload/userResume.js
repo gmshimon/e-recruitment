@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     destination: 'images/User/resume/',
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-';
-        cb(null, uniqueSuffix + file.originalname);
+        cb(null, file.originalname);
     }
 });
 

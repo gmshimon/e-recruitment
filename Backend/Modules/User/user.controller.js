@@ -26,7 +26,7 @@ export const createUser = async (req, res, next) => {
 
     const user = await Users.findOne({ email })
     if (user) {
-      const data ={
+      const data = {
         _id: user._id,
         name: user.name,
         email: user.email,
@@ -41,7 +41,7 @@ export const createUser = async (req, res, next) => {
       })
     } else {
       const result = await Users.create(userData)
-      const token = generateToken({_id:result?._id,...userData})
+      const token = generateToken({ _id: result?._id, ...userData })
 
       return res.status(200).json({
         status: 'Success',
@@ -108,42 +108,44 @@ export const userResumeUpdate = async (req, res, next) => {
       '/images/User/resume/' +
       req?.file.filename
 
-    const { email } = req.body
+    const { email } = req.user
     const user = await Users.findOne({ email })
 
-    if (user?.resume) {
-      const fileName = user.photo.resume('/')[6]
-      deleteImage('resume', fileName)
-    }
+    // if (user?.resume) {
+    //   const fileName = user.photo.resume('/')[6]
+    //   deleteImage('resume', fileName)
+    // }
     const updateUser = await Users.updateOne(
       { _id: user?.id },
       {
-        $set: {
+        $push: {
           resume: resume
         }
       }
     )
+    const getUser = await Users.findOne({ email })
     res.status(200).json({
       status: 'Success',
       message: 'User resume updated successfully',
+      data: getUser
     })
   } catch (error) {
     if (req.file) {
-        deleteImage('resume', req.file.filename)
-      }
-      res.status(400).json({
-        status: 'Failed',
-        message: error.message
-      })
+      deleteImage('resume', req.file.filename)
+    }
+    res.status(400).json({
+      status: 'Failed',
+      message: error.message
+    })
   }
 }
 
 export const updateUser = async (req, res, next) => {
   try {
-    const { id } = req.params
+    const { email } = req.user
     const data = req.body
 
-    const getUser = await Users.findOne({ _id: id })
+    const getUser = await Users.findOne({ email:email })
 
     if (!getUser) {
       return res.status(404).json({
@@ -152,20 +154,48 @@ export const updateUser = async (req, res, next) => {
       })
     }
     const result = await Users.updateOne(
-      { _id: id },
+      { _id: getUser?.id },
       {
         $set: data
       }
     )
+
+    const getUserAgain = await Users.findOne({ email:email })
     res.status(200).json({
       status: 'Success',
       message: 'User updated successfully',
-      data: result
+      data: getUserAgain
     })
   } catch (error) {
     res.status(400).json({
       status: 'Failed',
       message: 'Failed to update user',
+      error: error.message
+    })
+  }
+}
+
+export const fetchUser = async (req, res, next) => {
+  try {
+    const data = req.body
+    const user = await Users.findOne({ email: data.email })
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'Fail',
+        message: 'User not found'
+      })
+    }
+
+    res.status(200).json({
+      status: 'Success',
+      message: 'User fetched successfully',
+      data: user
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'Fail',
+      message: 'Failed to fetch users',
       error: error.message
     })
   }

@@ -14,6 +14,10 @@ const jobSchema = mongoose.Schema({
         type:[String],
         required:[true,'Please provide the required skills and experience'],
     },
+    category:{
+        type:String,
+        required:[true,'Please provide the category of the job'],
+    },
     createdBy:{
         type:ObjectId,
         ref:'users'
