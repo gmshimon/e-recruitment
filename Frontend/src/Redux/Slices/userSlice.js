@@ -36,6 +36,9 @@ const initialState = {
   isUserImageUpdateLoading: false,
   isUserImageUpdateError: false,
   isUserImageUpdateSuccess: false,
+  isUserResumeUpdateLoading: false,
+  isUserResumeUpdateError: false,
+  isUserResumeUpdateSuccess: false,
   isAdminDataLoading: false,
   isAdminDataSuccess: false,
   isAdminDataError: false
@@ -102,6 +105,11 @@ export const updateUser = createAsyncThunk('updateUser',async data=>{
   return response.data.data
 })
 
+export const updateUserResume = createAsyncThunk('updateUserResume',async data=>{
+  const response = await axiosSecure.post('/user/update-resume', data)
+  return response.data.data
+})
+
 export const logOut = createAsyncThunk('logOut', async () => {
   const response = await signOut(auth)
   localStorage.removeItem('userToken')
@@ -134,6 +142,9 @@ const userSlice = createSlice({
       state.isUserImageUpdateLoading = false
       state.isUserImageUpdateError = false
       state.isUserImageUpdateSuccess = false
+      state.isUserResumeUpdateLoading = false
+      state.isUserResumeUpdateError = false
+      state.isUserResumeUpdateSuccess = false
       state.isUpdateUserLoading=false
       state.isUpdateUserError=false
       state.isUpdateUserSuccess=false
@@ -232,6 +243,22 @@ const userSlice = createSlice({
         state.isUpdateUserLoading = false
         state.isUpdateUserError = true
         state.isUpdateUserSuccess = false
+      })
+      .addCase(updateUserResume.pending, state => {
+        state.isUserResumeUpdateLoading = true
+        state.isUserResumeUpdateError = false
+        state.isUserResumeUpdateSuccess = false
+      })
+      .addCase(updateUserResume.fulfilled, (state, action) => {
+        state.isUserResumeUpdateError = false
+        state.isUserResumeUpdateSuccess = true
+        state.isUserResumeUpdateLoading = false
+        state.user = action.payload
+      })
+      .addCase(updateUserResume.rejected, (state, action) => {
+        state.isUserResumeUpdateLoading = false
+        state.isUserResumeUpdateError = true
+        state.isUserResumeUpdateSuccess = false
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.user = null

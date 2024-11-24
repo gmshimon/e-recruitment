@@ -8,46 +8,51 @@ import ApplyJob from '../Pages/ApplyJob/ApplyJob'
 import Dashboard from '../Layout/Dashboard'
 import DashboardHome from '../Pages/Dashboard/DashboardHome/DashboardHome'
 import MyProfile from '../Pages/Dashboard/MyProfile/MyProfile'
+import MyResume from '../Pages/Dashboard/MyResume/MyResume'
 
 export const router = createBrowserRouter([
-    {
+  {
+    path: '/',
+    element: <Main />,
+    children: [
+      {
         path: '/',
-        element:<Main/>,
-        children:[
-            {
-                path: '/',
-                element:<Home/>
-            },
-            {
-                path:'/jobs',
-                element:<Jobs/>
-            },
-            {
-                path:'/apply-job/:id',
-                element:<ApplyJob/>
-            },
-            {
-                path:'/login',
-                element:<Login/>
-            },
-            {
-                path:'/register',
-                element:<Registration/>
-            }
-        ]
-    },
-    {
-        path: 'dashboard/',
-        element:<Dashboard/>,
-        children:[
-            {
-                path: 'home',
-                element:<DashboardHome/>
-            },
-            {
-                path:'profile',
-                element:<MyProfile/>
-            }
-        ]
-    }
+        element: <Home />
+      },
+      {
+        path: '/jobs',
+        element: <Jobs />
+      },
+      {
+        path: '/apply-job/:id',
+        element: <ApplyJob />
+      },
+      {
+        path: '/login',
+        element: <Login />
+      },
+      {
+        path: '/register',
+        element: <Registration />
+      }
+    ]
+  },
+  {
+    path: 'dashboard/',
+    element: <Dashboard />,
+    children: [
+      {
+        path: 'home',
+        element: <DashboardHome />
+      },
+      {
+        path: 'profile',
+        element: <MyProfile />
+      },
+      {
+        path: 'resume',
+        element: <MyResume />
+      }
+    ]
+  }
 ])

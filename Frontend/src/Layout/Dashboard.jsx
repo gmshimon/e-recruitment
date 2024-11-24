@@ -5,8 +5,9 @@ import {
   MdOutlinePerson,
   MdOutlineSettingsApplications
 } from 'react-icons/md'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import CurrentUser from '../utilis/CurrentUser'
+import { useSelector } from 'react-redux'
 
 const navbarOptions = [
   {
@@ -21,7 +22,7 @@ const navbarOptions = [
   },
   {
     label: 'Resume',
-    to: '/resume',
+    to: '/dashboard/resume',
     icon: <IoMdPaper />
   },
   {
@@ -37,7 +38,8 @@ const navbarOptions = [
 ]
 
 const Dashboard = () => {
-    CurrentUser()
+  const { user } = useSelector(state => state.user)
+  CurrentUser()
   return (
     <div className='drawer lg:drawer-open'>
       <input id='my-drawer-3' type='checkbox' className='drawer-toggle' />
@@ -92,23 +94,26 @@ const Dashboard = () => {
           <div className='flex justify-center'>
             <div className='avatar online'>
               <div className='w-20 rounded-full'>
-                <img src='https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp' />
+                <img
+                  src={
+                    user?.photo
+                      ? user?.photo
+                      : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                  }
+                />
               </div>
             </div>
           </div>
-          <p className='text-center mt-2 text-xl mb-10'>
-            G M Shaheen Shah Shimon
-          </p>
+          <p className='text-center mt-2 text-xl mb-10'>{user?.name}</p>
           {/* Sidebar content here */}
           {navbarOptions.map((option, index) => (
-            <div
-              key={index}
-              className='flex items-center text-xl cursor-pointer mb-7 hover:text-green-600  p-2 '
-            >
+            <Link key={index} to={option?.to}>
+              <div className='flex items-center text-xl cursor-pointer mb-7 hover:text-green-600  p-2 '>
                 {/* border rounded-md bg-green-700 text-white */}
-              <p>{option?.icon}</p>
-              <p className='ml-2'>{option?.label}</p>
-            </div>
+                <p>{option?.icon}</p>
+                <p className='ml-2'>{option?.label}</p>
+              </div>
+            </Link>
           ))}
 
           <div className='flex items-center text-xl cursor-pointer mt-5 hover:text-green-600'>
