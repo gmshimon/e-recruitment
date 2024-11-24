@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { type } from 'os'
 import validate from 'validator'
-
+import { ObjectId } from 'mongodb'
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -69,6 +69,12 @@ const userSchema = mongoose.Schema(
     resume: [
       {
         type: String
+      }
+    ],
+    education:[
+      {
+        type:ObjectId,
+        ref:'education'
       }
     ]
   },

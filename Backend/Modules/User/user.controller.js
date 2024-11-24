@@ -24,7 +24,9 @@ export const createUser = async (req, res, next) => {
     const userData = req.body
     const { name, email, role } = userData
 
-    const user = await Users.findOne({ email })
+    const user = await Users.findOne({ email }).populate(
+      {path:'education'}
+    )
     if (user) {
       const data = {
         _id: user._id,
@@ -178,7 +180,8 @@ export const updateUser = async (req, res, next) => {
 export const fetchUser = async (req, res, next) => {
   try {
     const data = req.body
-    const user = await Users.findOne({ email: data.email })
+    const user = await Users.findOne({ email: data.email }).populate(
+      {path:'education'})
 
     if (!user) {
       return res.status(404).json({
