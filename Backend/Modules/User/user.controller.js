@@ -145,7 +145,7 @@ export const updateUser = async (req, res, next) => {
     const { email } = req.user
     const data = req.body
 
-    const getUser = await Users.findOne({ email:email })
+    const getUser = await Users.findOne({ email: email })
 
     if (!getUser) {
       return res.status(404).json({
@@ -160,7 +160,7 @@ export const updateUser = async (req, res, next) => {
       }
     )
 
-    const getUserAgain = await Users.findOne({ email:email })
+    const getUserAgain = await Users.findOne({ email: email })
     res.status(200).json({
       status: 'Success',
       message: 'User updated successfully',
@@ -196,6 +196,47 @@ export const fetchUser = async (req, res, next) => {
     res.status(400).json({
       status: 'Fail',
       message: 'Failed to fetch users',
+      error: error.message
+    })
+  }
+}
+
+export const deleteResume = async (req, res, next) => {
+  try {
+    const  {resume}  = req.body
+    const { email } = req.user
+    console.log(resume)
+    const findResume = await Users.findOne({
+      email: email,
+      resume: resume.toString()
+    })
+
+    if (!findResume) {
+      return res.status(404).send({
+        status: 'Fail',
+        message: 'Resume not found'
+      })
+    }
+
+    const deleteResume = await Users.updateOne(
+      { _id: findResume._id },
+      {
+        $pull: { resume: resume.toString() }
+      }
+    )
+    if (deleteResume.modifiedCount == 1) {
+      deleteImage('resume', resume.split('/')[6])
+    }
+    const user = await Users.findOne({ _id: findResume._id })
+    res.status(200).json({
+      status: 'Success',
+      message: 'Resume deleted successfully',
+      data: user
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'Failed',
+      message: 'Failed to delete resume',
       error: error.message
     })
   }

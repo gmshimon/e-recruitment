@@ -1,10 +1,11 @@
 import express from 'express';
-import { createUser, fetchUser, updateImage, updateUser, userResumeUpdate } from './user.controller.js';
+import { createUser, deleteResume, fetchUser, updateImage, updateUser, userResumeUpdate } from './user.controller.js';
 import userImageUploader from '../../Utilis/fileUpload/userImage.js';
 import userResumeUploader from '../../Utilis/fileUpload/userResume.js';
 import verifyToken from '../../Middleware/verifyToken.js';
 const router = express.Router();
 
+router.put('/delete-resume',verifyToken,deleteResume)
 router.route('/update-user').put(verifyToken,updateUser)
 router.post('/get-user',fetchUser)
 router.post('/',createUser)
