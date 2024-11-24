@@ -12,6 +12,7 @@ import {
 } from '../../../Redux/Slices/educationSlice'
 import { AiOutlineClose } from 'react-icons/ai'
 import UpdateEducationForm from '../../../Component/Dashboard/UpdateEducationForm/UpdateEducationForm'
+import MySkills from '../../../Component/Dashboard/MySkills/MySkills'
 
 const MyResume = () => {
   const {
@@ -23,9 +24,12 @@ const MyResume = () => {
     deleteEducationSuccess,
     deleteEducationError
   } = useSelector(state => state.educations)
-  const { isUserResumeUpdateSuccess, isUserResumeUpdateError } = useSelector(
-    state => state.user
-  )
+  const {
+    isUserResumeUpdateSuccess,
+    isUserResumeUpdateError,
+    isUpdateUserError,
+    isUpdateUserSuccess
+  } = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -33,6 +37,26 @@ const MyResume = () => {
   }, [dispatch, updateEducationSuccess])
 
   useEffect(() => {
+    if (isUpdateUserSuccess) {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'User update success',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+    }
+    if (isUpdateUserError) {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'User update failed',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+    }
     if (isUserResumeUpdateSuccess) {
       Swal.fire({
         position: 'top-end',
@@ -119,6 +143,8 @@ const MyResume = () => {
     deleteEducationError,
     deleteEducationSuccess,
     dispatch,
+    isUpdateUserError,
+    isUpdateUserSuccess,
     isUserResumeUpdateError,
     isUserResumeUpdateSuccess,
     updateEducationError,
@@ -178,7 +204,10 @@ const MyResume = () => {
         ))}
         <UploadEducation />
       </div>
-
+      <div className='bg-white mx-7 mt-10 p-10 rounded-xl mb-5'>
+        <h1 className='text-3xl text-blue-800'>Skills</h1>
+        <MySkills />
+      </div>
       <dialog id='my_modal_4' className='modal'>
         <div className='modal-box '>
           <form method='dialog'>

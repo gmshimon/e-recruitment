@@ -64,7 +64,11 @@ const Navbar = () => {
               <div className='w-10 rounded-full'>
                 <img
                   alt='Tailwind CSS Navbar component'
-                  src={user?.photo?user?.photo: 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'}
+                  src={
+                    user?.photo
+                      ? user?.photo
+                      : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                  }
                 />
               </div>
             </div>
@@ -73,15 +77,14 @@ const Navbar = () => {
               className='menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow text-black'
             >
               <li>
-                <a className='justify-between'>
-                  Profile
-                  <span className='badge'>New</span>
-                </a>
+                <Link to="/dashboard/home">
+                  <a className='justify-between'>Profile</a>
+                </Link>
               </li>
               <li>
                 <a>Settings</a>
               </li>
-              <li onClick={()=>dispatch(logOut())}>
+              <li onClick={() => dispatch(logOut())}>
                 <a>Logout</a>
               </li>
             </ul>

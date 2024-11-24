@@ -3,7 +3,7 @@ import CreateEductionForm from '../CreateEducationForm/CreateEductionForm'
 const UploadEducation = () => {
   return (
     <section>
-      <div className='mt-5 mb-2'>
+      <div className='mt-5'>
         <button
           className='btn btn-info'
           onClick={() => document.getElementById('my_modal_3').showModal()}
