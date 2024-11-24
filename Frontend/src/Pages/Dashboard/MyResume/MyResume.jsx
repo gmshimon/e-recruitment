@@ -4,11 +4,12 @@ import { reset } from '../../../Redux/Slices/userSlice'
 import Swal from 'sweetalert2'
 import UploadResume from '../../../Component/Dashboard/UploadResume/UploadResume'
 import UploadEducation from '../../../Component/Dashboard/UploadEducation/UploadEducation'
-import { eduReset, getEducationList } from '../../../Redux/Slices/educationSlice'
+import { eduReset, getEducationList, setEducation } from '../../../Redux/Slices/educationSlice'
 import { AiOutlineClose } from 'react-icons/ai'
+import UpdateEducationForm from '../../../Component/Dashboard/UpdateEducationForm/UpdateEducationForm'
 
 const MyResume = () => {
-  const { educations, createEducationSuccess, createEducationError } =
+  const { educations, createEducationSuccess, createEducationError,updateEducationSuccess,updateEducationError } =
     useSelector(state => state.educations)
   const { isUserResumeUpdateSuccess, isUserResumeUpdateError } = useSelector(
     state => state.user
@@ -17,7 +18,7 @@ const MyResume = () => {
 
   useEffect(()=>{
     dispatch(getEducationList())
-  },[dispatch])
+  },[dispatch,updateEducationSuccess])
 
   useEffect(() => {
     if (isUserResumeUpdateSuccess) {
@@ -60,13 +61,27 @@ const MyResume = () => {
       })
       dispatch(eduReset())
     }
-  }, [
-    createEducationError,
-    createEducationSuccess,
-    dispatch,
-    isUserResumeUpdateError,
-    isUserResumeUpdateSuccess
-  ])
+    if(updateEducationSuccess){
+      Swal.fire({
+        position: 'top-end',
+        icon:'success',
+        title: 'Education Update success',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(eduReset())
+    }
+    if(updateEducationError){
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'Education Update failed',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(eduReset())
+    }
+  }, [createEducationError, createEducationSuccess, dispatch, isUserResumeUpdateError, isUserResumeUpdateSuccess, updateEducationError, updateEducationSuccess])
 
   return (
     <section>
@@ -83,9 +98,12 @@ const MyResume = () => {
               key={index}
               className='flex items-center justify-between bg-gray-100 rounded-lg p-4 w-full mb-2'
             >
-              <p className='text-gray-800 text-md hover:text-blue-500 cursor-pointer'>
-                {item?.title} of {item?.subject} in {item?.institution}
-                <p className='text-sm'>{item?.startDate.split('T')[0]} - {item?.endDate.split('T')[0]}</p>
+              <p className='text-gray-800 text-sm md:text-md hover:text-blue-500 cursor-pointer' onClick={() => {
+                dispatch(setEducation(item))
+                document.getElementById('my_modal_4').showModal()
+              }}>
+                {item?.title} of {item?.subject} in {item?.institution} <span className={`ml-5 badge  badge-sm md:badge-md ${item?.status === "Graduated"?"badge-success":"badge-warning"}`}>{item?.status}</span>
+                <p className='md:text-sm text-xs'>{item?.startDate.split('T')[0]} - {item?.endDate.split('T')[0]}</p>
               </p>
               <button
                 aria-label='Remove file'
@@ -99,6 +117,18 @@ const MyResume = () => {
         ))}
         <UploadEducation />
       </div>
+
+      <dialog id='my_modal_4' className='modal'>
+        <div className='modal-box '>
+          <form method='dialog'>
+            {/* if there is a button in form, it will close the modal */}
+            <UpdateEducationForm/>
+            <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
+              ✕
+            </button>
+          </form>
+        </div>
+      </dialog>
     </section>
   )
 }

@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axiosSecure from '../../utilis/axiosSecure'
 
 const initialState = {
+    education:null,
     educations:[],
     getEducationLoading:false,
     getEducationSuccess:false,
@@ -28,6 +29,11 @@ export const getEducationList = createAsyncThunk('getEducationList',async () =>{
     return response.data.data
 })
 
+export const updateEducation = createAsyncThunk('update-education',async ({id,data}) =>{
+    const response = await axiosSecure.put(`/education/update-education/${id}`,data);
+    return response.data.data
+})
+
 const educationSlice = createSlice({
     name:'educations',
     initialState,
@@ -45,6 +51,9 @@ const educationSlice = createSlice({
             state.deleteEducationLoading = false
             state.deleteEducationSuccess = false
             state.deleteEducationError = false
+        },
+        setEducation:(state,action)=>{
+            state.education = action.payload
         }
     },
     extraReducers:builder => {
@@ -81,8 +90,23 @@ const educationSlice = createSlice({
             state.getEducationSuccess = false
             state.getEducationError = true
         })
+        .addCase(updateEducation.pending, (state) => {
+            state.updateEducationLoading = true
+            state.updateEducationSuccess = false
+            state.updateEducationError = false
+        })
+        .addCase(updateEducation.fulfilled, (state, action) => {
+            state.updateEducationLoading = false
+            state.createEducationError= false 
+            state.updateEducationSuccess = true
+        })
+        .addCase(updateEducation.rejected, (state, action) => {
+            state.updateEducationLoading = false
+            state.updateEducationSuccess = false
+            state.updateEducationError = true
+        })
     }
 })
 
-export const { eduReset } = educationSlice.actions
+export const { eduReset ,setEducation} = educationSlice.actions
 export default educationSlice.reducer
