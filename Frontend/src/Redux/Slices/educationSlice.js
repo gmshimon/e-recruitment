@@ -29,9 +29,14 @@ export const getEducationList = createAsyncThunk('getEducationList',async () =>{
     return response.data.data
 })
 
-export const updateEducation = createAsyncThunk('update-education',async ({id,data}) =>{
+export const updateEducation = createAsyncThunk('updateEducation',async ({id,data}) =>{
     const response = await axiosSecure.put(`/education/update-education/${id}`,data);
     return response.data.data
+})
+
+export const deleteEducation = createAsyncThunk('deleteEducation',async(id)=>{
+    const response = await axiosSecure.delete(`/education/delete-education/${id}`);
+    return id
 })
 
 const educationSlice = createSlice({
@@ -104,6 +109,22 @@ const educationSlice = createSlice({
             state.updateEducationLoading = false
             state.updateEducationSuccess = false
             state.updateEducationError = true
+        })
+        .addCase(deleteEducation.pending, (state) => {
+            state.deleteEducationLoading = true
+            state.deleteEducationSuccess = false
+            state.deleteEducationError = false
+        })
+        .addCase(deleteEducation.fulfilled, (state, action) => {
+            state.deleteEducationLoading = false
+            state.deleteEducationSuccess = true
+            state.deleteEducationError = false
+            state.educations = state.educations.filter(edu => edu._id!== action.payload)
+        })
+        .addCase(deleteEducation.rejected, (state, action) => {
+            state.deleteEducationLoading = false
+            state.deleteEducationSuccess = false
+            state.deleteEducationError = true
         })
     }
 })

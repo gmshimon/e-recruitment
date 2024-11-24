@@ -4,21 +4,33 @@ import { reset } from '../../../Redux/Slices/userSlice'
 import Swal from 'sweetalert2'
 import UploadResume from '../../../Component/Dashboard/UploadResume/UploadResume'
 import UploadEducation from '../../../Component/Dashboard/UploadEducation/UploadEducation'
-import { eduReset, getEducationList, setEducation } from '../../../Redux/Slices/educationSlice'
+import {
+  deleteEducation,
+  eduReset,
+  getEducationList,
+  setEducation
+} from '../../../Redux/Slices/educationSlice'
 import { AiOutlineClose } from 'react-icons/ai'
 import UpdateEducationForm from '../../../Component/Dashboard/UpdateEducationForm/UpdateEducationForm'
 
 const MyResume = () => {
-  const { educations, createEducationSuccess, createEducationError,updateEducationSuccess,updateEducationError } =
-    useSelector(state => state.educations)
+  const {
+    educations,
+    createEducationSuccess,
+    createEducationError,
+    updateEducationSuccess,
+    updateEducationError,
+    deleteEducationSuccess,
+    deleteEducationError
+  } = useSelector(state => state.educations)
   const { isUserResumeUpdateSuccess, isUserResumeUpdateError } = useSelector(
     state => state.user
   )
   const dispatch = useDispatch()
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(getEducationList())
-  },[dispatch,updateEducationSuccess])
+  }, [dispatch, updateEducationSuccess])
 
   useEffect(() => {
     if (isUserResumeUpdateSuccess) {
@@ -61,17 +73,17 @@ const MyResume = () => {
       })
       dispatch(eduReset())
     }
-    if(updateEducationSuccess){
+    if (updateEducationSuccess) {
       Swal.fire({
         position: 'top-end',
-        icon:'success',
+        icon: 'success',
         title: 'Education Update success',
         showConfirmButton: false,
         timer: 1500
       })
       dispatch(eduReset())
     }
-    if(updateEducationError){
+    if (updateEducationError) {
       Swal.fire({
         position: 'top-end',
         icon: 'error',
@@ -81,7 +93,41 @@ const MyResume = () => {
       })
       dispatch(eduReset())
     }
-  }, [createEducationError, createEducationSuccess, dispatch, isUserResumeUpdateError, isUserResumeUpdateSuccess, updateEducationError, updateEducationSuccess])
+    if (deleteEducationSuccess) {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Education delete success',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(eduReset())
+    }
+    if (deleteEducationError) {
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'Education delete failed',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(eduReset())
+    }
+  }, [
+    createEducationError,
+    createEducationSuccess,
+    deleteEducationError,
+    deleteEducationSuccess,
+    dispatch,
+    isUserResumeUpdateError,
+    isUserResumeUpdateSuccess,
+    updateEducationError,
+    updateEducationSuccess
+  ])
+
+  const handleDeleteResume = id => {
+    dispatch(deleteEducation(id))
+  }
 
   return (
     <section>
@@ -98,17 +144,32 @@ const MyResume = () => {
               key={index}
               className='flex items-center justify-between bg-gray-100 rounded-lg p-4 w-full mb-2'
             >
-              <p className='text-gray-800 text-sm md:text-md hover:text-blue-500 cursor-pointer' onClick={() => {
-                dispatch(setEducation(item))
-                document.getElementById('my_modal_4').showModal()
-              }}>
-                {item?.title} of {item?.subject} in {item?.institution} <span className={`ml-5 badge  badge-sm md:badge-md ${item?.status === "Graduated"?"badge-success":"badge-warning"}`}>{item?.status}</span>
-                <p className='md:text-sm text-xs'>{item?.startDate.split('T')[0]} - {item?.endDate.split('T')[0]}</p>
+              <p
+                className='text-gray-800 text-sm md:text-md hover:text-blue-500 cursor-pointer'
+                onClick={() => {
+                  dispatch(setEducation(item))
+                  document.getElementById('my_modal_4').showModal()
+                }}
+              >
+                {item?.title} of {item?.subject} in {item?.institution}{' '}
+                <span
+                  className={`ml-5 badge  badge-sm md:badge-md ${
+                    item?.status === 'Graduated'
+                      ? 'badge-success'
+                      : 'badge-warning'
+                  }`}
+                >
+                  {item?.status}
+                </span>
+                <p className='md:text-sm text-xs'>
+                  {item?.startDate.split('T')[0]} -{' '}
+                  {item?.endDate.split('T')[0]}
+                </p>
               </p>
               <button
                 aria-label='Remove file'
                 className='text-green-600 hover:text-green-800'
-                // onClick={() => handleDeleteResume(item)}
+                onClick={() => handleDeleteResume(item?._id)}
               >
                 <AiOutlineClose size={18} />
               </button>
@@ -122,7 +183,7 @@ const MyResume = () => {
         <div className='modal-box '>
           <form method='dialog'>
             {/* if there is a button in form, it will close the modal */}
-            <UpdateEducationForm/>
+            <UpdateEducationForm />
             <button className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'>
               ✕
             </button>
