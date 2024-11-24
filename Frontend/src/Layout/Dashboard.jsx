@@ -1,4 +1,4 @@
-import { HiOutlineBellAlert } from 'react-icons/hi2'
+// import { HiOutlineBellAlert } from 'react-icons/hi2'
 import { IoIosLogOut, IoMdPaper } from 'react-icons/io'
 import {
   MdOutlineDashboard,
@@ -8,11 +8,12 @@ import {
 import { Link, Outlet } from 'react-router-dom'
 import CurrentUser from '../utilis/CurrentUser'
 import { useSelector } from 'react-redux'
+import { useState } from 'react'
 
 const navbarOptions = [
   {
     label: 'Dashboard',
-    to: '/',
+    to: '/dashboard/home',
     icon: <MdOutlineDashboard />
   },
   {
@@ -30,15 +31,16 @@ const navbarOptions = [
     to: '/dashboard/applications',
     icon: <MdOutlineSettingsApplications />
   },
-  {
-    label: 'Job Alert',
-    to: '/job_alert',
-    icon: <HiOutlineBellAlert />
-  }
+  // {
+  //   label: 'Job Alert',
+  //   to: '/job_alert',
+  //   icon: <HiOutlineBellAlert />
+  // }
 ]
 
 const Dashboard = () => {
   const { user } = useSelector(state => state.user)
+  const [activeTab,setActiveTab] = useState('Dashboard')
 
   CurrentUser()
   return (
@@ -89,8 +91,10 @@ const Dashboard = () => {
           className='drawer-overlay'
         ></label>
         <div className='menu bg-white min-h-full w-60 p-4 '>
-          <div className='text-3xl text-center my-10 '>
-            <p>XXX</p>
+          <div className='text-3xl text-center my-10 h-[30px]'>
+           <Link to="/">
+           <p className='cursor-pointer hover:bg-gray-100 hover:rounded-lg'>XXX</p>
+           </Link>
           </div>
           <div className='flex justify-center'>
             <div className='avatar online'>
@@ -109,7 +113,7 @@ const Dashboard = () => {
           {/* Sidebar content here */}
           {navbarOptions.map((option, index) => (
             <Link key={index} to={option?.to}>
-              <div className='flex items-center text-xl cursor-pointer mb-7 hover:text-green-600  p-2 '>
+              <div onClick={()=>setActiveTab(option?.label)} className={`flex items-center text-xl cursor-pointer mb-7 hover:text-green-600  p-2 ${activeTab==option?.label?'border rounded-md bg-green-700 text-white':''}`}>
                 {/* border rounded-md bg-green-700 text-white */}
                 <p>{option?.icon}</p>
                 <p className='ml-2'>{option?.label}</p>
