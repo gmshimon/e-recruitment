@@ -137,7 +137,7 @@ const MyResume = () => {
         <UploadResume />
       </div>
       <div className='bg-white mx-7 mt-10 p-10 rounded-xl'>
-        <h1 className='text-3xl text-blue-800'>Education Background</h1>
+        <h1 className='text-3xl text-blue-800 mb-8'>Education Background</h1>
         {educations?.map((item, index) => (
           <div key={item}>
             <div

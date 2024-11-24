@@ -27,7 +27,7 @@ const navbarOptions = [
   },
   {
     label: 'My Applications',
-    to: '/applications',
+    to: '/dashboard/applications',
     icon: <MdOutlineSettingsApplications />
   },
   {
@@ -39,7 +39,7 @@ const navbarOptions = [
 
 const Dashboard = () => {
   const { user } = useSelector(state => state.user)
-  
+
   CurrentUser()
   return (
     <div className='drawer lg:drawer-open'>
