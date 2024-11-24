@@ -39,6 +39,9 @@ const initialState = {
   isUserResumeUpdateLoading: false,
   isUserResumeUpdateError: false,
   isUserResumeUpdateSuccess: false,
+  isUserResumeDeleteLoading: false,
+  isUserResumeDeleteError: false,
+  isUserResumeDeleteSuccess: false,
   isAdminDataLoading: false,
   isAdminDataSuccess: false,
   isAdminDataError: false
@@ -110,6 +113,12 @@ export const updateUserResume = createAsyncThunk('updateUserResume',async data=>
   return response.data.data
 })
 
+export const deleteUserResume = createAsyncThunk('deleteUserResume',async data=>{
+  console.log(data)
+  const response = await axiosSecure.put('/user/delete-resume', data)
+  return response.data.data
+})
+
 export const logOut = createAsyncThunk('logOut', async () => {
   const response = await signOut(auth)
   localStorage.removeItem('userToken')
@@ -148,6 +157,9 @@ const userSlice = createSlice({
       state.isUpdateUserLoading=false
       state.isUpdateUserError=false
       state.isUpdateUserSuccess=false
+      state.isUserResumeDeleteLoading=false
+      state.isUserResumeDeleteError=false
+      state.isUserResumeDeleteSuccess=false
     },
     startLoading: (state, action) => {
       state.isLoading = true
@@ -259,6 +271,22 @@ const userSlice = createSlice({
         state.isUserResumeUpdateLoading = false
         state.isUserResumeUpdateError = true
         state.isUserResumeUpdateSuccess = false
+      })
+      .addCase(deleteUserResume.pending, state => {
+        state.isUserResumeDeleteLoading = true
+        state.isUserResumeDeleteError = false
+        state.isUserResumeDeleteSuccess = false
+      })
+      .addCase(deleteUserResume.fulfilled, (state, action) => {
+        state.isUserResumeDeleteError = false
+        state.isUserResumeDeleteSuccess = true
+        state.isUserResumeDeleteLoading = false
+        state.user = action.payload
+      })
+      .addCase(deleteUserResume.rejected, (state, action) => {
+        state.isUserResumeDeleteLoading = false
+        state.isUserResumeDeleteError = true
+        state.isUserResumeDeleteSuccess = false
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.user = null

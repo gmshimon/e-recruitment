@@ -1,19 +1,46 @@
 import { AiOutlineClose } from 'react-icons/ai'
-import { updateUserResume } from '../../../Redux/Slices/userSlice'
+import { deleteUserResume, reset, updateUserResume } from '../../../Redux/Slices/userSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import Swal from 'sweetalert2'
 
 const UploadResume = () => {
-  const { user } = useSelector(state => state.user)
+  const { user,isUserResumeDeleteError,isUserResumeDeleteSuccess } = useSelector(state => state.user)
   const dispatch = useDispatch()
   const handleResumeUpload = e => {
-    console.log(e.target.files[0])
     const formData = new FormData()
     formData.append('resume', e.target.files[0])
     dispatch(updateUserResume(formData))
   }
 
+  useEffect(()=>{
+    if(isUserResumeDeleteError){
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'Error deleting resume',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+    }
+    if(isUserResumeDeleteSuccess){
+      Swal.fire({
+        position: 'top-end',
+        icon:'success',
+        title: 'Resume deleted successfully',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+    }
+  },[dispatch, isUserResumeDeleteError, isUserResumeDeleteSuccess])
+
   const handleDeleteResume = item => {
-    console.log(item)
+    const data ={
+      resume:item
+    }
+    dispatch(deleteUserResume(data))
   }
   return (
     <>
