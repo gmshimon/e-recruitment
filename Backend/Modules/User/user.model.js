@@ -76,6 +76,9 @@ const userSchema = mongoose.Schema(
         type:ObjectId,
         ref:'education'
       }
+    ],
+    skills:[
+      String
     ]
   },
   {
