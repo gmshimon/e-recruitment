@@ -8,7 +8,8 @@ import {
 import { Link, Outlet } from 'react-router-dom'
 import CurrentUser from '../utilis/CurrentUser'
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { FaPen } from 'react-icons/fa'
 
 const navbarOptions = [
   {
@@ -31,18 +32,50 @@ const navbarOptions = [
     to: '/dashboard/applications',
     icon: <MdOutlineSettingsApplications />
   },
-  // {
-  //   label: 'Job Alert',
-  //   to: '/job_alert',
-  //   icon: <HiOutlineBellAlert />
-  // }
+]
+
+const adminNavbarOptions =[
+  {
+    label: 'Dashboard',
+    to: '/dashboard/home',
+    icon: <MdOutlineDashboard />
+  },
+  {
+    label: 'Profile',
+    to: '/dashboard/profile',
+    icon: <MdOutlinePerson />
+  },
+  {
+    label: 'My Jobs',
+    to: '/dashboard/my-jobs',
+    icon: <IoMdPaper />
+  },
+  {
+    label:'Post Job',
+    to: '/dashboard/post-job',
+    icon: <FaPen />
+  },
+  {
+    label: 'Applications',
+    to: '/dashboard/applications',
+    icon: <MdOutlineSettingsApplications />
+  },
 ]
 
 const Dashboard = () => {
   const { user } = useSelector(state => state.user)
   const [activeTab,setActiveTab] = useState('Dashboard')
-
+  const [navs,setNavs] = useState(navbarOptions)
   CurrentUser()
+
+  useEffect(()=>{
+    if(user?.role === 'admin'){
+      setNavs(adminNavbarOptions)
+    }else{
+      setNavs(navbarOptions)
+    }
+  },[user])
+
   return (
     <div className='drawer lg:drawer-open'>
       <input id='my-drawer-3' type='checkbox' className='drawer-toggle' />
@@ -111,7 +144,7 @@ const Dashboard = () => {
           </div>
           <p className='text-center mt-2 text-xl mb-10'>{user?.name}</p>
           {/* Sidebar content here */}
-          {navbarOptions.map((option, index) => (
+          {navs.map((option, index) => (
             <Link key={index} to={option?.to}>
               <div onClick={()=>setActiveTab(option?.label)} className={`flex items-center text-xl cursor-pointer mb-7 hover:text-green-600  p-2 ${activeTab==option?.label?'border rounded-md bg-green-700 text-white':''}`}>
                 {/* border rounded-md bg-green-700 text-white */}

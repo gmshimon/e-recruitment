@@ -12,7 +12,7 @@ const array = ['1', '2', '3', '4', '5', '6']
 const DashboardHome = () => {
   return (
     <section className='pb-4 h-[calc(100vh-20px)]'>
-      <h1 className='text-4xl m-7'>My Applications</h1>
+      <h1 className='text-4xl m-7'>Dashboard</h1>
       <div className=' py-5 flex justify-center w-full'>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-x-10  px-5'>
           {stats.map((stat, index) => (
