@@ -2,25 +2,11 @@ import { useDispatch, useSelector } from "react-redux"
 import { setAddress, setCity, setCountry, setState } from "../../../Redux/Slices/jobSlice"
 
 const AddressForm = () => {
-    const {
-        title,
-        company_name,
-        description,
-        requirements,
-        job_category,
-        job_type,
-        salary,
-        min,
-        max,
-        skills,
-        experience,
-        english_fluency,
+    const {  
         address,
         country,
         city,
-        state,
-        createJobSuccess,
-        createJobError
+        state
       } = useSelector(state => state.job)
     const dispatch = useDispatch()
   return (
