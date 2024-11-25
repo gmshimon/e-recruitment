@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../../../Redux/Slices/userSlice'
 
 const MySkills = () => {
-    const { user } = useSelector(state => state.user)
+  const { user } = useSelector(state => state.user)
   const [skills, setSkills] = useState([])
   const [newSkill, setNewSkill] = useState('')
   const dispatch = useDispatch()
-    useEffect(()=>{ 
-        setSkills(user?.skills|| [])
-    },[dispatch, user?.skills])
+  useEffect(() => {
+    setSkills(user?.skills || [])
+  }, [dispatch, user?.skills])
 
   const handleAddSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill)) {
@@ -28,10 +28,9 @@ const MySkills = () => {
     }
   }
 
-
   const handleSaveSkills = () => {
     const data = {
-      skills:skills
+      skills: skills
     }
     dispatch(updateUser(data))
   }
@@ -40,7 +39,7 @@ const MySkills = () => {
       <div className='flex flex-wrap items-center gap-2 mt-10 mb-5 p-4 border border-gray-300 rounded-lg bg-gray-50'>
         {skills.map((skill, index) => (
           <div
-            key={skill+index}
+            key={skill + index}
             className='flex items-center bg-white text-gray-700 border border-gray-300 rounded-full px-3 py-1 shadow-sm'
           >
             {skill}

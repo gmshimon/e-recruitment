@@ -10,6 +10,7 @@ import DashboardHome from '../Pages/Dashboard/DashboardHome/DashboardHome'
 import MyProfile from '../Pages/Dashboard/MyProfile/MyProfile'
 import MyResume from '../Pages/Dashboard/MyResume/MyResume'
 import MyApplication from '../Pages/Dashboard/MyApplication/MyApplication'
+import PostJobs from '../Pages/Dashboard/PostJobs/PostJobs'
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,9 @@ export const router = createBrowserRouter([
       {
         path:'applications',
         element:<MyApplication/>
+      },{
+        path:'post-job',
+        element:<PostJobs/>
       }
     ]
   }
