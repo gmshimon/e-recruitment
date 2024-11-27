@@ -56,7 +56,7 @@ const adminNavbarOptions =[
     icon: <FaPen />
   },
   {
-    label: 'Applications',
+    label: 'Applicants',
     to: '/dashboard/applications',
     icon: <MdOutlineSettingsApplications />
   },

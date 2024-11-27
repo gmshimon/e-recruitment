@@ -72,6 +72,7 @@ const categories = [
 
 const JobDetailsForm = () => {
   const {
+    job,
     title,
     company_name,
     description,
@@ -95,6 +96,7 @@ const JobDetailsForm = () => {
     dispatch(setDescription(value))
     dispatch(setRequirements(req))
   }, [value, dispatch, req])
+
   return (
     <>
       {/* job details */}

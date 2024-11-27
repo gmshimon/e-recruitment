@@ -3,7 +3,8 @@ import axiosSecure from '../../utilis/axiosSecure'
 
 const initialState = {
   jobs: [],
-  title: null,
+  job: null,
+  title: '',
   company_name: null,
   description: null,
   requirements: null,
@@ -19,7 +20,6 @@ const initialState = {
   country: null,
   city: null,
   state: null,
-
   createJobLoading: false,
   createJobSuccess: false,
   createJobError: false,
@@ -34,9 +34,24 @@ const initialState = {
   getJobError: false
 }
 
-export const createJob = createAsyncThunk('createJob',async(data)=>{
-    const response = await axiosSecure.post('/job/create-job', data)
-    return response.data.data
+export const createJob = createAsyncThunk('createJob', async data => {
+  const response = await axiosSecure.post('/job/create-job', data)
+  return response.data.data
+})
+
+export const getMyJob = createAsyncThunk('getMyJob', async () => {
+  const response = await axiosSecure.get('/job/get-my-job')
+  return response.data.data
+})
+
+export const getJobID = createAsyncThunk('getJobID', async ({id}) => {
+  const response = await axiosSecure.get(`/job/${id}`)
+  return response.data.data
+})
+
+export const updateJob = createAsyncThunk('updateJob', async ({id, data}) => {
+  const response = await axiosSecure.put(`/job/edit-job/${id}`, data)
+  return response.data.data
 })
 
 const jobSlice = createSlice({
@@ -75,8 +90,8 @@ const jobSlice = createSlice({
       state.city = null
       state.state = null
     },
-    setTitle:(state,action)=>{
-        state.title = action.payload
+    setTitle: (state, action) => {
+      state.title = action.payload
     },
     setJobDetails: (state, action) => {
       state.title = action.payload
@@ -117,34 +132,81 @@ const jobSlice = createSlice({
     setState: (state, action) => {
       state.state = action.payload
     },
-    setMin:(state,action)=>{
-        state.min = action.payload
+    setMin: (state, action) => {
+      state.min = action.payload
     },
-    setMax:(state,action)=>{
-        state.max = action.payload
+    setMax: (state, action) => {
+      state.max = action.payload
     },
-    setJob_skills:(state,action)=>{
-        state.skills = action.payload
+    setJob_skills: (state, action) => {
+      state.skills = action.payload
     }
   },
   extraReducers: builder => {
     builder
-    .addCase(createJob.pending,(state)=>{
+      .addCase(createJob.pending, state => {
         state.createJobLoading = true
         state.createJobSuccess = false
         state.createJobError = false
-    })
-    .addCase(createJob.fulfilled,(state,action)=>{
+      })
+      .addCase(createJob.fulfilled, (state, action) => {
         state.createJobLoading = false
         state.createJobSuccess = true
         state.createJobError = false
         state.jobs.push(action.payload)
-    })
-    .addCase(createJob.rejected,(state)=>{
+      })
+      .addCase(createJob.rejected, state => {
         state.createJobLoading = false
         state.createJobSuccess = false
         state.createJobError = true
-    })
+      })
+      .addCase(getMyJob.pending, state => {
+        state.getJobLoading = true
+        state.getJobSuccess = false
+        state.getJobError = false
+      })
+      .addCase(getMyJob.fulfilled, (state, action) => {
+        state.getJobLoading = false
+        state.getJobSuccess = true
+        state.getJobError = false
+        state.jobs = action.payload
+      })
+      .addCase(getMyJob.rejected, state => {
+        state.getJobLoading = false
+        state.getJobSuccess = false
+        state.getJobError = true
+      })
+      .addCase(getJobID.pending, state => {
+        state.getJobLoading = true
+        state.getJobSuccess = false
+        state.getJobError = false
+      })
+      .addCase(getJobID.fulfilled, (state, action) => {
+        state.getJobLoading = false
+        state.getJobSuccess = true
+        state.getJobError = false
+        state.job = action.payload
+      })
+      .addCase(getJobID.rejected, state => {
+        state.getJobLoading = false
+        state.getJobSuccess = false
+        state.getJobError = true
+      })
+      .addCase(updateJob.pending,state=>{
+        state.updateJobLoading = true
+        state.updateJobSuccess = false
+        state.updateJobError = false
+      })
+      .addCase(updateJob.fulfilled, (state) => {
+        state.updateJobLoading = false
+        state.updateJobSuccess = true
+        state.updateJobError = false
+      })
+      .addCase(updateJob.rejected, state => {
+        state.updateJobLoading = false
+        state.updateJobSuccess = false
+        state.updateJobError = true
+      })
   }
 })
 

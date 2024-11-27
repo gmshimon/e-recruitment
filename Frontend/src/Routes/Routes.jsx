@@ -12,6 +12,7 @@ import MyResume from '../Pages/Dashboard/MyResume/MyResume'
 import MyApplication from '../Pages/Dashboard/MyApplication/MyApplication'
 import PostJobs from '../Pages/Dashboard/PostJobs/PostJobs'
 import MyJobs from '../Pages/Dashboard/MyJobs/MyJobs'
+import EditJobs from '../Pages/Dashboard/EditJobs/EditJobs'
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       {
         path:'my-jobs',
         element:<MyJobs/>
+      },
+      {
+        path:'my-jobs/:id',
+        element:<EditJobs/>
       }
     ]
   }

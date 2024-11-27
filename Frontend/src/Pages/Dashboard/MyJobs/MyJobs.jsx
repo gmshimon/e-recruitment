@@ -1,28 +1,55 @@
 
+import { useEffect } from 'react'
 import { MdDeleteOutline, MdOutlineModeEditOutline } from 'react-icons/md'
-import Swal from 'sweetalert2';
+import { useDispatch, useSelector } from 'react-redux'
+
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import { reset, resetDetails } from '../../../Redux/Slices/jobSlice'
+
 
 const MyJobs = () => {
+  const {updateJobSuccess} = useSelector(state=>state.job)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-    const handledeleteJob = (id) =>{
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-          }).then((result) => {
-            if (result.isConfirmed) {
-              Swal.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success"
-              });
-            }
-          });
+  useEffect(()=>{
+    if(updateJobSuccess){
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Job Updated Successfully',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+       dispatch(resetDetails())
     }
+  },[updateJobSuccess,dispatch])
+
+  const handledeleteJob = id => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(result => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'Your file has been deleted.',
+          icon: 'success'
+        })
+      }
+    })
+  }
+
+  const handleEditJobs = (id)=>{
+    navigate(`/dashboard/my-jobs/6744cd946f983cab82c9722e`)
+  }
   return (
     <section className='h-[calc(100vh-28px)]'>
       <h1 className='text-4xl m-7'>My Jobs</h1>
@@ -62,6 +89,7 @@ const MyJobs = () => {
                     <button
                       className='btn btn-ghost btn-xs text-2xl'
                       title='Details'
+                      onClick={()=>handleEditJobs(1)}
                     >
                       <MdOutlineModeEditOutline />
                     </button>
@@ -70,7 +98,7 @@ const MyJobs = () => {
                     <button
                       className='btn btn-ghost btn-xs text-2xl'
                       title='Details'
-                      onClick={()=>handledeleteJob(1)}
+                      onClick={() => handledeleteJob(1)}
                     >
                       <MdDeleteOutline />
                     </button>

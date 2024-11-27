@@ -41,7 +41,7 @@ const PostJobs = () => {
         timer: 1500
       })
       dispatch(reset())
-      dispatch(resetDetails())
+       dispatch(resetDetails())
     }
     if (createJobError) {
       Swal.fire({
@@ -85,7 +85,7 @@ const PostJobs = () => {
 
   return (
     <section>
-      <h1 className='text-4xl m-7'>Post a New Jobss</h1>
+      <h1 className='text-4xl m-7'>Post a New Jobs</h1>
       <div className='bg-white mx-7 mt-10 p-10 rounded-xl'>
         <JobDetailsForm />
         {/* Skills and Experience */}

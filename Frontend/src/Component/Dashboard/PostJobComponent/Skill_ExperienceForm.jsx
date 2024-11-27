@@ -13,6 +13,8 @@ const Skill_ExperienceForm = () => {
   const [skills_value, setSkills] = useState([])
   const [newSkill, setNewSkill] = useState('')
 
+  
+
   const handleAddSkill = () => {
     if (newSkill.trim() && !skills_value.includes(newSkill)) {
       setSkills([...skills_value, newSkill.trim()])
@@ -32,8 +34,13 @@ const Skill_ExperienceForm = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(setJob_skills(skills))
-  }, [dispatch, skills])
+    setSkills(skills)
+  }, [ skills])
+
+  useEffect(()=>{
+    dispatch(setJob_skills(skills_value))
+  },[dispatch,skills_value])
+
 
   return (
     <>
