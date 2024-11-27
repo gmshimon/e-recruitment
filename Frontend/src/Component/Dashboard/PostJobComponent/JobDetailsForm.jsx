@@ -72,7 +72,6 @@ const categories = [
 
 const JobDetailsForm = () => {
   const {
-    job,
     title,
     company_name,
     description,

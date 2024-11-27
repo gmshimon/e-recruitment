@@ -102,7 +102,7 @@ const MyJobs = () => {
                   </td>
                   <td className='w-[350px]'>
                     {
-                      job?.job_type==='Part Time' ? <p className='text-orange-600 '>{job?.job_type}</p>:job?.job_type==='Part Time' && <p className='text-red-600 '>{job?.job_type}</p>
+                      job?.job_type==='Part Time' ? <p className='text-green-600 '>{job?.job_type}</p>:job?.job_type==='Full Time' && <p className='text-red-600 '>{job?.job_type}</p>
                     }
                     <p>{job?.salary?.salary} Salary, {job?.address.country}</p>
                   </td>

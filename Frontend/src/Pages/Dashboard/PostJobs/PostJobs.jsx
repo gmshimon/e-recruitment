@@ -33,7 +33,7 @@ const PostJobs = () => {
 
   useEffect(()=>{
     dispatch(resetDetails())
-  },[dispatch, title])
+  },[dispatch])
 
   useEffect(() => {
     if (createJobSuccess) {
@@ -70,8 +70,8 @@ const PostJobs = () => {
       job_type,
       salary: {
         salary: salary,
-        min: parseFloat(min).toFixed(2),
-        max: parseFloat(max).toFixed(2)
+        min: parseInt(min).toFixed(2),
+        max: parseInt(max).toFixed(2)
       },
       skills,
       experience,
@@ -83,7 +83,7 @@ const PostJobs = () => {
         state
       }
     }
-
+    console.log(data)
     dispatch(createJob(data))
   }
 
