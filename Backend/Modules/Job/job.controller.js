@@ -100,6 +100,25 @@ export const getMyJob = async(req, res, next) => {
   }
 }
 
+export const  deleteJob = async(req,res,next)=>{
+  try {
+    const {id} = req.params
+    const {_id} = req.user
+
+    const deleteJob = await Job.deleteOne({_id:id,createdBy:_id})
+
+    res.status(200).json({
+      success: 'success',
+      message: 'Job deleted successfully',
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'failed',
+      message: error.message,
+    })
+  }
+}
+
 export const getJobID = async (req, res) => {
   try {
     const{id} = req.params
