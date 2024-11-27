@@ -5,13 +5,17 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { reset, resetDetails } from '../../../Redux/Slices/jobSlice'
+import { deleteJob, getMyJob, reset, resetDetails } from '../../../Redux/Slices/jobSlice'
 
 
 const MyJobs = () => {
-  const {updateJobSuccess} = useSelector(state=>state.job)
+  const {jobs,updateJobSuccess,deleteJobSuccess,deleteJobError} = useSelector(state=>state.job)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  useEffect(()=>{
+    dispatch(getMyJob())
+  },[dispatch])
 
   useEffect(()=>{
     if(updateJobSuccess){
@@ -25,7 +29,29 @@ const MyJobs = () => {
       dispatch(reset())
        dispatch(resetDetails())
     }
-  },[updateJobSuccess,dispatch])
+    if(deleteJobSuccess){
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Job deleted Successfully',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+       dispatch(resetDetails())
+    }
+    if(deleteJobError){
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'Job delete failed',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+       dispatch(resetDetails())
+    }
+  },[updateJobSuccess, deleteJobError, dispatch, deleteJobSuccess])
 
   const handledeleteJob = id => {
     Swal.fire({
@@ -38,17 +64,12 @@ const MyJobs = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(result => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Deleted!',
-          text: 'Your file has been deleted.',
-          icon: 'success'
-        })
+        dispatch(deleteJob({id:id}))
       }
     })
   }
-
   const handleEditJobs = (id)=>{
-    navigate(`/dashboard/my-jobs/6744cd946f983cab82c9722e`)
+    navigate(`/dashboard/my-jobs/${id}`)
   }
   return (
     <section className='h-[calc(100vh-28px)]'>
@@ -67,44 +88,47 @@ const MyJobs = () => {
               </tr>
             </thead>
             <tbody>
-              {/* row 1 */}
-              <tr className='text-[17px]'>
-                <td className='w-[350px]'>
-                  <div className='flex items-center gap-3'>
-                    <div>
-                      <div className='font-bold'>Product Designer</div>
-                      <div className='badge badge-error mt-2 badge-sm p-2'>
-                        Disable
+              {
+                jobs.map(job=><tr key={job._id} className='text-[17px]'>
+                  <td className='w-[350px]'>
+                    <div className='flex items-center gap-3'>
+                      <div>
+                        <div className='font-bold'>{job.title}</div>
+                        <div className='badge badge-error mt-2 badge-sm p-2'>
+                          {job?.status}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className='w-[350px]'>
-                  <p className='text-red-600 '>Full Time</p>
-                  <p>Yearly Salary, Germany</p>
-                </td>
-                <td className='w-[300px]'>20-11-2024</td>
-                <th className='flex'>
-                  <div>
-                    <button
-                      className='btn btn-ghost btn-xs text-2xl'
-                      title='Details'
-                      onClick={()=>handleEditJobs(1)}
-                    >
-                      <MdOutlineModeEditOutline />
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      className='btn btn-ghost btn-xs text-2xl'
-                      title='Details'
-                      onClick={() => handledeleteJob(1)}
-                    >
-                      <MdDeleteOutline />
-                    </button>
-                  </div>
-                </th>
-              </tr>
+                  </td>
+                  <td className='w-[350px]'>
+                    {
+                      job?.job_type==='Part Time' ? <p className='text-orange-600 '>{job?.job_type}</p>:job?.job_type==='Part Time' && <p className='text-red-600 '>{job?.job_type}</p>
+                    }
+                    <p>{job?.salary?.salary} Salary, {job?.address.country}</p>
+                  </td>
+                  <td className='w-[300px]'>{job?.createdAt.split('T')[0]}</td>
+                  <th className='flex'>
+                    <div>
+                      <button
+                        className='btn btn-ghost btn-xs text-2xl'
+                        title='Details'
+                        onClick={()=>handleEditJobs(job?._id)}
+                      >
+                        <MdOutlineModeEditOutline />
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        className='btn btn-ghost btn-xs text-2xl'
+                        title='Details'
+                        onClick={() => handledeleteJob(job?._id)}
+                      >
+                        <MdDeleteOutline />
+                      </button>
+                    </div>
+                  </th>
+                </tr>)
+              }
             </tbody>
           </table>
         </div>

@@ -54,6 +54,11 @@ export const updateJob = createAsyncThunk('updateJob', async ({id, data}) => {
   return response.data.data
 })
 
+export const deleteJob = createAsyncThunk('deleteJob', async ({id}) => {
+  const response = await axiosSecure.delete(`/job/delete-job/${id}`)
+  return id
+})
+
 const jobSlice = createSlice({
   name: 'job',
   initialState,
@@ -206,6 +211,22 @@ const jobSlice = createSlice({
         state.updateJobLoading = false
         state.updateJobSuccess = false
         state.updateJobError = true
+      })
+      .addCase(deleteJob.pending, state => {
+        state.deleteJobLoading = true
+        state.deleteJobSuccess = false
+        state.deleteJobError = false
+      })
+      .addCase(deleteJob.fulfilled, (state, action) => {
+        state.deleteJobLoading = false
+        state.deleteJobSuccess = true
+        state.deleteJobError = false
+        state.jobs = state.jobs.filter(job => job._id!== action.payload)
+      })
+      .addCase(deleteJob.rejected, state => {
+        state.deleteJobLoading = false
+        state.deleteJobSuccess = false
+        state.deleteJobError = true
       })
   }
 })

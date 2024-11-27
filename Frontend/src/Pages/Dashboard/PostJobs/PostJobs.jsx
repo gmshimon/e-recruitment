@@ -31,6 +31,10 @@ const PostJobs = () => {
 
   const dispatch = useDispatch()
 
+  useEffect(()=>{
+    dispatch(resetDetails())
+  },[dispatch, title])
+
   useEffect(() => {
     if (createJobSuccess) {
       Swal.fire({
@@ -41,7 +45,7 @@ const PostJobs = () => {
         timer: 1500
       })
       dispatch(reset())
-       dispatch(resetDetails())
+      dispatch(resetDetails())
     }
     if (createJobError) {
       Swal.fire({
@@ -65,7 +69,7 @@ const PostJobs = () => {
       job_category,
       job_type,
       salary: {
-        salary:salary,
+        salary: salary,
         min: parseFloat(min).toFixed(2),
         max: parseFloat(max).toFixed(2)
       },
