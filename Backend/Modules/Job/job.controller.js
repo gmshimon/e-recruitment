@@ -1,5 +1,5 @@
 import Job from './job.model.js'
-
+import { ObjectId } from "mongodb";
 export const createJob = async (req, res, next) => {
   try {
     const { _id } = req.user
@@ -77,6 +77,44 @@ export const editJob = async (req, res, next) => {
     res.status(400).json({
       status: 'Failed',
       message: error.status
+    })
+  }
+}
+
+export const getMyJob = async(req, res, next) => {
+  try {
+    const {_id} = req.user
+    const result = await Job.find({createdBy: _id})
+
+    res.status(200).json({
+      success: 'success',
+      message: 'My job list fetched successfully',
+      data: result
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'failed',
+      message: error.message,
+
+    })
+  }
+}
+
+export const getJobID = async (req, res) => {
+  try {
+    const{id} = req.params
+
+    const result = await Job.findOne({_id: id})
+
+    res.status(200).json({
+      success: 'success',
+      message: 'Job fetched successfully',
+      data: result
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'failed',
+      message: error.message
     })
   }
 }
