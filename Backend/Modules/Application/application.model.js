@@ -1,14 +1,30 @@
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 const applicationSchema = mongoose.Schema({
     candidate:{
-        type:String,
+        type:ObjectId,
         ref:'users',
         required: true
     },
     job:{
+        type:ObjectId,
+        ref:'Job',
+        required: true
+    },
+    name:{
         type:String,
-        ref:'jobs',
+        required: true
+    },
+    email:{
+        type:String,
+        required: true
+    },
+    cover:{
+        type:String,
+    },
+    phone:{
+        type:String,
         required: true
     },
     status:{

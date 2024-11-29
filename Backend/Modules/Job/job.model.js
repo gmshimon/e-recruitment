@@ -33,14 +33,14 @@ const jobSchema = mongoose.Schema({
             min:1
         },
         min:{
-            type:Number,
+            type:String,
             required:[true,'Please provide the minimum salary'],
-            min:1
+
         },
         max:{
-            type:Number,
+            type:String,
             required:[true,'Please provide the maximum salary'],
-            min:1
+
         }
     },
     skills:[

@@ -33,7 +33,7 @@ export const getJobList = async (req, res, next) => {
 
     const result = await Job.find(keyword).populate({
       path: 'createdBy',
-      select: 'name email'
+      select: 'name email phone'
     })
     res.status(200).json({
       success: 'success',
@@ -123,7 +123,10 @@ export const getJobID = async (req, res) => {
   try {
     const{id} = req.params
 
-    const result = await Job.findOne({_id: id})
+    const result = await Job.findOne({_id: id}).populate({
+      path: 'createdBy',
+      select: 'name email phone'
+    })
 
     res.status(200).json({
       success: 'success',

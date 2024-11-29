@@ -8,7 +8,7 @@ router.route('/get-my-job').get(verifyAdminToken, getMyJob)
 router.route('/create-job').post(verifyAdminToken,createJob)
 router.route('/').get(getJobList)
 router.route('/delete-job/:id').delete(verifyAdminToken, deleteJob)
-router.route('/:id').get(verifyAdminToken,getJobID)
+router.route('/:id').get(getJobID)
 router.route('/edit-job/:id').put(verifyAdminToken, editJob)
 
 export default router;
