@@ -6,7 +6,9 @@ import { TfiHeadphoneAlt } from 'react-icons/tfi'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import SingleJob from '../../Component/SingleJob/SingleJob'
 import { useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getJobs } from '../../Redux/Slices/jobSlice'
 
 const tabs = [
   {
@@ -60,16 +62,33 @@ const tabs = [
 ]
 
 const Jobs = () => {
-    const [searchParams] = useSearchParams();
-    const category = searchParams.get('category');
-    const initialIndex = tabs.forEach((tab,index)=>{
-        if(tab.name === category){
-            console.log(category);
-            return index;
-        }
-    })
-    const [tabIndex,setTabIndex] = useState(initialIndex || 0);
-    console.log(initialIndex)
+  const {jobs} = useSelector(state => state.job)
+  const [jobByCategory,setJobByCategory] = useState([])
+    // const [searchParams] = useSearchParams();
+    // const category = searchParams.get('category');
+    // const initialIndex = tabs.forEach((tab,index)=>{
+    //     if(tab.name === category){
+    //         console.log(category);
+    //         return index;
+    //     }
+    // })
+    const [tabIndex,setTabIndex] = useState( 0);
+    // console.log(initialIndex)
+
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+      const selectedTab = tabs[tabIndex]
+      const jobsByCategory = jobs.filter(job => job?.job_category === selectedTab.name)
+      console.log(jobsByCategory)
+      setJobByCategory(jobsByCategory)
+    },[jobs, tabIndex])
+
+    useEffect(()=>{
+      dispatch(getJobs())
+    },[dispatch])
+
+    console.log(jobs)
   return (
     <section className='pt-20'>
       <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
@@ -90,8 +109,8 @@ const Jobs = () => {
           <TabPanel key={index}>
             <div className='flex justify-center mt-10'>
               <div className='grid grid-cols-1 md:grid-cols-4  gap-x-10 gap-y-10'>
-                {tabs.map((tab, index) => (
-                  <SingleJob key={index}/>
+                {jobByCategory.map((tab, index) => (
+                  <SingleJob job={tab} key={index}/>
                 ))}
               </div>
             </div>

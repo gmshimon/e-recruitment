@@ -3,8 +3,47 @@ import { CiClock2 } from 'react-icons/ci'
 import { IoBagHandleOutline } from 'react-icons/io5'
 import CompanyDetails from '../../Component/CompanyDetails/CompanyDetails'
 import ApplicationJob from '../../Component/ApplicationJob/ApplicationJob'
+import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getJobID } from '../../Redux/Slices/jobSlice'
+import dateDifference from '../../utilis/formattedDate'
+import './applyJob.css'
+import Swal from 'sweetalert2'
+import { reset } from '../../Redux/Slices/applicationSlice'
 
 const ApplyJob = () => {
+  const {job} = useSelector(state=>state.job)
+  const {createApplicationSuccess,createApplicationError} = useSelector(state=>state.application)
+  const {id} = useParams()
+
+  const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(getJobID({id: id}))
+  },[dispatch, id])
+
+  useEffect(()=>{
+    if(createApplicationError){
+      Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: 'Application Error',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+    }
+    if(createApplicationSuccess){
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Application Successful',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      dispatch(reset())
+    }
+  },[createApplicationError, createApplicationSuccess, dispatch])
   return (
     <section className='pt-20 md:px-0 px-2'>
       <div className='mt-8'>
@@ -15,15 +54,15 @@ const ApplyJob = () => {
             alt=''
           />
         </div>
-        <h1 className='text-3xl font-semibold md:ml-24'>Full Stack Engineer</h1>
+        <h1 className='text-3xl font-semibold md:ml-24'>{job?.title}</h1>
         <div className='flex md:ml-24 mt-2'>
           <div className='flex items-center text-gray-600'>
             <IoBagHandleOutline />
-            <p className='ml-1'>Full Time</p>
+            <p className='ml-1'>{job?.job_type}</p>
           </div>
           <div className='flex items-center text-gray-600 ml-5'>
             <CiClock2 />
-            <p className='ml-1'>Posted 2 years ago</p>
+            <p className='ml-1'>{dateDifference(job?.createdAt)}</p>
           </div>
         </div>
         <div className='my-5 mx-24'>
@@ -33,7 +72,7 @@ const ApplyJob = () => {
           <div className='md:w-[700px] ml-15'>
             <div>
               <h1 className='text-3xl font-semibold'>
-                Welcome to Jthemes Team
+                Welcome to {job?.company_name}
               </h1>
               <p className='mt-5 text-justify text-lg'>
                 The AliStudio Design team has a vision to establish a trusted
@@ -47,56 +86,15 @@ const ApplyJob = () => {
                 such as digital and print forms.
               </p>
             </div>
-            <div className='mt-5'>
+            <div className='mt-10'>
               <h1 className='text-3xl font-semibold'>
-                Welcome to Jthemes Team
+                Job Description
               </h1>
-              <ul className='list-disc ml-5 space-y-1 mt-5 text-lg'>
-                <li>
-                  A portfolio demonstrating well thought through and polished
-                  end to end customer journeys
-                </li>
-                <li>
-                  5+ years of industry experience in interactive design and / or
-                  visual design
-                </li>
-                <li>Excellent interpersonal skills</li>
-                <li>
-                  Aware of trends in mobile, communications, and collaboration
-                </li>
-                <li>
-                  Ability to create highly polished design prototypes, mockups,
-                  and other communication artifacts
-                </li>
-                <li>
-                  The ability to scope and estimate efforts accurately and
-                  prioritize tasks and goals independently
-                </li>
-                <li>History of impacting shipping products with your work</li>
-                <li>
-                  A Bachelor’s Degree in Design (or related field) or equivalent
-                  professional experience
-                </li>
-                <li>
-                  Proficiency in a variety of design tools such as Figma,
-                  Photoshop, Illustrator, and Sketch
-                </li>
-              </ul>
+              <div className='design_container text-lg' dangerouslySetInnerHTML={{__html:job?.description}}/>
             </div>
             <div className='mt-5'>
               <h1 className='text-3xl font-semibold'>Preferred Experience</h1>
-              <ul className='list-disc ml-5 space-y-1 mt-5 text-lg'>
-                <li>
-                  Designing user experiences for enterprise software / services
-                </li>
-                <li>
-                  Designing user experiences for enterprise software / services
-                </li>
-                <li>
-                  Aligning or influencing design thinking with teams working in
-                  other geographies
-                </li>
-              </ul>
+              <div className='design_container text-lg' dangerouslySetInnerHTML={{__html:job?.requirements}}/>
             </div>
             <div className='my-5'>
               <hr />

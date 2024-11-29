@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axiosSecure from '../../utilis/axiosSecure'
+import axios from '../../utilis/axios'
 
 const initialState = {
   jobs: [],
@@ -39,13 +40,18 @@ export const createJob = createAsyncThunk('createJob', async data => {
   return response.data.data
 })
 
+export const getJobs = createAsyncThunk('getJobs', async () => {
+  const response = await axios.get('/job')
+  return response.data.data
+})
+
 export const getMyJob = createAsyncThunk('getMyJob', async () => {
   const response = await axiosSecure.get('/job/get-my-job')
   return response.data.data
 })
 
 export const getJobID = createAsyncThunk('getJobID', async ({id}) => {
-  const response = await axiosSecure.get(`/job/${id}`)
+  const response = await axios.get(`/job/${id}`)
   return response.data.data
 })
 
@@ -55,6 +61,7 @@ export const updateJob = createAsyncThunk('updateJob', async ({id, data}) => {
 })
 
 export const deleteJob = createAsyncThunk('deleteJob', async ({id}) => {
+  // eslint-disable-next-line no-unused-vars
   const response = await axiosSecure.delete(`/job/delete-job/${id}`)
   return id
 })
@@ -227,6 +234,22 @@ const jobSlice = createSlice({
         state.deleteJobLoading = false
         state.deleteJobSuccess = false
         state.deleteJobError = true
+      })
+      .addCase(getJobs.pending, state => {
+        state.getJobLoading = true
+        state.getJobSuccess = false
+        state.getJobError = false
+      })
+      .addCase(getJobs.fulfilled, (state, action) => {
+        state.getJobLoading = false
+        state.getJobSuccess = true
+        state.getJobError = false
+        state.jobs = action.payload
+      })
+      .addCase(getJobs.rejected, state => {
+        state.getJobLoading = false
+        state.getJobSuccess = false
+        state.getJobError = true
       })
   }
 })
