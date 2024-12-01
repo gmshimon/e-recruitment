@@ -9,7 +9,7 @@ const generateToken = userInfo => {
   }
 
   const token = jwt.sign(playLoad, process.env.TOKEN_SECRET, {
-    expiresIn: '3h'
+    expiresIn: '5h'
   })
 
   return token
