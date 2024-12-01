@@ -11,65 +11,87 @@ import { MdProductionQuantityLimits } from 'react-icons/md'
 import { TfiHeadphoneAlt } from 'react-icons/tfi'
 import { BsBank } from 'react-icons/bs'
 import SingleJob from '../SingleJob/SingleJob'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getJobs } from '../../Redux/Slices/jobSlice'
+
+const tabs = [
+  {
+    id: 1,
+    icon: <FaRegFileAlt />,
+    name: 'content Writer',
+    job: 3
+  },
+  {
+    id: 2,
+    icon: <TfiHeadphoneAlt />,
+    name: 'Human Resource',
+    job: 2
+  },
+  {
+    id: 3,
+    icon: <BsBank />,
+    name: 'Finance',
+    job: 1
+  },
+  {
+    id: 4,
+    icon: <GrPersonalComputer />,
+    name: 'Management',
+    job: 0
+  },
+  {
+    id: 5,
+    icon: <FaSearchengin />,
+    name: 'Market Research',
+    job: 1
+  },
+  {
+    id: 6,
+    icon: <FaRegFolderOpen />,
+    name: 'Retail & Product',
+    job: 0
+  },
+  {
+    id: 7,
+    icon: <MdProductionQuantityLimits />,
+    name: 'Market & Sale',
+    job: 0
+  },
+  {
+    id: 8,
+    icon: <GrCloudSoftware />,
+    name: 'Software',
+    job: 0
+  }
+]
+
 
 const LatestJob = () => {
-  const tabs = [
-    {
-      id: 1,
-      icon: <FaRegFileAlt />,
-      name: 'content Writer',
-      job: 3
-    },
-    {
-      id: 2,
-      icon: <TfiHeadphoneAlt />,
-      name: 'Human Resource',
-      job: 2
-    },
-    {
-      id: 3,
-      icon: <BsBank />,
-      name: 'Finance',
-      job: 1
-    },
-    {
-      id: 4,
-      icon: <GrPersonalComputer />,
-      name: 'Management',
-      job: 0
-    },
-    {
-      id: 5,
-      icon: <FaSearchengin />,
-      name: 'Market Research',
-      job: 1
-    },
-    {
-      id: 6,
-      icon: <FaRegFolderOpen />,
-      name: 'Retail & Product',
-      job: 0
-    },
-    {
-      id: 7,
-      icon: <MdProductionQuantityLimits />,
-      name: 'Market & Sale',
-      job: 0
-    },
-    {
-      id: 8,
-      icon: <GrCloudSoftware />,
-      name: 'Software',
-      job: 0
-    }
-  ]
+  const {jobs} = useSelector(state => state.job)
+  const [jobByCategory,setJobByCategory] = useState([])
+  const [tabIndex,setTabIndex] = useState( 0);
+  // console.log(initialIndex)
+
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    const selectedTab = tabs[tabIndex]
+    const jobsByCategory = jobs.filter(job => job?.job_category === selectedTab.name)
+    console.log(jobsByCategory)
+    setJobByCategory(jobsByCategory)
+  },[jobs, tabIndex])
+
+  useEffect(()=>{
+    dispatch(getJobs())
+  },[dispatch])
   return (
     <section className='mt-14'>
       <h1 className='text-center text-3xl font-semibold'>Jobs of the day</h1>
       <p className='text-center text-gray-500 mt-2 mb-5'>
         Search and connect with the right candidates faster{' '}
       </p>
-      <Tabs>
+      <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
         <TabList className='grid md:grid-cols-8 grid-cols-3 md:space-x-4  border-b pb-1'>
           {tabs.map((tab, index) => (
             <Tab
@@ -87,8 +109,8 @@ const LatestJob = () => {
           <TabPanel key={index}>
             <div className='flex justify-center mt-10'>
               <div className='grid grid-cols-1 md:grid-cols-4  gap-x-10 gap-y-10'>
-                {tabs.map((tab, index) => (
-                  <SingleJob key={index}/>
+                {jobByCategory.map((tab, index) => (
+                  <SingleJob job={tab} key={index}/>
                 ))}
               </div>
             </div>

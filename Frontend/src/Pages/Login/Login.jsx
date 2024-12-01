@@ -5,29 +5,29 @@ import { loginUser } from '../../Redux/Slices/userSlice'
 import Swal from 'sweetalert2'
 
 const Login = () => {
-  const {isLoginSuccess,isLoginError} = useSelector(state=>state.user)
+  const { isLoginSuccess, isLoginError } = useSelector(state => state.user)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  useEffect(()=>{
-    if(isLoginError){
+  useEffect(() => {
+    if (isLoginError) {
       Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: "Something went wrong",
+        position: 'top-end',
+        icon: 'error',
+        title: 'Something went wrong',
         showConfirmButton: false,
         timer: 1500
-      });
+      })
     }
-    if(isLoginSuccess){
+    if (isLoginSuccess) {
       navigate('/')
     }
-  },[isLoginError, isLoginSuccess, navigate])
+  }, [isLoginError, isLoginSuccess, navigate])
 
-  const handleLogin =() =>{
+  const handleLogin = () => {
     const data = {
       email,
       password
@@ -73,7 +73,7 @@ const Login = () => {
                   className='grow'
                   name='email'
                   placeholder='Email'
-                  onChange={e=>setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                 />
               </label>
               <div className='flex justify-between'>
@@ -106,10 +106,13 @@ const Login = () => {
                   className='grow'
                   name='password'
                   placeholder='Password'
-                  onChange={e=>setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                 />
               </label>
-              <button className='btn btn-info text-white w-full mt-5 mb-3' onClick={handleLogin}>
+              <button
+                className='btn btn-info text-white w-full mt-5 mb-3'
+                onClick={handleLogin}
+              >
                 Login
               </button>
 

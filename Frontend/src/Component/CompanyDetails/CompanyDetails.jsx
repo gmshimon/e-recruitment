@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import dateDifference from '../../utilis/formattedDate'
 import { getJobs } from '../../Redux/Slices/jobSlice'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 const CompanyDetails = () => {
   const {job,jobs} = useSelector(state=>state.job)
   const [similarJob,setSimilarJob] = useState([])
@@ -20,8 +20,6 @@ const CompanyDetails = () => {
     setSimilarJob(result)
   },[job, jobs])
 
-console.log(similarJob);
-const navigate = useNavigate()
   return (
     <section className='w-6/7'>
       <div className=' border-2 rounded-lg'>

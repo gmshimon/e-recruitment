@@ -1,13 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useEffect } from 'react'
 import { CiClock2, CiLocationOn } from 'react-icons/ci'
 import { IoBagHandleOutline } from 'react-icons/io5'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import dateDifference from '../../utilis/formattedDate'
 
 const SingleJob = ({ job }) => {
-
   return (
     <div className='border-2 border-inherit bg-base-100 w-80 rounded-md cursor-pointer hover:border-black hover:shadow-lg'>
       <h1 className='text-lg font-semibold px-2 my-2'>{job?.title} </h1>
