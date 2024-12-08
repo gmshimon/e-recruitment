@@ -1,32 +1,41 @@
+import { useSelector } from "react-redux"
+
 const ApplicationStatus = () => {
+  const {singleApplication} = useSelector(state=>state.application)
   return (
     <section>
       <h1 className='text-center text-2xl font-bold'>Application Details</h1>
-      <h1 className='text-center italic mt-3 text-xl'>Product Manager</h1>
+      <h1 className='text-center italic mt-3 text-xl'>{singleApplication?.job?.title}</h1>
       <div className='flex justify-center'>
-        <div className='badge badge-accent my-2 p-2'>Accepted</div>
+        {
+          singleApplication?.status === 'applied' ? <div className='badge badge-warning my-2 p-2'>{singleApplication?.status}</div>:
+          singleApplication?.status === 'accepted' ? <div className='badge badge-accent my-2 p-2'>{singleApplication?.status}</div>:
+          singleApplication?.status === 'rejected' && <div className='badge badge-error my-2 p-2'>{singleApplication?.status}</div>
+        }
+        
       </div>
-      <p className='text-black font-bold text-lg text-center'>2023-03-16</p>
+      <p className='text-black font-bold text-lg text-center'>{singleApplication?.createdAt.split('T')[0]}</p>
       <div className='flex flex-col w-full items-center gap-1 mt-4'>
         {/* Job type */}
-        <span className='text-red-500 font-semibold'>Part time</span>
+        <span className='text-red-500 font-semibold'>{singleApplication?.job?.job_type}</span>
         {/* Salary and other details */}
         <span className='text-black font-bold text-lg'>
-          $300-$500{' '}
+          ${singleApplication?.job?.salary?.min.split('.')[0]}-${singleApplication?.job?.salary?.max.split('.')[0]}{' '}
           <span className='text-gray-500 font-normal text-base'>
-            / week. Expert
+            / {singleApplication?.job.salary?.salary}. {singleApplication?.job?.experience}
           </span>
         </span>
       </div>
       <div className='text-center mt-5'>
         {/* Additional details */}
         <p className='text-gray-500 text-lg'>
-          Company: XYZ Corp. <br />
-          Location: Remote
+          Company: {singleApplication?.job?.company_name} <br />
+          Location: {singleApplication?.job?.address?.country}
         </p>
       </div>
       {/* Attachment Section */}
-      <div className='mt-5 flex justify-center'>
+      {
+        singleApplication?.resume && <div className='mt-5 flex justify-center'>
         <div className='flex items-center gap-2 border border-gray-300 rounded-md p-3 shadow-md bg-gray-100'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -44,14 +53,15 @@ const ApplicationStatus = () => {
           </svg>
           <a
             target='_blank'
-            href='http://localhost:5000/images/User/resume/G-M-Shaheen-Shah-Shimon-updated_resume.pdf'
+            href={singleApplication?.resume}
             className='text-blue-600 font-semibold hover:underline'
             rel='noopener noreferrer'
           >
-            G-M-Shaheen-Shah-Shimon-updated_resume.pdf
+            {singleApplication?.resume?.split('/')[6]}
           </a>
         </div>
       </div>
+      }
 
       {/* Messages Section */}
       <h2 className='mt-5 text-center text-xl font-semibold'>Messages</h2>

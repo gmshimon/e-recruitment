@@ -4,16 +4,25 @@ import axiosSecure from '../../utilis/axiosSecure'
 
 const initialState = {
     applications:[],
+    singleApplication:null,
     createApplicationLoading:false,
     createApplicationSuccess:false,
     createApplicationError:false,
     getApplicationsLoading:false,
     getApplicationsSuccess:false,
     getApplicationsError:false,
+    getMyApplicationsLoading:false,
+    getMyApplicationsSuccess:false,
+    getMyApplicationsError:false,
 }
 
 export const createApplication = createAsyncThunk('createApplication',async data=>{
     const response = await axiosSecure.post('/app/create-app',data)
+    return response.data.data
+})
+
+export const getMyApplications = createAsyncThunk('getMyApplications',async()=>{
+    const response = await axiosSecure.get('/app/my-applications')
     return response.data.data
 })
 
@@ -28,6 +37,15 @@ const applicationSlice = createSlice({
             state.getApplicationsLoading = false
             state.getApplicationsSuccess = false
             state.getApplicationsError = false
+            state.getMyApplicationsLoading=false
+            state.getMyApplicationsSuccess=false
+            state.getMyApplicationsError=false
+        },
+        setSingleApplication:(state,action)=>{
+            state.singleApplication = action.payload
+        },
+        setSingleApplicationNull:(state)=>{
+            state.singleApplication = null
         }
     },
     extraReducers:builder => {
@@ -47,9 +65,25 @@ const applicationSlice = createSlice({
             state.createApplicationSuccess = false
             state.createApplicationError = true
         })
+        .addCase(getMyApplications.pending, (state) => {
+            state.getMyApplicationsLoading = true
+            state.getMyApplicationsSuccess = false
+            state.getMyApplicationsError = false
+        })
+        .addCase(getMyApplications.fulfilled, (state, action) => {
+            state.getMyApplicationsLoading = false
+            state.getMyApplicationsSuccess = true
+            state.getMyApplicationsError = false
+            state.applications = action.payload
+        })
+        .addCase(getMyApplications.rejected, (state) => {
+            state.getMyApplicationsLoading = false
+            state.getMyApplicationsSuccess = false
+            state.getMyApplicationsError = true
+        })
     }
 })
 
-export const {reset} = applicationSlice.actions
+export const {reset,setSingleApplication,setSingleApplicationNull} = applicationSlice.actions
 
 export default applicationSlice.reducer
