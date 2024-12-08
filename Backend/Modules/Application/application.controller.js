@@ -56,3 +56,29 @@ export const changeApplicationStatus = async (req,res,next) =>{
         })
     }
 }
+
+export const getMyApplications = async(req,res,next)=>{
+    try {
+        const user = req.user;
+        const applications = await Application.find({candidate:user._id}).populate({
+            path: 'job'
+        }).populate({
+            path: 'candidate',
+            populate:{
+                path:'education'
+            }
+        })
+
+        res.status(200).json({
+            status:"Success",
+            message:"My applications fetched successfully",
+            data:applications
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status:"Failed",
+            message:error.message,
+        })
+    }
+}

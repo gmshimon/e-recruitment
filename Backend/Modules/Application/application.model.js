@@ -20,9 +20,27 @@ const applicationSchema = mongoose.Schema({
         type:String,
         required: true
     },
+    resume:{
+        type:String,
+        required: true
+    },
     cover:{
         type:String,
     },
+    messages:[
+        {
+            text:{
+                type:String,
+            },
+            message_date:{
+                type:String
+            },
+            createdBy:{
+                type:ObjectId,
+                ref:'users'
+            }
+        }
+    ],
     phone:{
         type:String,
         required: true
