@@ -1,4 +1,11 @@
 import Application from "./application.model.js";
+import path from "path";
+import fs from 'fs';
+import { pipeline } from "@huggingface/transformers";
+
+// Load the Hugging Face model pipeline
+const model = pipeline('text-classification', 'bert-base-uncased');
+
 
 export const createApp = async(req,res,next)=>{
     try {
@@ -80,5 +87,13 @@ export const getMyApplications = async(req,res,next)=>{
             status:"Failed",
             message:error.message,
         })
+    }
+}
+
+export const evaluateApplication = async (req,res,next) =>{
+    try {
+        
+    } catch (error) {
+        
     }
 }

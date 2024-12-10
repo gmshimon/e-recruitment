@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
-
+// 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
 const applicationSchema = mongoose.Schema({
     candidate:{
         type:ObjectId,
