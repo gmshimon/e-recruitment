@@ -38,7 +38,6 @@ const ApplicantsList = () => {
     }
   },[applicants, activeTab])
 
-  console.log(applicants)
   return (
     <section className='h-[calc(100vh-19px)]'>
       <h1 className='text-4xl m-7'>{applicants[0]?.job?.title}</h1>

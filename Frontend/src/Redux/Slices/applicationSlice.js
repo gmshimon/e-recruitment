@@ -24,6 +24,12 @@ const initialState = {
     updateApplicationStatusLoading:false,
     updateApplicationStatusSuccess:false,
     updateApplicationStatusError:false,
+    updateApplicationAtsScoreLoading:false,
+    updateApplicationAtsScoreSuccess:false,
+    updateApplicationAtsScoreError:false,
+    deleteApplicationLoading:false,
+    deleteApplicationSuccess:false,
+    deleteApplicationError:false,
 }
 
 export const createApplication = createAsyncThunk('createApplication',async data=>{
@@ -43,6 +49,11 @@ export const getJobApplicants = createAsyncThunk('getJobApplicants',async(id)=>{
 
 export const updateApplicationMessage = createAsyncThunk('updateApplicationMessage',async({id,data})=>{
     const response = await axiosSecure.put(`/app/add-message/${id}`,data)
+    return response.data.data
+})
+
+export const evaluateApplication = createAsyncThunk('evaluateApplication',async(id)=>{
+    const response = await axiosSecure.post(`/app/evaluate-resume/${id}`)
     return response.data.data
 })
 
@@ -69,6 +80,12 @@ const applicationSlice = createSlice({
             state.updateApplicationMessageLoading=false
             state.updateApplicationMessageSuccess=false
             state.updateApplicationMessageError=false
+            state.updateApplicationAtsScoreLoading=false
+            state.updateApplicationAtsScoreSuccess=false
+            state.updateApplicationAtsScoreError=false
+            state.deleteApplicationLoading=false
+            state.deleteApplicationSuccess=false
+            state.deleteApplicationError=false
         },
         setSingleApplication:(state,action)=>{
             state.singleApplication = action.payload
@@ -141,6 +158,21 @@ const applicationSlice = createSlice({
             state.updateApplicationMessageLoading = false
             state.updateApplicationMessageSuccess = false
             state.updateApplicationMessageError = true
+        })
+        .addCase(evaluateApplication.pending, (state) => {
+            state.updateApplicationAtsScoreLoading = true
+            state.updateApplicationAtsScoreSuccess = false
+            state.updateApplicationAtsScoreError = false
+        })
+        .addCase(evaluateApplication.fulfilled, (state) => {
+            state.updateApplicationAtsScoreLoading = false
+            state.updateApplicationAtsScoreSuccess = true
+            state.updateApplicationAtsScoreError = false
+        })
+        .addCase(evaluateApplication.rejected, (state) => {
+            state.updateApplicationAtsScoreLoading = false
+            state.updateApplicationAtsScoreSuccess = false
+            state.updateApplicationAtsScoreError = true
         })
     }
 })

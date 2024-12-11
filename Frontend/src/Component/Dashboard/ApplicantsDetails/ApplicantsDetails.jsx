@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateApplicationMessage } from '../../../Redux/Slices/applicationSlice'
+import { evaluateApplication, updateApplicationMessage } from '../../../Redux/Slices/applicationSlice'
 
 const ApplicantsDetails = () => {
-//   const { user } = useSelector(state => state.user)
-  const { singleApplication,updateApplicationMessageLoading  } = useSelector(state => state.application)
+  //   const { user } = useSelector(state => state.user)
+  const { singleApplication, updateApplicationMessageLoading,updateApplicationAtsScoreLoading } = useSelector(
+    state => state.application
+  )
   const [newMessage, setNewMessage] = useState('')
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-  const handleCalculateATS = () => {
-    console.log(singleApplication)
+  const handleCalculateATS = (id) => {
+    dispatch(evaluateApplication(id))
   }
 
   const handleShortList = () => {
@@ -25,18 +27,17 @@ const ApplicantsDetails = () => {
     console.log(singleApplication)
   }
 
-  const handleAddNewMessage = (id) => {
+  const handleAddNewMessage = id => {
     const today = new Date()
     const day = String(today.getDate()).padStart(2, '0') // Add leading zero if needed
     const month = String(today.getMonth() + 1).padStart(2, '0') // Months are zero-indexed
     const year = today.getFullYear()
-    
+
     const newMessageData = {
       text: newMessage,
-      message_date: `${day}-${month}-${year}`,
+      message_date: `${day}-${month}-${year}`
     }
-    dispatch(updateApplicationMessage({id,data:newMessageData}))
-    console.log(newMessageData)
+    dispatch(updateApplicationMessage({ id, data: newMessageData }))
   }
   return (
     <section>
@@ -65,12 +66,14 @@ const ApplicantsDetails = () => {
         )}
       </div>
       <div className='flex justify-center my-3'>
-        <button
-          onClick={() => handleCalculateATS()}
-          className='btn btn-primary btn-sm'
-        >
-          Calculate ATS
-        </button>
+        {
+            updateApplicationAtsScoreLoading? '...Loading':<button
+            onClick={() => handleCalculateATS(singleApplication?._id)}
+            className='btn btn-primary btn-sm'
+          >
+            Calculate ATS
+          </button>
+        }
       </div>
       {/* button section */}
       <div className='flex justify-center my-4'>
@@ -197,11 +200,11 @@ const ApplicantsDetails = () => {
         ></textarea>
 
         <button
-        disabled={updateApplicationMessageLoading}
+          disabled={updateApplicationMessageLoading}
           className='btn btn-primary btn-sm'
-          onClick={()=>handleAddNewMessage(singleApplication?._id)}
+          onClick={() => handleAddNewMessage(singleApplication?._id)}
         >
-          {updateApplicationMessageLoading?'...loading':'Add'}
+          {updateApplicationMessageLoading ? '...loading' : 'Add'}
         </button>
       </div>
     </section>
