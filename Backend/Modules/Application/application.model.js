@@ -27,6 +27,15 @@ const applicationSchema = mongoose.Schema({
     cover:{
         type:String,
     },
+    application_status:{
+        type:String,
+        enum: ['pending', 'interviewing', 'offered', 'rejected'],
+        default: 'pending'
+    },
+    ats_score:{
+        type:Number,
+        default: 0
+    },
     messages:[
         {
             text:{
