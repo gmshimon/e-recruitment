@@ -13,6 +13,8 @@ import MyApplication from '../Pages/Dashboard/MyApplication/MyApplication'
 import PostJobs from '../Pages/Dashboard/PostJobs/PostJobs'
 import MyJobs from '../Pages/Dashboard/MyJobs/MyJobs'
 import EditJobs from '../Pages/Dashboard/EditJobs/EditJobs'
+import JobApplicants from '../Pages/Dashboard/JobApplicants/JobApplicants'
+import ApplicantsList from '../Pages/Dashboard/ApplicantsList/ApplicantsList'
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +62,14 @@ export const router = createBrowserRouter([
       {
         path: 'applications',
         element: <MyApplication />
+      },
+      {
+        path:'applicants',
+        element:<JobApplicants/>
+      },
+      {
+        path:'job/applicants/:id',
+        element:<ApplicantsList/>
       },
       {
         path: 'post-job',

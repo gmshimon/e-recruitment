@@ -57,7 +57,7 @@ const adminNavbarOptions =[
   },
   {
     label: 'Applicants',
-    to: '/dashboard/applications',
+    to: '/dashboard/applicants',
     icon: <MdOutlineSettingsApplications />
   },
 ]
