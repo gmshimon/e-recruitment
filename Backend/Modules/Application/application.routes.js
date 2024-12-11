@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.route('/get-applicants/:job_id').get(verifyAdminToken,getApplicantsOfJob)
 router.route('/update-status/:id').put(verifyAdminToken,changeApplicationStatus)
+router.route('/evaluate-resume/:id').post(verifyAdminToken,evaluateApplication)
 router.route('/add-message/:id').put(verifyAdminToken,addNewMessage)
 router.route('/my-applications').get(verifyToken,getMyApplications)
 router.route('/create-app').post(verifyToken,createApp);
-router.route('/evaluate-resume').post(evaluateApplication)
 
 export default router;

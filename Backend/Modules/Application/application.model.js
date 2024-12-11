@@ -32,6 +32,11 @@ const applicationSchema = mongoose.Schema({
         enum: ['pending', 'interviewing', 'offered', 'rejected'],
         default: 'pending'
     },
+    status:{
+        type:String,
+        enum: ['applied', 'interviewing', 'offered', 'rejected'],
+        default: 'applied'
+    },
     ats_score:{
         type:Number,
         default: 0
@@ -53,11 +58,6 @@ const applicationSchema = mongoose.Schema({
     phone:{
         type:String,
         required: true
-    },
-    status:{
-        type:String,
-        enum: ['applied', 'interviewing', 'offered', 'rejected'],
-        default: 'applied'
     }
 },{
     timestamps:true
