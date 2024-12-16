@@ -163,7 +163,8 @@ const MyProfile = () => {
               type='text'
               placeholder='Full Name'
               className='p-2 rounded-lg w-full border border-black focus:border-black'
-              value={user?.name}
+              value={name}
+              onChange={e=>setName(e.target.value)}
             />
           </label>
         </div>
@@ -192,6 +193,7 @@ const MyProfile = () => {
                 placeholder='Full Name'
                 className='p-2 rounded-lg w-full border border-black focus:border-black'
                 value={user?.phone}
+                onChange={e=>setPhone(e.target.value)}
               />
             </label>
           </div>

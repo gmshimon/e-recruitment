@@ -1,19 +1,15 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { evaluateApplication, updateApplicationMessage } from '../../../Redux/Slices/applicationSlice'
+import { updateApplicationMessage } from '../../../Redux/Slices/applicationSlice'
 
 const ApplicantsDetails = () => {
   //   const { user } = useSelector(state => state.user)
-  const { singleApplication, updateApplicationMessageLoading,updateApplicationAtsScoreLoading } = useSelector(
+  const { singleApplication, updateApplicationMessageLoading } = useSelector(
     state => state.application
   )
   const [newMessage, setNewMessage] = useState('')
 
   const dispatch = useDispatch()
-
-  const handleCalculateATS = (id) => {
-    dispatch(evaluateApplication(id))
-  }
 
   const handleShortList = () => {
     console.log(singleApplication)
@@ -64,16 +60,6 @@ const ApplicantsDetails = () => {
             </div>
           )
         )}
-      </div>
-      <div className='flex justify-center my-3'>
-        {
-            updateApplicationAtsScoreLoading? '...Loading':<button
-            onClick={() => handleCalculateATS(singleApplication?._id)}
-            className='btn btn-primary btn-sm'
-          >
-            Calculate ATS
-          </button>
-        }
       </div>
       {/* button section */}
       <div className='flex justify-center my-4'>

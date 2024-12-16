@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import {
+  evaluateApplication,
   getJobApplicants,
   setSingleApplication,
   setSingleApplicationNull
@@ -10,7 +11,7 @@ import { FcViewDetails } from 'react-icons/fc'
 import ApplicantsDetails from '../../../Component/Dashboard/ApplicantsDetails/ApplicantsDetails'
 
 const ApplicantsList = () => {
-  const { applicants } = useSelector(state => state.application)
+  const { applicants ,updateApplicationAtsScoreLoading} = useSelector(state => state.application)
   const [filteredApplicants,setFilteredApplicants] = useState()
   const [activeTab, setActiveTab] = useState('All')
 
@@ -38,6 +39,10 @@ const ApplicantsList = () => {
     }
   },[applicants, activeTab])
 
+  const handleCalculateATS = () => {
+    dispatch(evaluateApplication(id))
+  }
+
   return (
     <section className='h-[calc(100vh-19px)]'>
       <h1 className='text-4xl m-7'>{applicants[0]?.job?.title}</h1>
@@ -56,7 +61,17 @@ const ApplicantsList = () => {
           </button>
         ))}
       </div>
-      <div className='bg-white h-[550px] mx-7 mt-10 px-10 py-10 rounded-xl'>
+      <div className='flex px-10 mt-5'>
+        {
+            updateApplicationAtsScoreLoading? '...Loading':<button
+            onClick={() => handleCalculateATS()}
+            className='btn btn-primary btn-sm'
+          >
+            Calculate ATS
+          </button>
+        }
+      </div>
+      <div className='bg-white h-[550px] mx-7 mt-5 px-10 py-10 rounded-xl'>
         <div className='overflow-x-auto '>
           <table className='table '>
             {/* head */}
@@ -65,6 +80,7 @@ const ApplicantsList = () => {
                 <th>Applicants</th>
                 <th>Date</th>
                 <th>Resume</th>
+                <th>ATS</th>
                 <th>Details</th>
               </tr>
             </thead>
@@ -104,6 +120,7 @@ const ApplicantsList = () => {
                       Resume
                     </a>
                   </td>
+                  <td>{app?.ats_score}</td>
                   <th>
                     <button
                       className='btn btn-ghost btn-xs text-2xl'
