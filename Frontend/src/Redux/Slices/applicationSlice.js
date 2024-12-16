@@ -57,6 +57,11 @@ export const evaluateApplication = createAsyncThunk('evaluateApplication',async(
     return response.data.data
 })
 
+export const updateApplicationStatus = createAsyncThunk('updateApplicationStatus',async ({id,data})=>{
+    const response = await axiosSecure.put(`/app/update-status/${id}`,data)
+    return response.data.data
+})
+
 const applicationSlice = createSlice({
     name:'application',
     initialState,
@@ -173,6 +178,17 @@ const applicationSlice = createSlice({
             state.updateApplicationAtsScoreLoading = false
             state.updateApplicationAtsScoreSuccess = false
             state.updateApplicationAtsScoreError = true
+        })
+        .addCase(updateApplicationStatus.pending,(state)=>{
+            state.updateApplicationStatusLoading = true
+            state.updateApplicationStatusSuccess = false
+            state.updateApplicationStatusError = false
+        })
+        .addCase(updateApplicationStatus.fulfilled,(state,action)=>{
+            state.updateApplicationStatusLoading = false
+            state.updateApplicationStatusSuccess = true
+            state.updateApplicationStatusError = false
+            state.singleApplication = action.payload
         })
     }
 })

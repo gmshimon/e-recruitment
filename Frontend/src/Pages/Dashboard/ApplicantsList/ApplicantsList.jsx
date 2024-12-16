@@ -44,7 +44,7 @@ const ApplicantsList = () => {
   }
 
   return (
-    <section className='h-[calc(100vh-19px)]'>
+    <section className=''>
       <h1 className='text-4xl m-7'>{applicants[0]?.job?.title}</h1>
       <div className='flex space-x-4 items-center py-2 px-4'>
         {tabs.map(tab => (
@@ -71,7 +71,7 @@ const ApplicantsList = () => {
           </button>
         }
       </div>
-      <div className='bg-white h-[550px] mx-7 mt-5 px-10 py-10 rounded-xl'>
+      <div className='bg-white h-[550px] mx-7 my-5 px-10 py-10 rounded-xl'>
         <div className='overflow-x-auto '>
           <table className='table '>
             {/* head */}
@@ -103,7 +103,7 @@ const ApplicantsList = () => {
                             {app.application_status}
                           </div>:app.application_status==='offered'?<div className='badge badge-success mt-2 badge-sm p-2'>
                             {app.application_status}
-                          </div>:app.application_status==='pending'&&<div className='badge badge-error mt-2 badge-sm p-2'>
+                          </div>:app.application_status==='rejected'&&<div className='badge badge-error mt-2 badge-sm p-2'>
                             {app.application_status}
                           </div>
                         }

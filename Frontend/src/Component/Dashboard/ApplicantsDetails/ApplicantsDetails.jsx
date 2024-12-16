@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateApplicationMessage } from '../../../Redux/Slices/applicationSlice'
+import { updateApplicationMessage, updateApplicationStatus } from '../../../Redux/Slices/applicationSlice'
 
 const ApplicantsDetails = () => {
   //   const { user } = useSelector(state => state.user)
-  const { singleApplication, updateApplicationMessageLoading } = useSelector(
+  const { singleApplication, updateApplicationMessageLoading,updateApplicationStatusLoading } = useSelector(
     state => state.application
   )
   const [newMessage, setNewMessage] = useState('')
@@ -12,14 +12,29 @@ const ApplicantsDetails = () => {
   const dispatch = useDispatch()
 
   const handleShortList = () => {
+    const data={
+      application_status: 'interviewing',
+      status:'interviewing'
+    }
+    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
     console.log(singleApplication)
   }
 
   const handleOfferJob = () => {
+    const data={
+      application_status: 'offered',
+      status:'offered'
+    }
+    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
     console.log(singleApplication)
   }
 
   const handleRejectJob = () => {
+    const data={
+      application_status: 'rejected',
+      status:'rejected'
+    }
+    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
     console.log(singleApplication)
   }
 
@@ -54,7 +69,7 @@ const ApplicantsDetails = () => {
             {singleApplication?.application_status}
           </div>
         ) : (
-          singleApplication?.application_status === 'pending' && (
+          singleApplication?.application_status === 'rejected' && (
             <div className='badge badge-error mt-2 badge-sm p-2'>
               {singleApplication?.application_status}
             </div>
@@ -63,8 +78,11 @@ const ApplicantsDetails = () => {
       </div>
       {/* button section */}
       <div className='flex justify-center my-4'>
-        <div className='mr-3'>
+        {
+          updateApplicationStatusLoading? <p>Loading...</p>:<>
+          <div className='mr-3'>
           <button
+          disabled={singleApplication?.application_status === 'interviewing'}
             onClick={() => handleShortList()}
             className='btn btn-accent btn-sm'
           >
@@ -73,6 +91,7 @@ const ApplicantsDetails = () => {
         </div>
         <div className='mr-3'>
           <button
+          disabled={singleApplication?.application_status === 'offered'}
             onClick={() => handleOfferJob()}
             className='btn btn-success btn-sm'
           >
@@ -81,12 +100,15 @@ const ApplicantsDetails = () => {
         </div>
         <div>
           <button
+          disabled={singleApplication?.application_status === 'rejected'}
             onClick={() => handleRejectJob()}
             className='btn btn-error btn-sm'
           >
-            Offer Job
+            Reject
           </button>
         </div>
+          </>
+        }
       </div>
       <h3 className='text-lg font-medium text-gray-700 mb-2 text-center mt-2'>
         Skills
@@ -161,7 +183,7 @@ const ApplicantsDetails = () => {
       <div className=' max-h-96 overflow-y-auto'>
         <div className='mt-4 space-y-4'>
           {/* Message 1 */}
-          {singleApplication?.messages.map((message, index) => (
+          {singleApplication?.messages?.map((message, index) => (
             <div
               key={index}
               className='flex flex-col bg-gray-100 p-4 rounded-lg shadow-md'
