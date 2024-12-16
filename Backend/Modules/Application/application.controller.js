@@ -56,11 +56,26 @@ export const changeApplicationStatus = async (req, res, next) => {
         $set: data
       }
     )
-
+    const getResult = await Application.findOne({_id:id}).populate({
+      path: 'job'
+    })
+    .populate({
+      path: 'candidate',
+      populate: {
+        path: 'education'
+      }
+    })
+    .populate({
+      path: 'messages',
+      populate: {
+        path: 'createdBy',
+        select: 'name'
+      }
+    })
     res.status(200).json({
       status: 'Success',
       message: 'Application status updated successfully',
-      data: result
+      data: getResult
     })
   } catch (error) {
     res.status(400).json({
@@ -96,11 +111,12 @@ export const addNewMessage = async (req, res, next) => {
       }
     )
 
-    const getApplication = await Application.findOne({ _id: id }).populate({
-      path: 'job'
-    })
+    const getApplication = await Application.findOne({ _id: id })
       .populate({
-        path:'messages',
+        path: 'job'
+      })
+      .populate({
+        path: 'messages',
         populate: {
           path: 'createdBy',
           select: 'name'
@@ -186,50 +202,77 @@ export const getMyApplications = async (req, res, next) => {
 export const evaluateApplication = async (req, res, next) => {
   try {
     const { id } = req.params
-    const isApplicationExist = await Application.findOne({ _id: id })
+    const applicants = await Application.find({ job: id })
+      .populate({
+        path: 'job'
+      })
+      .populate({
+        path: 'candidate'
+      })
 
-    if (!isApplicationExist) {
+    if (!applicants) {
       return res.status(404).json({
         status: 'Failed',
         message: 'Application not found'
       })
     }
-    const url = isApplicationExist?.resume
-    // // Extract the file name from the URL
-    const fileName = url.split('/')[6]
-    if (!fileName) {
-      throw new Error('Invalid URL format. Unable to extract file name.')
-    }
 
-    // Construct file path
-    const filePath = path.join(__dirname, '../../images/User/resume/', fileName)
+    applicants?.forEach(async item => {
+      const url = item?.resume
+      // // Extract the file name from the URL
+      const fileName = url.split('/')[6]
+      if (!fileName) {
+        throw new Error('Invalid URL format. Unable to extract file name.')
+      }
 
-    // Check if the file exists
-    if (!fs.existsSync(filePath)) {
-      throw new Error(`File not found at path: ${filePath}`)
-    }
+      // Construct file path
+      const filePath = path.join(
+        __dirname,
+        '../../images/User/resume/',
+        fileName
+      )
 
-    const file = await ResumeParser.parseResumeUrl(url)
+      // Check if the file exists
+      if (!fs.existsSync(filePath)) {
+        throw new Error(`File not found at path: ${filePath}`)
+      }
 
-    const skillsList = parseSkills(file.skills)
+      const file = await ResumeParser.parseResumeUrl(url)
+      console.log(file)
+      const skillsList = parseSkills(file.skills)
 
-    // const educationString = file.education.join('');
-    const educationList = parseEducation(file.education)
-    const workExperienceList = parseExperience(file.experience)
-    const data = {
-      jobDescription: isApplicationExist?.job?.description,
-      fullName: isApplicationExist?.candidate?.name,
-      skills: skillsList,
-      education: educationList.slice(0, 4),
-      workExperience: workExperienceList
-    }
-    const result = await ATSChecker(data)
-    console.log(result);
+      // const educationString = file.education.join('');
+      const educationList = parseEducation(file.education)
+      const workExperienceList = file.experience
+        ? parseExperience(file.experience)
+        : 'null'
+      const data = {
+        jobDescription: item?.job?.requirements,
+        fullName: item?.candidate?.name,
+        skills: skillsList,
+        education: educationList.slice(0, 4),
+        workExperience: workExperienceList
+      }
+      const result = await ATSChecker(data)
+
+      const updateApplicant = await Application.updateOne(
+        {_id:item?.id},
+        {
+          $set:{
+            ats_score:parseFloat(result)
+          }
+        }
+      )
+      console.log(result)
+    })
+
+    const getApplicants = await Application.find({ job: id }).sort({ats_score:1})
+
     // Respond with the analysis result
     res.status(200).json({
       status: 'Success',
       message: 'Resume evaluated successfully',
-      data:result
+      data: getApplicants
     })
   } catch (error) {
     console.error('Error:', error.message)
