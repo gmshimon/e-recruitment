@@ -13,6 +13,8 @@ import { FaDownload } from 'react-icons/fa'
 import { BsCalendar2DateFill } from 'react-icons/bs'
 import InterviewDetails from '../../../Component/Dashboard/InterviewDetails/InterviewDetails'
 import * as XLSX from "xlsx";
+import { RiFeedbackFill } from 'react-icons/ri'
+import InterviewFeedBack from '../../../Component/InterviewFeedBack/InterviewFeedBack'
 
 const ApplicantsList = () => {
   const { applicants,singleApplication, updateApplicationAtsScoreLoading } = useSelector(
@@ -161,6 +163,7 @@ const handleDownload = () =>{
                 <th>Resume</th>
                 <th>ATS</th>
                 <th>Details</th>
+                {activeTab === "Short Listed"&& <th>Feedback</th>}
               </tr>
             </thead>
             <tbody>
@@ -234,6 +237,20 @@ const handleDownload = () =>{
                       </button>
                     )}
                   </th>
+                  {
+                    activeTab === 'Short Listed' && (
+                      <td>
+                        <button className='btn btn-ghost btn-xs text-2xl' title="Interview feedback"
+                          onClick={()=>{
+                            dispatch(setSingleApplication(app))
+                            document.getElementById('my_modal_8').showModal()
+                          }}
+                        >
+                        <RiFeedbackFill />
+                        </button>
+                      </td>
+                    )
+                  }
                 </tr>
               ))}
             </tbody>
@@ -265,6 +282,20 @@ const handleDownload = () =>{
               </button>
             </form>
             <InterviewDetails/>
+          </div>
+        </dialog>
+        <dialog id='my_modal_8' className='modal'>
+          <div className='modal-box w-full md:max-w-2xl'>
+            <form method='dialog'>
+              {/* if there is a button in form, it will close the modal */}
+              <button
+                onClick={() => dispatch(setSingleApplicationNull())}
+                className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+              >
+                ✕
+              </button>
+            </form>
+            <InterviewFeedBack/>
           </div>
         </dialog>
       </div>

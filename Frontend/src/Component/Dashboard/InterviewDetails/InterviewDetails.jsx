@@ -122,6 +122,7 @@ const dispatch = useDispatch()
               <span className='font-semibold'>Meeting link </span>
             </div>
             <input
+            value={meetingLink}
               type='text'
               placeholder='Online Meeting link'
               className='p-2 rounded-lg w-full border border-black focus:border-black'
