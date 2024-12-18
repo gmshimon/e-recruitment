@@ -4,31 +4,6 @@ import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import { updateApplicationStatus } from '../../../Redux/Slices/applicationSlice'
 
-// interview:{
-//     date:{
-//         type:String,
-//         required: true
-//     },
-//     time:{
-//         type:String,
-//         required: true
-//     },
-//     type:{
-//         type:String,
-//         enum:['Online','Offline'],
-//         default:'Online'
-//     },
-//     location:{
-//         type:String,
-//     },
-//     phone:{
-//         type:String,
-//     },
-//     score:{
-//         type:Number,
-//     }
-// },
-
 const InterviewDetails = () => {
   const [value, setValue] = useState('')
   const [time, setTime] = useState()

@@ -26,7 +26,6 @@ const ApplicantsDetails = () => {
       status:'offered'
     }
     dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
-    console.log(singleApplication)
   }
 
   const handleRejectJob = () => {
@@ -35,7 +34,6 @@ const ApplicantsDetails = () => {
       status:'rejected'
     }
     dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
-    console.log(singleApplication)
   }
 
   const handleAddNewMessage = id => {

@@ -12,6 +12,7 @@ import ApplicantsDetails from '../../../Component/Dashboard/ApplicantsDetails/Ap
 import { FaDownload } from 'react-icons/fa'
 import { BsCalendar2DateFill } from 'react-icons/bs'
 import InterviewDetails from '../../../Component/Dashboard/InterviewDetails/InterviewDetails'
+import * as XLSX from "xlsx";
 
 const ApplicantsList = () => {
   const { applicants,singleApplication, updateApplicationAtsScoreLoading } = useSelector(
@@ -19,6 +20,7 @@ const ApplicantsList = () => {
   )
   const [filteredApplicants, setFilteredApplicants] = useState()
   const [newApplicants, setNewApplicants] = useState()
+  const [formattedData,setFormattedData] = useState()
   const [activeTab, setActiveTab] = useState('All')
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +76,28 @@ const ApplicantsList = () => {
     }
   }
 
+const handleDownload = () =>{
+  const data = filteredApplicants?.map(item=>({
+    applicant:item?.candidate?.name,
+    interview_data:item?.interview?.date,
+    interview_type:item?.interview?.type,
+    details:item?.interview?.location,
+    resume_link: {
+      t: "s",
+      v: 'Resume', // Display text for the cell
+      l: { Target: item?.resume }, // Hyperlink target (URL)
+    },
+  }))
+  const worksheet = XLSX.utils.json_to_sheet(data, {
+    header: ["applicant", "interview_date", "interview_type", "details", "resume_link"],
+  });
+  const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Interviews");
+
+      // Generate and download Excel file
+      XLSX.writeFile(workbook, `InterviewList-${newApplicants[0]?.job?.title}.xlsx`);
+}
+
   return (
     <section className=''>
       <div className='flex items-center justify-between'>
@@ -85,12 +109,14 @@ const ApplicantsList = () => {
             className='p-1 border border-black rounded-md hover:border hover:border-black'
             onChange={e => handleSearchApplicant(e.target.value)}
           />
-          <button
-            onClick={() => dispatch(setSingleApplication(id))}
+          {
+            activeTab==='Short Listed'&&<button
+            onClick={() => handleDownload()}
             className='btn btn-accent btn-sm ml-2'
           >
             <FaDownload />
           </button>
+          }
         </div>
       </div>
       <div className='flex space-x-4 items-center py-2 px-4'>
