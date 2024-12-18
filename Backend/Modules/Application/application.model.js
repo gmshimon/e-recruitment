@@ -41,6 +41,33 @@ const applicationSchema = mongoose.Schema({
         type:Number,
         default: 0
     },
+    interview:{
+        date:{
+            type:String,
+            required: true
+        },
+        time:{
+            type:String,
+            required: true
+        },
+        type:{
+            type:String,
+            enum:['Online','Offline'],
+            default:'Online'
+        },
+        location:{
+            type:String,
+        },
+        phone:{
+            type:String,
+        },
+        score:{
+            type:Number,
+        }
+    },
+    review:{
+        type:String,
+    },
     messages:[
         {
             text:{
