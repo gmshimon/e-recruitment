@@ -42,7 +42,7 @@ const MyApplication = () => {
                           <div className='badge badge-warning my-2 p-2'>
                             {app?.status}
                           </div>
-                        ) : app?.status === 'accepted' ? (
+                        ) : app?.status === 'interviewing' ? (
                           <div className='badge badge-accent my-2 p-2'>
                             {app?.status}
                           </div>

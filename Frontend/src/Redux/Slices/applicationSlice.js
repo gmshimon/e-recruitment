@@ -157,6 +157,7 @@ const applicationSlice = createSlice({
             state.updateApplicationMessageLoading = false
             state.updateApplicationMessageSuccess = true
             state.updateApplicationMessageError = false
+            console.log(action.payload)
             state.singleApplication = action.payload
         })
         .addCase(updateApplicationMessage.rejected, (state) => {
@@ -169,10 +170,11 @@ const applicationSlice = createSlice({
             state.updateApplicationAtsScoreSuccess = false
             state.updateApplicationAtsScoreError = false
         })
-        .addCase(evaluateApplication.fulfilled, (state) => {
+        .addCase(evaluateApplication.fulfilled, (state,action) => {
             state.updateApplicationAtsScoreLoading = false
             state.updateApplicationAtsScoreSuccess = true
             state.updateApplicationAtsScoreError = false
+            state.applications = action.payload
         })
         .addCase(evaluateApplication.rejected, (state) => {
             state.updateApplicationAtsScoreLoading = false
