@@ -55,6 +55,9 @@ const ApplicantsDetails = () => {
       <h1 className='text-center text-xl font-semibold'>
         {singleApplication?.candidate?.name}
       </h1>
+      <p className='text-center'>
+        ATS Score: {singleApplication?.ats_score}
+      </p>
       <div className='flex justify-center'>
         {singleApplication?.application_status === 'pending' ? (
           <div className='badge badge-warning mt-2 badge-sm p-2'>

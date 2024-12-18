@@ -9,43 +9,90 @@ import {
 } from '../../../Redux/Slices/applicationSlice'
 import { FcViewDetails } from 'react-icons/fc'
 import ApplicantsDetails from '../../../Component/Dashboard/ApplicantsDetails/ApplicantsDetails'
+import { FaDownload } from 'react-icons/fa'
+import { BsCalendar2DateFill } from 'react-icons/bs'
+import InterviewDetails from '../../../Component/Dashboard/InterviewDetails/InterviewDetails'
 
 const ApplicantsList = () => {
-  const { applicants ,updateApplicationAtsScoreLoading} = useSelector(state => state.application)
-  const [filteredApplicants,setFilteredApplicants] = useState()
+  const { applicants,singleApplication, updateApplicationAtsScoreLoading } = useSelector(
+    state => state.application
+  )
+  const [filteredApplicants, setFilteredApplicants] = useState()
+  const [newApplicants, setNewApplicants] = useState()
   const [activeTab, setActiveTab] = useState('All')
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const tabs = ['All', 'Short Listed','Offered','Rejected']
+  const tabs = ['All', 'Short Listed', 'Offered', 'Rejected']
   const { id } = useParams()
 
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getJobApplicants(id))
-  }, [dispatch, id])
+  }, [dispatch, id,singleApplication])
 
-  useEffect(()=>{
-    if(activeTab==='All'){
-        setFilteredApplicants(applicants)
+  useEffect(() => {
+    if (activeTab === 'All') {
+      setNewApplicants(applicants)
+      setFilteredApplicants(applicants)
+    } else if (activeTab === 'Short Listed') {
+      setFilteredApplicants(
+        applicants.filter(app => app.application_status === 'interviewing')
+      )
+      setNewApplicants(
+        applicants.filter(app => app.application_status === 'interviewing')
+      )
+    } else if (activeTab === 'Offered') {
+      setFilteredApplicants(
+        applicants.filter(app => app.application_status === 'offered')
+      )
+      setNewApplicants(
+        applicants.filter(app => app.application_status === 'offered')
+      )
+    } else if (activeTab === 'Rejected') {
+      setFilteredApplicants(
+        applicants.filter(app => app.application_status === 'rejected')
+      )
+      setNewApplicants(
+        applicants.filter(app => app.application_status === 'rejected')
+      )
     }
-    else if(activeTab==='Short Listed'){
-        setFilteredApplicants(applicants.filter(app=>app.application_status==='interviewing'))
-    }
-    else if(activeTab==='Offered'){
-        setFilteredApplicants(applicants.filter(app=>app.application_status==='offered'))
-    }
-    else if(activeTab==='Rejected'){
-        setFilteredApplicants(applicants.filter(app=>app.application_status==='rejected'))
-    }
-  },[applicants, activeTab])
+  }, [applicants, activeTab])
 
   const handleCalculateATS = () => {
     dispatch(evaluateApplication(id))
   }
 
+  const handleSearchApplicant = e => {
+    if (e == '' || e == undefined) {
+      setFilteredApplicants(newApplicants)
+    } else {
+      setFilteredApplicants(
+        filteredApplicants.filter(app =>
+          app.name.toLowerCase().includes(e.toLowerCase())
+        )
+      )
+    }
+  }
+
   return (
     <section className=''>
-      <h1 className='text-4xl m-7'>{applicants[0]?.job?.title}</h1>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-4xl m-7'>{applicants[0]?.job?.title}</h1>
+        <div className='md:mr-10'>
+          <input
+            type='text'
+            placeholder='Search'
+            className='p-1 border border-black rounded-md hover:border hover:border-black'
+            onChange={e => handleSearchApplicant(e.target.value)}
+          />
+          <button
+            onClick={() => dispatch(setSingleApplication(id))}
+            className='btn btn-accent btn-sm ml-2'
+          >
+            <FaDownload />
+          </button>
+        </div>
+      </div>
       <div className='flex space-x-4 items-center py-2 px-4'>
         {tabs.map(tab => (
           <button
@@ -62,14 +109,20 @@ const ApplicantsList = () => {
         ))}
       </div>
       <div className='flex px-10 mt-5'>
-        {
-            updateApplicationAtsScoreLoading? '...Loading':<button
-            onClick={() => handleCalculateATS()}
-            className='btn btn-primary btn-sm'
-          >
-            Calculate ATS
-          </button>
-        }
+        {activeTab === 'All' && (
+          <>
+            {updateApplicationAtsScoreLoading ? (
+              '...Loading'
+            ) : (
+              <button
+                onClick={() => handleCalculateATS()}
+                className='btn btn-primary btn-sm'
+              >
+                Calculate ATS
+              </button>
+            )}
+          </>
+        )}
       </div>
       <div className='bg-white h-[550px] mx-7 my-5 px-10 py-10 rounded-xl'>
         <div className='overflow-x-auto '>
@@ -96,17 +149,25 @@ const ApplicantsList = () => {
                           {app?.candidate?.email}
                         </span>
                         <br />
-                        {
-                            app.application_status==='pending'?<div className='badge badge-warning mt-2 badge-sm p-2'>
-                            {app.application_status}
-                          </div>:app.application_status==='interviewing'?<div className='badge badge-accent mt-2 badge-sm p-2'>
-                            {app.application_status}
-                          </div>:app.application_status==='offered'?<div className='badge badge-success mt-2 badge-sm p-2'>
-                            {app.application_status}
-                          </div>:app.application_status==='rejected'&&<div className='badge badge-error mt-2 badge-sm p-2'>
+                        {app.application_status === 'pending' ? (
+                          <div className='badge badge-warning mt-2 badge-sm p-2'>
                             {app.application_status}
                           </div>
-                        }
+                        ) : app.application_status === 'interviewing' ? (
+                          <div className='badge badge-accent mt-2 badge-sm p-2'>
+                            {app.application_status}
+                          </div>
+                        ) : app.application_status === 'offered' ? (
+                          <div className='badge badge-success mt-2 badge-sm p-2'>
+                            {app.application_status}
+                          </div>
+                        ) : (
+                          app.application_status === 'rejected' && (
+                            <div className='badge badge-error mt-2 badge-sm p-2'>
+                              {app.application_status}
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </td>
@@ -122,16 +183,30 @@ const ApplicantsList = () => {
                   </td>
                   <td>{app?.ats_score}</td>
                   <th>
-                    <button
-                      className='btn btn-ghost btn-xs text-2xl'
-                      title='Details'
-                      onClick={() => {
-                        dispatch(setSingleApplication(app))
-                        document.getElementById('my_modal_6').showModal()
-                      }}
-                    >
-                      <FcViewDetails />
-                    </button>
+                    {activeTab === 'All' && (
+                      <button
+                        className='btn btn-ghost btn-xs text-2xl'
+                        title='Details'
+                        onClick={() => {
+                          dispatch(setSingleApplication(app))
+                          document.getElementById('my_modal_6').showModal()
+                        }}
+                      >
+                        <FcViewDetails />
+                      </button>
+                    )}
+                    {activeTab === 'Short Listed' && (
+                      <button
+                        className='btn btn-ghost btn-xs text-2xl'
+                        title='Interview Date'
+                        onClick={() => {
+                          dispatch(setSingleApplication(app))
+                          document.getElementById('my_modal_7').showModal()
+                        }}
+                      >
+                        <BsCalendar2DateFill />
+                      </button>
+                    )}
                   </th>
                 </tr>
               ))}
@@ -143,13 +218,27 @@ const ApplicantsList = () => {
             <form method='dialog'>
               {/* if there is a button in form, it will close the modal */}
               <button
-                  onClick={() => dispatch(setSingleApplicationNull())}
+                onClick={() => dispatch(setSingleApplicationNull())}
                 className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
               >
                 ✕
               </button>
             </form>
             <ApplicantsDetails />
+          </div>
+        </dialog>
+        <dialog id='my_modal_7' className='modal'>
+          <div className='modal-box w-full md:max-w-2xl'>
+            <form method='dialog'>
+              {/* if there is a button in form, it will close the modal */}
+              <button
+                onClick={() => dispatch(setSingleApplicationNull())}
+                className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+              >
+                ✕
+              </button>
+            </form>
+            <InterviewDetails/>
           </div>
         </dialog>
       </div>
