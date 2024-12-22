@@ -56,6 +56,12 @@ app.get('/images/User/resume/:filename',async(req,res)=>{
     res.sendFile(imagePath)
 })
 
+app.get('/images/application/:filename',async(req,res)=>{
+    const {filename} = req.params
+    const imagePath = path.join(__dirname,'./images/application',filename)   
+    res.sendFile(imagePath)
+})
+
 app.listen(port,()=>{
     console.log(`Server running on port ${port}`)
 })

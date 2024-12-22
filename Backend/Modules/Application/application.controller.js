@@ -13,6 +13,17 @@ import {
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const deleteImage = ( file) => {
+  const filePath = path.join(__dirname, `../../images/application/`, file)
+  fs.unlink(filePath, unlinkError => {
+    if (unlinkError) {
+      console.error('Failed to delete the uploaded file:', unlinkError)
+    } else {
+      console.log('Uploaded file deleted successfully.')
+    }
+  })
+}
+
 export const createApp = async (req, res, next) => {
   try {
     const { _id } = req.user
@@ -112,16 +123,22 @@ export const addNewMessage = async (req, res, next) => {
     )
 
     const getApplication = await Application.findOne({ _id: id })
-      .populate({
-        path: 'job'
-      })
-      .populate({
-        path: 'messages',
-        populate: {
-          path: 'createdBy',
-          select: 'name'
-        }
-      })
+    .populate({
+      path: 'job'
+    })
+    .populate({
+      path: 'candidate',
+      populate: {
+        path: 'education'
+      }
+    })
+    .populate({
+      path: 'messages',
+      populate: {
+        path: 'createdBy',
+        select: 'name'
+      }
+    })
 
     res.status(200).json({
       status: 'Success',
@@ -176,15 +193,22 @@ export const getMyApplications = async (req, res, next) => {
   try {
     const user = req.user
     const applications = await Application.find({ candidate: user._id })
-      .populate({
-        path: 'job'
-      })
-      .populate({
-        path: 'candidate',
-        populate: {
-          path: 'education'
-        }
-      })
+    .populate({
+      path: 'job'
+    })
+    .populate({
+      path: 'candidate',
+      populate: {
+        path: 'education'
+      }
+    })
+    .populate({
+      path: 'messages',
+      populate: {
+        path: 'createdBy',
+        select: 'name'
+      }
+    })
 
     res.status(200).json({
       status: 'Success',
@@ -238,7 +262,6 @@ export const evaluateApplication = async (req, res, next) => {
       }
 
       const file = await ResumeParser.parseResumeUrl(url)
-      console.log(file)
       const skillsList = parseSkills(file.skills)
 
       // const educationString = file.education.join('');
@@ -266,7 +289,12 @@ export const evaluateApplication = async (req, res, next) => {
       console.log(result)
     })
 
-    const getApplicants = await Application.find({ job: id }).sort({ats_score:1})
+    const getApplicants = await Application.find({ job: id }).sort({ats_score:1}).populate({
+      path: 'job'
+    })
+    .populate({
+      path: 'candidate'
+    })
 
     // Respond with the analysis result
     res.status(200).json({
@@ -280,5 +308,58 @@ export const evaluateApplication = async (req, res, next) => {
       status: 'Failed',
       message: error.message
     })
+  }
+}
+
+
+export const uploadOfferLetter = async(req,res,next)=>{
+  try {
+    const {id} =  req.params;
+    const file = req.file;
+
+    const image =
+      req.protocol +
+      '://' +
+      req.get('host') +
+      '/images/application/' +
+      req?.file.filename
+
+    const isApplicationExist = await Application.findOne({_id:id})
+    if(!isApplicationExist){
+      return res.status(404).json({
+        status: 'Failed',
+        message: 'Application not found'
+      })
+    }
+    if(isApplicationExist?.offer_letter){
+      const fileData = isApplicationExist?.offer_letter?.split('/')[5]
+      deleteImage(fileData)
+    }
+    const uploadApplication = await Application.updateOne(
+      {_id:id},
+      {
+        $set:{
+          offer_letter:image
+        }
+      }
+    )
+
+    const application = await Application.findOne({_id:id}).populate({
+      path: 'job'
+    })
+    .populate({
+      path: 'candidate'
+    })
+
+    res.status(200).json({
+      status: 'Success',
+      message: 'Offer letter uploaded successfully',
+      data: application
+    })
+  } catch (error) {
+      res.status(400).json({
+        status: 'Failed',
+        message: error.message
+      })
   }
 }

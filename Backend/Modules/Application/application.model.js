@@ -63,6 +63,9 @@ const applicationSchema = mongoose.Schema({
         },
         score:{
             type:Number,
+        },
+        feedback:{
+            type:String,
         }
     },
     review:{
@@ -85,6 +88,9 @@ const applicationSchema = mongoose.Schema({
     phone:{
         type:String,
         required: true
+    },
+    offer_letter:{
+        type:String,
     }
 },{
     timestamps:true
