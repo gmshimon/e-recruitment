@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateApplicationStatus } from '../../Redux/Slices/applicationSlice'
+import { updateApplicationStatus } from '../../../../Redux/Slices/applicationSlice'
 
 const InterviewFeedBack = () => {
   const { singleApplication, updateApplicationStatusLoading } = useSelector(
@@ -9,20 +9,24 @@ const InterviewFeedBack = () => {
 
   const [interviewDetails, setInterviewDetails] = useState()
   const [score, setScore] = useState()
-  const [feedback, setFeedback] = useState()	
-const dispatch = useDispatch()
+  const [feedback, setFeedback] = useState()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setInterviewDetails(singleApplication?.interview)
   }, [singleApplication])
 
-  const handleSave = () =>{
-    const interview = {...interviewDetails,score:parseInt(score),feedback:feedback};
+  const handleSave = () => {
+    const interview = {
+      ...interviewDetails,
+      score: parseInt(score),
+      feedback: feedback
+    }
     const data = {
-        interview
+      interview
     }
     console.log(data)
-    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
+    dispatch(updateApplicationStatus({ id: singleApplication?._id, data }))
     setScore('')
     setFeedback('')
   }
@@ -59,16 +63,18 @@ const dispatch = useDispatch()
           </label>
         </div>
         <div className='flex justify-center mt-5'>
-       { 
-            updateApplicationStatusLoading? <p>...Loading</p>:
-        <button
-          className='btn btn-primary text-white py-2 px-4 rounded-lg '
-          type='submit'
-          onClick={handleSave}
-        >
-          Submit
-        </button>}
-      </div>
+          {updateApplicationStatusLoading ? (
+            <p>...Loading</p>
+          ) : (
+            <button
+              className='btn btn-primary text-white py-2 px-4 rounded-lg '
+              type='submit'
+              onClick={handleSave}
+            >
+              Submit
+            </button>
+          )}
+        </div>
       </div>
     </section>
   )

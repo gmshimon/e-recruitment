@@ -12,17 +12,18 @@ import ApplicantsDetails from '../../../Component/Dashboard/ApplicantsDetails/Ap
 import { FaDownload } from 'react-icons/fa'
 import { BsCalendar2DateFill } from 'react-icons/bs'
 import InterviewDetails from '../../../Component/Dashboard/InterviewDetails/InterviewDetails'
-import * as XLSX from "xlsx";
+import * as XLSX from 'xlsx'
 import { RiFeedbackFill } from 'react-icons/ri'
-import InterviewFeedBack from '../../../Component/InterviewFeedBack/InterviewFeedBack'
+import InterviewFeedBack from '../../../Component/Dashboard/CreateEducationForm/InterviewFeedBack/InterviewFeedBack'
+import { SlEnvolopeLetter } from 'react-icons/sl'
+import GenerateOfferLetter from '../../../Component/Dashboard/GenerateOfferLetter/GenerateOfferLetter'
 
 const ApplicantsList = () => {
-  const { applicants,singleApplication, updateApplicationAtsScoreLoading } = useSelector(
-    state => state.application
-  )
+  const { applicants, singleApplication, updateApplicationAtsScoreLoading } =
+    useSelector(state => state.application)
   const [filteredApplicants, setFilteredApplicants] = useState()
   const [newApplicants, setNewApplicants] = useState()
-  const [formattedData,setFormattedData] = useState()
+  // const [formattedData, setFormattedData] = useState()
   const [activeTab, setActiveTab] = useState('All')
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,7 +33,7 @@ const ApplicantsList = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getJobApplicants(id))
-  }, [dispatch, id,singleApplication])
+  }, [dispatch, id, singleApplication])
 
   useEffect(() => {
     if (activeTab === 'All') {
@@ -78,28 +79,36 @@ const ApplicantsList = () => {
     }
   }
 
-const handleDownload = () =>{
-  const data = filteredApplicants?.map(item=>({
-    applicant:item?.candidate?.name,
-    interview_data:item?.interview?.date,
-    interview_type:item?.interview?.type,
-    details:item?.interview?.location,
-    resume_link: {
-      t: "s",
-      v: 'Resume', // Display text for the cell
-      l: { Target: item?.resume }, // Hyperlink target (URL)
-    },
-  }))
-  const worksheet = XLSX.utils.json_to_sheet(data, {
-    header: ["applicant", "interview_date", "interview_type", "details", "resume_link"],
-  });
-  const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Interviews");
+  const handleDownload = () => {
+    const data = filteredApplicants?.map(item => ({
+      applicant: item?.candidate?.name,
+      interview_date: item?.interview?.date,
+      interview_type: item?.interview?.type,
+      details: item?.interview?.location,
+      resume_link: {
+        t: 's',
+        v: 'Resume', // Display text for the cell
+        l: { Target: item?.resume } // Hyperlink target (URL)
+      }
+    }))
+    const worksheet = XLSX.utils.json_to_sheet(data, {
+      header: [
+        'applicant',
+        'interview_date',
+        'interview_type',
+        'details',
+        'resume_link'
+      ]
+    })
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Interviews')
 
-      // Generate and download Excel file
-      XLSX.writeFile(workbook, `InterviewList-${newApplicants[0]?.job?.title}.xlsx`);
-}
-
+    // Generate and download Excel file
+    XLSX.writeFile(
+      workbook,
+      `InterviewList-${newApplicants[0]?.job?.title}.xlsx`
+    )
+  }
   return (
     <section className=''>
       <div className='flex items-center justify-between'>
@@ -111,14 +120,14 @@ const handleDownload = () =>{
             className='p-1 border border-black rounded-md hover:border hover:border-black'
             onChange={e => handleSearchApplicant(e.target.value)}
           />
-          {
-            activeTab==='Short Listed'&&<button
-            onClick={() => handleDownload()}
-            className='btn btn-accent btn-sm ml-2'
-          >
-            <FaDownload />
-          </button>
-          }
+          {activeTab === 'Short Listed' && (
+            <button
+              onClick={() => handleDownload()}
+              className='btn btn-accent btn-sm ml-2'
+            >
+              <FaDownload />
+            </button>
+          )}
         </div>
       </div>
       <div className='flex space-x-4 items-center py-2 px-4'>
@@ -162,8 +171,12 @@ const handleDownload = () =>{
                 <th>Date</th>
                 <th>Resume</th>
                 <th>ATS</th>
-                <th>Details</th>
-                {activeTab === "Short Listed"&& <th>Feedback</th>}
+                {activeTab === 'Offered' ? (
+                  <th>Offer Letter</th>
+                ) : (
+                  <th>Details</th>
+                )}
+                {activeTab === 'Short Listed' && <th>Feedback</th>}
               </tr>
             </thead>
             <tbody>
@@ -236,21 +249,35 @@ const handleDownload = () =>{
                         <BsCalendar2DateFill />
                       </button>
                     )}
+                    {activeTab === 'Offered' && (
+                    <td>
+                      <button
+                        className='btn btn-ghost btn-xs text-2xl'
+                        title='Generate Offer Letter'
+                        onClick={() => {
+                          dispatch(setSingleApplication(app))
+                          document.getElementById('my_modal_9').showModal()
+                        }}
+                      >
+                        <SlEnvolopeLetter />
+                      </button>
+                    </td>
+                  )}
                   </th>
-                  {
-                    activeTab === 'Short Listed' && (
-                      <td>
-                        <button className='btn btn-ghost btn-xs text-2xl' title="Interview feedback"
-                          onClick={()=>{
-                            dispatch(setSingleApplication(app))
-                            document.getElementById('my_modal_8').showModal()
-                          }}
-                        >
+                  {activeTab === 'Short Listed' && (
+                    <td>
+                      <button
+                        className='btn btn-ghost btn-xs text-2xl'
+                        title='Interview feedback'
+                        onClick={() => {
+                          dispatch(setSingleApplication(app))
+                          document.getElementById('my_modal_8').showModal()
+                        }}
+                      >
                         <RiFeedbackFill />
-                        </button>
-                      </td>
-                    )
-                  }
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -281,7 +308,7 @@ const handleDownload = () =>{
                 ✕
               </button>
             </form>
-            <InterviewDetails/>
+            <InterviewDetails />
           </div>
         </dialog>
         <dialog id='my_modal_8' className='modal'>
@@ -295,7 +322,21 @@ const handleDownload = () =>{
                 ✕
               </button>
             </form>
-            <InterviewFeedBack/>
+            <InterviewFeedBack />
+          </div>
+        </dialog>
+        <dialog id='my_modal_9' className='modal'>
+          <div className='modal-box w-full md:max-w-3xl'>
+            <form method='dialog'>
+              {/* if there is a button in form, it will close the modal */}
+              <button
+                onClick={() => dispatch(setSingleApplicationNull())}
+                className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
+              >
+                ✕
+              </button>
+            </form>
+            <GenerateOfferLetter/>
           </div>
         </dialog>
       </div>

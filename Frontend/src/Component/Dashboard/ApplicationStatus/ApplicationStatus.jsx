@@ -83,7 +83,34 @@ const ApplicationStatus = () => {
           </div>
         </div>
       )}
-
+{singleApplication?.offer_letter && (
+        <div className='mt-5 flex justify-center'>
+          <div className='flex items-center gap-2 border border-gray-300 rounded-md p-3 shadow-md bg-gray-100'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-6 w-6 text-blue-500'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M15.172 7l-6.586 6.586a2 2 0 002.828 2.828L18 11.828m0 0L19.414 10.414a2 2 0 00-2.828-2.828L11 14.586M12 20h9m-9-4h6'
+              />
+            </svg>
+            <a
+              target='_blank'
+              href={singleApplication?.offer_letter}
+              className='text-blue-600 font-semibold hover:underline'
+              rel='noopener noreferrer'
+            >
+              {singleApplication?.offer_letter?.split('/')[5]}
+            </a>
+          </div>
+        </div>
+      )}
       {/* Interview Details */}
       {singleApplication?.interview?.date && (
         <h2 className='mt-5 text-center text-xl font-semibold'>

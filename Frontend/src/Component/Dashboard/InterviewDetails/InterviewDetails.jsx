@@ -11,21 +11,23 @@ const InterviewDetails = () => {
   const [meetingLink, setMeetingLink] = useState('')
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
-  const { singleApplication ,updateApplicationStatusLoading} = useSelector(state => state.application)
+  const { singleApplication, updateApplicationStatusLoading } = useSelector(
+    state => state.application
+  )
 
-const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    useEffect(()=>{
-        setValue(singleApplication?.interview?.date)
-        setTime(singleApplication?.interview?.time)
-        setInterviewType(singleApplication?.interview?.type)
-        if(singleApplication?.interview?.type === 'Online'){
-            setMeetingLink(singleApplication?.interview?.location)
-        }else{
-            setAddress(singleApplication?.interview?.location)
-            setPhone(singleApplication?.interview?.phone)
-        }
-    },[singleApplication, updateApplicationStatusLoading])
+  useEffect(() => {
+    setValue(singleApplication?.interview?.date)
+    setTime(singleApplication?.interview?.time)
+    setInterviewType(singleApplication?.interview?.type)
+    if (singleApplication?.interview?.type === 'Online') {
+      setMeetingLink(singleApplication?.interview?.location)
+    } else {
+      setAddress(singleApplication?.interview?.location)
+      setPhone(singleApplication?.interview?.phone)
+    }
+  }, [singleApplication, updateApplicationStatusLoading])
 
   const handleTimeChange = time => {
     const [hours, minutes] = time.split(':')
@@ -57,13 +59,13 @@ const dispatch = useDispatch()
         phone: phone
       }
     }
-    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
-    setTime('');
-    setValue('');
-    setInterviewType('');
-    setMeetingLink('');
-    setAddress('');
-    setPhone('');
+    dispatch(updateApplicationStatus({ id: singleApplication?._id, data }))
+    setTime('')
+    setValue('')
+    setInterviewType('')
+    setMeetingLink('')
+    setAddress('')
+    setPhone('')
   }
 
   return (
@@ -122,7 +124,7 @@ const dispatch = useDispatch()
               <span className='font-semibold'>Meeting link </span>
             </div>
             <input
-            value={meetingLink}
+              value={meetingLink}
               type='text'
               placeholder='Online Meeting link'
               className='p-2 rounded-lg w-full border border-black focus:border-black'
@@ -139,7 +141,7 @@ const dispatch = useDispatch()
                 <span className='font-semibold'>Address </span>
               </div>
               <input
-              value={address}
+                value={address}
                 type='text'
                 placeholder='Address'
                 className='p-2 rounded-lg w-full border border-black focus:border-black'
@@ -153,7 +155,7 @@ const dispatch = useDispatch()
                 <span className='font-semibold'>Phone </span>
               </div>
               <input
-              value={phone}
+                value={phone}
                 type='text'
                 placeholder='Phone Number'
                 className='p-2 rounded-lg w-full border border-black focus:border-black'
@@ -164,15 +166,17 @@ const dispatch = useDispatch()
         </div>
       )}
       <div className='flex justify-center mt-5'>
-       { 
-            updateApplicationStatusLoading? <p>...Loading</p>:
-        <button
-          className='btn btn-primary text-white py-2 px-4 rounded-lg '
-          type='submit'
-          onClick={handleSaveInterview}
-        >
-          Submit
-        </button>}
+        {updateApplicationStatusLoading ? (
+          <p>...Loading</p>
+        ) : (
+          <button
+            className='btn btn-primary text-white py-2 px-4 rounded-lg '
+            type='submit'
+            onClick={handleSaveInterview}
+          >
+            Submit
+          </button>
+        )}
       </div>
     </section>
   )

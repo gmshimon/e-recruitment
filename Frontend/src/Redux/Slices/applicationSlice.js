@@ -30,6 +30,9 @@ const initialState = {
     deleteApplicationLoading:false,
     deleteApplicationSuccess:false,
     deleteApplicationError:false,
+    uploadOfferLetterLoading:false,
+    uploadOfferLetterSuccess:false,
+    uploadOfferLetterError:false,
 }
 
 export const createApplication = createAsyncThunk('createApplication',async data=>{
@@ -62,6 +65,12 @@ export const updateApplicationStatus = createAsyncThunk('updateApplicationStatus
     return response.data.data
 })
 
+
+export const uploadOfferLetter = createAsyncThunk('uploadOfferLetter',async ({id,data})=>{
+    const response = await axiosSecure.put(`/app/upload-offer-letter/${id}`,data)
+    return response.data.data
+})
+
 const applicationSlice = createSlice({
     name:'application',
     initialState,
@@ -91,6 +100,9 @@ const applicationSlice = createSlice({
             state.deleteApplicationLoading=false
             state.deleteApplicationSuccess=false
             state.deleteApplicationError=false
+            state.uploadOfferLetterLoading=false
+            state.uploadOfferLetterSuccess=false
+            state.uploadOfferLetterError=false
         },
         setSingleApplication:(state,action)=>{
             state.singleApplication = action.payload
@@ -191,6 +203,21 @@ const applicationSlice = createSlice({
             state.updateApplicationStatusSuccess = true
             state.updateApplicationStatusError = false
             state.singleApplication = action.payload
+        })
+        .addCase(uploadOfferLetter.pending,(state)=>{
+            state.uploadOfferLetterLoading = true
+            state.uploadOfferLetterSuccess = false
+            state.uploadOfferLetterError = false
+        })
+        .addCase(uploadOfferLetter.fulfilled,(state,action)=>{
+            state.uploadOfferLetterLoading = false
+            state.uploadOfferLetterSuccess = true
+            state.uploadOfferLetterError = false
+        })
+        .addCase(updateApplicationStatus.rejected,(state)=>{
+            state.updateApplicationStatusLoading = false
+            state.updateApplicationStatusSuccess = false
+            state.updateApplicationStatusError = true
         })
     }
 })

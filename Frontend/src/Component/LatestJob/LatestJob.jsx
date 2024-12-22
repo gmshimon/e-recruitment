@@ -78,7 +78,6 @@ const LatestJob = () => {
   useEffect(()=>{
     const selectedTab = tabs[tabIndex]
     const jobsByCategory = jobs.filter(job => job?.job_category === selectedTab.name)
-    console.log(jobsByCategory)
     setJobByCategory(jobsByCategory)
   },[jobs, tabIndex])
 

@@ -1,39 +1,44 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateApplicationMessage, updateApplicationStatus } from '../../../Redux/Slices/applicationSlice'
+import {
+  updateApplicationMessage,
+  updateApplicationStatus
+} from '../../../Redux/Slices/applicationSlice'
 
 const ApplicantsDetails = () => {
   //   const { user } = useSelector(state => state.user)
-  const { singleApplication, updateApplicationMessageLoading,updateApplicationStatusLoading } = useSelector(
-    state => state.application
-  )
+  const {
+    singleApplication,
+    updateApplicationMessageLoading,
+    updateApplicationStatusLoading
+  } = useSelector(state => state.application)
   const [newMessage, setNewMessage] = useState('')
 
   const dispatch = useDispatch()
 
   const handleShortList = () => {
-    const data={
+    const data = {
       application_status: 'interviewing',
-      status:'interviewing'
+      status: 'interviewing'
     }
-    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
+    dispatch(updateApplicationStatus({ id: singleApplication?._id, data }))
     console.log(singleApplication)
   }
 
   const handleOfferJob = () => {
-    const data={
+    const data = {
       application_status: 'offered',
-      status:'offered'
+      status: 'offered'
     }
-    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
+    dispatch(updateApplicationStatus({ id: singleApplication?._id, data }))
   }
 
   const handleRejectJob = () => {
-    const data={
+    const data = {
       application_status: 'rejected',
-      status:'rejected'
+      status: 'rejected'
     }
-    dispatch(updateApplicationStatus({id:singleApplication?._id,data}))
+    dispatch(updateApplicationStatus({ id: singleApplication?._id, data }))
   }
 
   const handleAddNewMessage = id => {
@@ -53,9 +58,7 @@ const ApplicantsDetails = () => {
       <h1 className='text-center text-xl font-semibold'>
         {singleApplication?.candidate?.name}
       </h1>
-      <p className='text-center'>
-        ATS Score: {singleApplication?.ats_score}
-      </p>
+      <p className='text-center'>ATS Score: {singleApplication?.ats_score}</p>
       <div className='flex justify-center'>
         {singleApplication?.application_status === 'pending' ? (
           <div className='badge badge-warning mt-2 badge-sm p-2'>
@@ -79,37 +82,41 @@ const ApplicantsDetails = () => {
       </div>
       {/* button section */}
       <div className='flex justify-center my-4'>
-        {
-          updateApplicationStatusLoading? <p>Loading...</p>:<>
-          <div className='mr-3'>
-          <button
-          disabled={singleApplication?.application_status === 'interviewing'}
-            onClick={() => handleShortList()}
-            className='btn btn-accent btn-sm'
-          >
-            Short list
-          </button>
-        </div>
-        <div className='mr-3'>
-          <button
-          disabled={singleApplication?.application_status === 'offered'}
-            onClick={() => handleOfferJob()}
-            className='btn btn-success btn-sm'
-          >
-            Offer Job
-          </button>
-        </div>
-        <div>
-          <button
-          disabled={singleApplication?.application_status === 'rejected'}
-            onClick={() => handleRejectJob()}
-            className='btn btn-error btn-sm'
-          >
-            Reject
-          </button>
-        </div>
+        {updateApplicationStatusLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <div className='mr-3'>
+              <button
+                disabled={
+                  singleApplication?.application_status === 'interviewing'
+                }
+                onClick={() => handleShortList()}
+                className='btn btn-accent btn-sm'
+              >
+                Short list
+              </button>
+            </div>
+            <div className='mr-3'>
+              <button
+                disabled={singleApplication?.application_status === 'offered'}
+                onClick={() => handleOfferJob()}
+                className='btn btn-success btn-sm'
+              >
+                Offer Job
+              </button>
+            </div>
+            <div>
+              <button
+                disabled={singleApplication?.application_status === 'rejected'}
+                onClick={() => handleRejectJob()}
+                className='btn btn-error btn-sm'
+              >
+                Reject
+              </button>
+            </div>
           </>
-        }
+        )}
       </div>
       <h3 className='text-lg font-medium text-gray-700 mb-2 text-center mt-2'>
         Skills
@@ -148,6 +155,34 @@ const ApplicantsDetails = () => {
               rel='noopener noreferrer'
             >
               {singleApplication?.resume?.split('/')[6]}
+            </a>
+          </div>
+        </div>
+      )}
+      {singleApplication?.offer_letter && (
+        <div className='mt-5 flex justify-center'>
+          <div className='flex items-center gap-2 border border-gray-300 rounded-md p-3 shadow-md bg-gray-100'>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-6 w-6 text-blue-500'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M15.172 7l-6.586 6.586a2 2 0 002.828 2.828L18 11.828m0 0L19.414 10.414a2 2 0 00-2.828-2.828L11 14.586M12 20h9m-9-4h6'
+              />
+            </svg>
+            <a
+              target='_blank'
+              href={singleApplication?.offer_letter}
+              className='text-blue-600 font-semibold hover:underline'
+              rel='noopener noreferrer'
+            >
+              {singleApplication?.offer_letter?.split('/')[5]}
             </a>
           </div>
         </div>
