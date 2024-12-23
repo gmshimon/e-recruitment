@@ -16,6 +16,8 @@ import EditJobs from '../Pages/Dashboard/EditJobs/EditJobs'
 import JobApplicants from '../Pages/Dashboard/JobApplicants/JobApplicants'
 import ApplicantsList from '../Pages/Dashboard/ApplicantsList/ApplicantsList'
 import SearchJob from '../Pages/SearchJob/SearchJob'
+import Blogs from '../Pages/Blogs/Blogs'
+import ReadBlog from '../Pages/ReadBlog/ReadBlog'
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +39,14 @@ export const router = createBrowserRouter([
       {
         path: '/apply-job/:id',
         element: <ApplyJob />
+      },
+      {
+        path:'/blogs',
+        element: <Blogs />
+      },
+      {
+        path: '/read-blog/:name',
+        element: <ReadBlog/>
       },
       {
         path: '/login',

@@ -41,7 +41,7 @@ const Home = () => {
   return (
     <div>
       <Banner />
-      <div className='divider'></div>
+      {/* <div className='divider'></div> */}
       <CategorySection />
       <HiringBanner />
       <LatestJob />

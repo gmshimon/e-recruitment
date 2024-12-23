@@ -1,9 +1,10 @@
 import JobSearchBar from "../JobSearchBar/JobSearchBar"
+import pic1 from '../../../public/Assessts/a68b6889-0a34-4ebc-b5e4-a9cd03a08258.webp'
 
 const Banner = () => {
   return (
     <div>
-      <section className='md:flex items-center justify-evenly pt-20'>
+      <section className="md:flex items-center justify-evenly pt-20 pb-5 bg-[url('https://www.zmo.ai/wp-content/uploads/2023/09/powerpoint-slide-with-white-background-SB02298-min-scaled.jpg')] bg-no-repeat bg-cover">
       <div className='w-full md:w-1/2 md:ml-24'>
         <div className='text-4xl font-semibold'>
           <h1>
@@ -30,7 +31,7 @@ const Banner = () => {
       <div>
         <img
           className='w-[600px] h-[350px]'
-          src='https://jthemes.com/themes/wp/jobbox/wp-content/uploads/2023/03/hero-home4.png'
+          src={pic1}
           alt=''
         />
       </div>
