@@ -216,6 +216,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.user = action.payload
+        state.isLoading = false
         state.isGetUserDataLoading = false
         state.isGetUserDataSuccess = true
         state.isGetUserDataError = false
@@ -289,6 +290,7 @@ const userSlice = createSlice({
         state.isUserResumeDeleteSuccess = false
       })
       .addCase(logOut.fulfilled, (state, action) => {
+        state.isLoading = false
         state.user = null
       })
       .addCase(logOut.rejected, (state, action) => {})

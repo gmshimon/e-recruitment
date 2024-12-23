@@ -19,6 +19,7 @@ import SearchJob from '../Pages/SearchJob/SearchJob'
 import Blogs from '../Pages/Blogs/Blogs'
 import ReadBlog from '../Pages/ReadBlog/ReadBlog'
 import ContactForm from '../Pages/ContactForm/ContactForm'
+import PrivateRoute from '../Component/PrivateRoute/PrivateRoute'
 
 export const router = createBrowserRouter([
   {
@@ -69,19 +70,19 @@ export const router = createBrowserRouter([
     children: [
       {
         path: 'home',
-        element: <DashboardHome />
+        element: <PrivateRoute><DashboardHome /></PrivateRoute>
       },
       {
         path: 'profile',
-        element: <MyProfile />
+        element: <PrivateRoute><MyProfile /></PrivateRoute> 
       },
       {
         path: 'resume',
-        element: <MyResume />
+        element: <PrivateRoute><MyResume /></PrivateRoute>
       },
       {
         path: 'applications',
-        element: <MyApplication />
+        element: <PrivateRoute><MyApplication /></PrivateRoute>
       },
       {
         path:'applicants',

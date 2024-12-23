@@ -7,9 +7,10 @@ import {
 } from 'react-icons/md'
 import { Link, Outlet } from 'react-router-dom'
 import CurrentUser from '../utilis/CurrentUser'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { FaPen } from 'react-icons/fa'
+import { logOut } from '../Redux/Slices/userSlice'
 
 const navbarOptions = [
   {
@@ -66,6 +67,9 @@ const Dashboard = () => {
   const { user } = useSelector(state => state.user)
   const [activeTab,setActiveTab] = useState('Dashboard')
   const [navs,setNavs] = useState(navbarOptions)
+  
+  const dispatch = useDispatch()
+
   CurrentUser()
 
   useEffect(()=>{
@@ -75,6 +79,30 @@ const Dashboard = () => {
       setNavs(navbarOptions)
     }
   },[user])
+
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ const checkTokenExpiration = () => {
+  const storedToken = localStorage.getItem('userToken');
+  if (storedToken) {
+    const { expiration } = JSON.parse(storedToken);
+    const currentTime = new Date().getTime();
+    if (currentTime > expiration) {
+      // Token has expired, log out the user
+      localStorage.removeItem('userToken');
+      // Redirect to the login page or show a logged-out state
+      dispatch(logOut());
+      window.location.href = "/";
+      // history.push('/login');
+    }
+  }
+};
+
+useEffect(() => {
+  // Call checkTokenExpiration every sec (1 * 1000 milliseconds)
+  const tokenExpirationInterval = setInterval(checkTokenExpiration, 1 * 1000);
+  // Clean up the interval on component unmount
+  return () => clearInterval(tokenExpirationInterval);
+}, [checkTokenExpiration]);
 
   return (
     <div className='drawer lg:drawer-open'>
@@ -154,7 +182,7 @@ const Dashboard = () => {
             </Link>
           ))}
 
-          <div className='flex items-center text-xl cursor-pointer mt-5 hover:text-green-600'>
+          <div onClick={()=>dispatch(logOut())} className='flex items-center text-xl cursor-pointer mt-5 hover:text-green-600'>
             <p>Logout</p>
             <p className='ml-2'>
               <IoIosLogOut />
