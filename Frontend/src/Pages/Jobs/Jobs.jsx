@@ -5,7 +5,6 @@ import { MdProductionQuantityLimits } from 'react-icons/md'
 import { TfiHeadphoneAlt } from 'react-icons/tfi'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import SingleJob from '../../Component/SingleJob/SingleJob'
-import { useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getJobs } from '../../Redux/Slices/jobSlice'
@@ -85,10 +84,9 @@ const Jobs = () => {
     },[jobs, tabIndex])
 
     useEffect(()=>{
-      dispatch(getJobs())
+      dispatch(getJobs({title:'',category:''}))
     },[dispatch])
 
-    console.log(jobs)
   return (
     <section className='pt-20'>
       <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>

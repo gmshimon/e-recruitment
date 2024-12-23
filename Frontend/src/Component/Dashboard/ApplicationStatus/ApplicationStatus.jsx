@@ -83,7 +83,7 @@ const ApplicationStatus = () => {
           </div>
         </div>
       )}
-{singleApplication?.offer_letter && (
+      {singleApplication?.offer_letter && (
         <div className='mt-5 flex justify-center'>
           <div className='flex items-center gap-2 border border-gray-300 rounded-md p-3 shadow-md bg-gray-100'>
             <svg

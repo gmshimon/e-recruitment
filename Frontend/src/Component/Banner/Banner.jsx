@@ -1,4 +1,4 @@
-import { FaArrowRight } from "react-icons/fa"
+import JobSearchBar from "../JobSearchBar/JobSearchBar"
 
 const Banner = () => {
   return (
@@ -24,8 +24,7 @@ const Banner = () => {
         </p>
 
         <div className="mt-5">
-          <button className='btn btn-active btn-primary'><span className="mb-1">Primary</span> <FaArrowRight />
-          </button>
+         <JobSearchBar/>
         </div>
       </div>
       <div>

@@ -15,6 +15,7 @@ import MyJobs from '../Pages/Dashboard/MyJobs/MyJobs'
 import EditJobs from '../Pages/Dashboard/EditJobs/EditJobs'
 import JobApplicants from '../Pages/Dashboard/JobApplicants/JobApplicants'
 import ApplicantsList from '../Pages/Dashboard/ApplicantsList/ApplicantsList'
+import SearchJob from '../Pages/SearchJob/SearchJob'
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
       {
         path: '/jobs',
         element: <Jobs />
+      },
+      {
+        path:'/search-job',
+        element:<SearchJob />
       },
       {
         path: '/apply-job/:id',
