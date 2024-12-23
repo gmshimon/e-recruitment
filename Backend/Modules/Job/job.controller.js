@@ -1,5 +1,5 @@
 import Job from './job.model.js'
-import { ObjectId } from "mongodb";
+import { ObjectId } from 'mongodb'
 export const createJob = async (req, res, next) => {
   try {
     const { _id } = req.user
@@ -22,16 +22,17 @@ export const createJob = async (req, res, next) => {
 
 export const getJobList = async (req, res, next) => {
   try {
-    const keyword = req.query.keyword
-      ? {
-          title: {
-            $regex: req.query.keyword,
-            $options: 'i' // case-insensitive search
-          }
-        }
-      : {}
-
-    const result = await Job.find(keyword).populate({
+    const { title, category } = req.query
+    const result = await Job.find({
+      title: {
+        $regex: title?title:'',
+        $options: 'i' // case-insensitive search
+      },
+      job_category: {
+        $regex: category?category:'',
+        $options: 'i'
+      }
+    }).populate({
       path: 'createdBy',
       select: 'name email phone'
     })
@@ -62,16 +63,15 @@ export const editJob = async (req, res, next) => {
     }
 
     const updateJob = await Job.updateOne(
-        {_id:id},
-        {
-            $set:data
-        }
+      { _id: id },
+      {
+        $set: data
+      }
     )
-    
+
     res.status(200).json({
       status: 'success',
-      message: 'Job updated successfully',
-
+      message: 'Job updated successfully'
     })
   } catch (error) {
     res.status(400).json({
@@ -81,10 +81,10 @@ export const editJob = async (req, res, next) => {
   }
 }
 
-export const getMyJob = async(req, res, next) => {
+export const getMyJob = async (req, res, next) => {
   try {
-    const {_id} = req.user
-    const result = await Job.find({createdBy: _id})
+    const { _id } = req.user
+    const result = await Job.find({ createdBy: _id })
 
     res.status(200).json({
       success: 'success',
@@ -94,36 +94,35 @@ export const getMyJob = async(req, res, next) => {
   } catch (error) {
     res.status(400).json({
       status: 'failed',
-      message: error.message,
-
+      message: error.message
     })
   }
 }
 
-export const  deleteJob = async(req,res,next)=>{
+export const deleteJob = async (req, res, next) => {
   try {
-    const {id} = req.params
-    const {_id} = req.user
+    const { id } = req.params
+    const { _id } = req.user
 
-    const deleteJob = await Job.deleteOne({_id:id,createdBy:_id})
+    const deleteJob = await Job.deleteOne({ _id: id, createdBy: _id })
 
     res.status(200).json({
       success: 'success',
-      message: 'Job deleted successfully',
+      message: 'Job deleted successfully'
     })
   } catch (error) {
     res.status(500).json({
       status: 'failed',
-      message: error.message,
+      message: error.message
     })
   }
 }
 
 export const getJobID = async (req, res) => {
   try {
-    const{id} = req.params
+    const { id } = req.params
 
-    const result = await Job.findOne({_id: id}).populate({
+    const result = await Job.findOne({ _id: id }).populate({
       path: 'createdBy',
       select: 'name email phone'
     })
