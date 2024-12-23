@@ -1,4 +1,4 @@
-import pic2 from '../../../public/Assessts/download.png'
+
 const HiringBanner = () => {
   return (
     <section className="md:flex mt-10 md:justify-center" >
@@ -15,7 +15,7 @@ const HiringBanner = () => {
             <h1 className='text-3xl text-black font-bold'>HIRING</h1>
           </div>
           <div className="ml-3">
-            <p>Let's Work Together & Explore Opportunities</p>
+            <p>Let&apos;s Work Together & Explore Opportunities</p>
           </div>
           <div>
             <img

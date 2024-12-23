@@ -8,6 +8,7 @@ import SingleJob from '../../Component/SingleJob/SingleJob'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getJobs } from '../../Redux/Slices/jobSlice'
+import { useLocation } from 'react-router-dom'
 
 const tabs = [
   {
@@ -61,31 +62,33 @@ const tabs = [
 ]
 
 const Jobs = () => {
-  const {jobs} = useSelector(state => state.job)
-  const [jobByCategory,setJobByCategory] = useState([])
-    // const [searchParams] = useSearchParams();
-    // const category = searchParams.get('category');
-    // const initialIndex = tabs.forEach((tab,index)=>{
-    //     if(tab.name === category){
-    //         console.log(category);
-    //         return index;
-    //     }
-    // })
-    const [tabIndex,setTabIndex] = useState( 0);
-    // console.log(initialIndex)
+  const { jobs } = useSelector(state => state.job)
+  const [jobByCategory, setJobByCategory] = useState([])
+  const location = useLocation()
 
-    const dispatch = useDispatch()
+  // Parse query parameters from the location.search
+  const queryParams = new URLSearchParams(location.search)
+  const category = queryParams.get('category') // Extract 'category' parameter
 
-    useEffect(()=>{
-      const selectedTab = tabs[tabIndex]
-      const jobsByCategory = jobs.filter(job => job?.job_category === selectedTab.name)
-      console.log(jobsByCategory)
-      setJobByCategory(jobsByCategory)
-    },[jobs, tabIndex])
+  const [tabIndex, setTabIndex] = useState(0)
+  useEffect(() => {
+    const index = tabs.findIndex(tab => tab.name === category)
+    setTabIndex(index)
+  }, [category])
 
-    useEffect(()=>{
-      dispatch(getJobs({title:'',category:''}))
-    },[dispatch])
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const selectedTab = tabs[tabIndex]
+    const jobsByCategory = jobs.filter(
+      job => job?.job_category === selectedTab.name
+    )
+    setJobByCategory(jobsByCategory)
+  }, [jobs, tabIndex])
+
+  useEffect(() => {
+    dispatch(getJobs({ title: '', category: '' }))
+  }, [dispatch])
 
   return (
     <section className='pt-20'>
@@ -108,7 +111,7 @@ const Jobs = () => {
             <div className='flex justify-center mt-10'>
               <div className='grid grid-cols-1 md:grid-cols-4  gap-x-10 gap-y-10'>
                 {jobByCategory.map((tab, index) => (
-                  <SingleJob job={tab} key={index}/>
+                  <SingleJob job={tab} key={index} />
                 ))}
               </div>
             </div>

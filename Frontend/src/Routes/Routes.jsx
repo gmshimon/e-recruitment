@@ -18,6 +18,7 @@ import ApplicantsList from '../Pages/Dashboard/ApplicantsList/ApplicantsList'
 import SearchJob from '../Pages/SearchJob/SearchJob'
 import Blogs from '../Pages/Blogs/Blogs'
 import ReadBlog from '../Pages/ReadBlog/ReadBlog'
+import ContactForm from '../Pages/ContactForm/ContactForm'
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
       {
         path: '/login',
         element: <Login />
+      },
+      {
+        path:'/contact',
+        element:<ContactForm/>
       },
       {
         path: '/register',

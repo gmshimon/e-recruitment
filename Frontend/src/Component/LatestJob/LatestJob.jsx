@@ -14,6 +14,7 @@ import SingleJob from '../SingleJob/SingleJob'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getJobs } from '../../Redux/Slices/jobSlice'
+import { useNavigate } from 'react-router-dom'
 
 const tabs = [
   {
@@ -74,6 +75,7 @@ const LatestJob = () => {
   // console.log(initialIndex)
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(()=>{
     const selectedTab = tabs[tabIndex]
@@ -82,8 +84,9 @@ const LatestJob = () => {
   },[jobs, tabIndex])
 
   useEffect(()=>{
-    dispatch(getJobs())
+    dispatch(getJobs({title:'',category:''}))
   },[dispatch])
+
   return (
     <section className='mt-14'>
       <h1 className='text-center text-3xl font-semibold'>Jobs of the day</h1>
@@ -104,9 +107,10 @@ const LatestJob = () => {
             </Tab>
           ))}
         </TabList>
+        <div className='md:h-[200px] mt-10'>
         {tabs.map((tab, index) => (
           <TabPanel key={index}>
-            <div className='flex justify-center mt-10'>
+            <div className='flex justify-center '>
               <div className='grid grid-cols-1 md:grid-cols-4  gap-x-10 gap-y-10'>
                 {jobByCategory.map((tab, index) => (
                   <SingleJob job={tab} key={index}/>
@@ -115,10 +119,11 @@ const LatestJob = () => {
             </div>
           </TabPanel>
         ))}
+        </div>
       </Tabs>
 
       <div className='flex justify-center mt-10'>
-        <button className='btn btn-active btn-neutral btn-md'>
+        <button onClick={()=>navigate(`/jobs/?category=${tabs[tabIndex].name}`)} className='btn btn-active btn-neutral btn-md'>
           See More <FaAngleRight />
         </button>
       </div>
