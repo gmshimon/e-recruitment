@@ -49,8 +49,8 @@ const ApplyJob = () => {
       <div className='mt-8'>
         <div className='flex justify-center mb-5'>
           <img
-            className='rounded-md'
-            src='https://jthemes.com/themes/wp/jobbox/wp-content/uploads/2023/02/job-single.svg'
+            className='rounded-md md:h-[450px] w-full md:mx-10'
+            src='https://www.microsoft.com/de-de/microsoft-365/blog/wp-content/uploads/sites/10/2018/09/10-new-ways-for-everyone-to-achieve-more-in-the-modern-workplace-BANNER-1.png'
             alt=''
           />
         </div>

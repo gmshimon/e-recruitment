@@ -2,14 +2,14 @@ import newsLetterImg_right from '../../assets/images/newsletter-right.png'
 import newsLetterImg_left from '../../assets/images/newsletter-left.png'
 const NewsLetter = () => {
   return (
-    <section className='md:flex md:justify-center mt-10'>
-      <div className="bg-[url('https://jthemes.com/themes/wp/jobbox/wp-content/themes/jobbox/assets/imgs/template/bg-newsletter.svg')] bg-cover bg-center md:w-4/5 p-5 md:mx-0 mx-5">
+    <section className='md:flex md:justify-center mt-10 mb-5'>
+      <div className="bg-[url('https://static.vecteezy.com/system/resources/thumbnails/002/375/040/small_2x/modern-white-background-free-vector.jpg')] bg-cover bg-center md:w-4/5 p-5 md:mx-0 mx-5 rounded-md">
         <div className='flex items-center justify-between'>
           <div className='hidden md:block'>
             <img src={newsLetterImg_left} alt='' />
           </div>
           <div>
-            <h1 className='text-xl md:text-3xl text-white font-bold mb-6 text-center'>
+            <h1 className='text-xl md:text-3xl text-black font-bold mb-6 text-center'>
               New Things Will Always Update Regularly
             </h1>
             <div className='flex justify-center'>
