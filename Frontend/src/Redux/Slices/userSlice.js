@@ -119,6 +119,11 @@ export const deleteUserResume = createAsyncThunk('deleteUserResume',async data=>
   return response.data.data
 })
 
+export const getAdminData = createAsyncThunk('getAdminData',async(req,res,next)=>{
+  const response = await axiosSecure.get('/user//admin-data')
+  return response.data.data
+})
+
 export const logOut = createAsyncThunk('logOut', async () => {
   const response = await signOut(auth)
   localStorage.removeItem('userToken')
@@ -288,6 +293,22 @@ const userSlice = createSlice({
         state.isUserResumeDeleteLoading = false
         state.isUserResumeDeleteError = true
         state.isUserResumeDeleteSuccess = false
+      })
+      .addCase(getAdminData.pending, state => {
+        state.isAdminDataLoading = true
+        state.isAdminDataError = false
+        state.isAdminDataSuccess = false
+      })
+      .addCase(getAdminData.fulfilled, (state, action) => {
+        state.isAdminDataError = false
+        state.isAdminDataSuccess = true
+        state.isAdminDataLoading = false
+        state.adminDetails = action.payload
+      })
+      .addCase(getAdminData.rejected, (state, action) => {
+        state.isAdminDataLoading = false
+        state.isAdminDataError = true
+        state.isAdminDataSuccess = false
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.isLoading = false

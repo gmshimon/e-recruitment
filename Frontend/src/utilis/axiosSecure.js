@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 
+const prod = 'https://e-recruitment.onrender.com/api/v1/'
 const local = 'http://localhost:5000/api/v1/'
 
 // Create an Axios instance

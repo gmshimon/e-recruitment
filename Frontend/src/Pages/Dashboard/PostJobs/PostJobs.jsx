@@ -83,7 +83,6 @@ const PostJobs = () => {
         state
       }
     }
-    console.log(data)
     dispatch(createJob(data))
   }
 
