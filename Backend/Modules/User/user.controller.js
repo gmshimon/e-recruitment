@@ -3,6 +3,8 @@ import Users from './user.model.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
+import Job from '../Job/job.model.js'
+import Application from '../Application/application.model.js'
 
 // Define __dirname in ES6 modules
 const __filename = fileURLToPath(import.meta.url)
@@ -24,9 +26,7 @@ export const createUser = async (req, res, next) => {
     const userData = req.body
     const { name, email, role } = userData
 
-    const user = await Users.findOne({ email }).populate(
-      {path:'education'}
-    )
+    const user = await Users.findOne({ email }).populate({ path: 'education' })
     if (user) {
       const data = {
         _id: user._id,
@@ -180,8 +180,9 @@ export const updateUser = async (req, res, next) => {
 export const fetchUser = async (req, res, next) => {
   try {
     const data = req.body
-    const user = await Users.findOne({ email: data.email }).populate(
-      {path:'education'})
+    const user = await Users.findOne({ email: data.email }).populate({
+      path: 'education'
+    })
 
     if (!user) {
       return res.status(404).json({
@@ -206,7 +207,7 @@ export const fetchUser = async (req, res, next) => {
 
 export const deleteResume = async (req, res, next) => {
   try {
-    const  {resume}  = req.body
+    const { resume } = req.body
     const { email } = req.user
     console.log(resume)
     const findResume = await Users.findOne({
@@ -240,6 +241,120 @@ export const deleteResume = async (req, res, next) => {
     res.status(400).json({
       status: 'Failed',
       message: 'Failed to delete resume',
+      error: error.message
+    })
+  }
+}
+
+export const adminData = async (req, res, next) => {
+  try {
+    const getJobs = await Job.find({
+      createdBy: '6742a527788197b93657ec03'
+    })
+    const result = await Application.aggregate([
+      {
+        $group: {
+          _id: '$status', // Group by the "status" field
+          count: { $sum: 1 } // Count the number of occurrences for each status
+        }
+      }
+    ])
+
+    // Convert the array into the desired object structure in JavaScript
+    const statuses = result.reduce((acc, item) => {
+      acc[item._id] = item.count
+      return acc
+    }, {})
+
+    const totalApplications = Object.values(statuses).reduce(
+      (sum, count) => sum + count,
+      0
+    )
+
+    const getApplications = await Application.find({})
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+
+    // Mapping the application count according to the month name
+    const applicationsByMonth = getApplications.reduce((acc, application) => {
+      const createdAt = new Date(application.createdAt) // Parse the creation date
+      const month = monthNames[createdAt.getMonth()] // Get the month name
+
+      acc[month] = (acc[month] || 0) + 1 // Increment the count for this month
+      return acc
+    }, {})
+
+    // Ensure all months are represented
+    const applicationOfMonth = monthNames.map(month => ({
+      month,
+      count: applicationsByMonth[month] || 0 // Use 0 if no applications for the month
+    }))
+
+    // Example list of all possible job categories (you can modify this based on your database or requirements)
+    const allJobCategories = [
+      'content Writer',
+      'Human Resource',
+      'Finance',
+      'Management',
+      'Market Research',
+      'Retail & Product',
+      'Market & Sale',
+      'Software'
+    ]
+
+    // Count the total number of jobs
+    const totalJobs = getJobs.length
+
+    // Calculate counts for each job category
+    const categoryCounts = getJobs.reduce((acc, job) => {
+      const category = job.job_category
+      acc[category] = (acc[category] || 0) + 1
+      return acc
+    }, {})
+
+    // Ensure all categories are represented, even if they have no jobs
+    const categoryPercentages = allJobCategories.map(category => ({
+      job_category: category,
+      percentage: (((categoryCounts[category] || 0) / totalJobs) * 100).toFixed(
+        2
+      ) // Format percentage to 2 decimal places
+    }))
+
+    const jobs = {
+      totalJobs: getJobs.length,
+      categories: categoryPercentages
+    }
+
+    // format the application object
+    const applications = {
+      totalApplications,
+      statuses,
+      month: applicationOfMonth
+    }
+    res.status(200).json({
+      status: 'Success',
+      message: 'User fetched successfully',
+      data: {
+        jobs,
+        applications
+      }
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'Failed',
+      message: 'Failed to fetch users',
       error: error.message
     })
   }
