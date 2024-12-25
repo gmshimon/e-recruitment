@@ -110,7 +110,7 @@ const ApplicantsList = () => {
     )
   }
   return (
-    <section className=''>
+    <section className='min-h-screen'>
       <div className='flex items-center justify-between'>
         <h1 className='text-4xl m-7'>{applicants[0]?.job?.title}</h1>
         <div className='md:mr-10'>
@@ -161,7 +161,7 @@ const ApplicantsList = () => {
           </>
         )}
       </div>
-      <div className='bg-white h-[550px] mx-7 my-5 px-10 py-10 rounded-xl'>
+      <div className='bg-white h-[550px] mx-7 my-5 px-10 py-10 rounded-xl mb-10'>
         <div className='overflow-x-auto '>
           <table className='table '>
             {/* head */}
