@@ -67,7 +67,7 @@ const JobSearchBar = () => {
   }
 
   return (
-    <div className='flex items-center gap-5 p-4 bg-base-100 shadow-md rounded-lg w-2/3'>
+    <div className='flex items-center gap-5 p-4 bg-base-100 shadow-md rounded-lg md:w-2/3'>
       {/* Job Categories Dropdown */}
       <div className='flex flex-col'>
         <label className='text-sm text-gray-600 mb-1'>Job Categories</label>

@@ -81,9 +81,6 @@ const Navbar = () => {
                   <a className='justify-between'>Profile</a>
                 </Link>
               </li>
-              <li>
-                <a>Settings</a>
-              </li>
               <li onClick={() => dispatch(logOut())}>
                 <a>Logout</a>
               </li>
