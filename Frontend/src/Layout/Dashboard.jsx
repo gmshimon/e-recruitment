@@ -131,7 +131,7 @@ useEffect(() => {
               </svg>
             </label>
           </div>
-          <div className='mx-2 flex-1 px-2'>Navbar Title</div>
+          <div className='mx-2 flex-1 px-2'>Talent IQ</div>
         </div>
         {/* Page content here */}
         <div className='bg-base-300'>
@@ -154,7 +154,7 @@ useEffect(() => {
         <div className='menu bg-white min-h-full w-60 p-4 '>
           <div className='text-3xl text-center my-10 h-[30px]'>
            <Link to="/">
-           <p className='cursor-pointer hover:bg-gray-100 hover:rounded-lg'>XXX</p>
+           <p className='cursor-pointer hover:bg-gray-100 hover:rounded-lg'>Talent IQ</p>
            </Link>
           </div>
           <div className='flex justify-center'>
