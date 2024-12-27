@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import AdminHome from '../../../Component/AdminHome/AdminHome'
 import { getAdminData } from '../../../Redux/Slices/userSlice'
 import { MdError } from 'react-icons/md'
+import { getJobs } from '../../../Redux/Slices/jobSlice'
+import { useNavigate } from 'react-router-dom'
+import dateDifference from '../../../utilis/formattedDate'
 
 const stats = [
   { value: '1.7k+', label: 'Total Visitor', icon: <FaUser /> },
@@ -24,9 +27,12 @@ const adminStats = [
 const array = ['1', '2', '3', '4', '5', '6']
 const DashboardHome = () => {
   const { user, adminDetails } = useSelector(state => state.user)
+  const {jobs} = useSelector(state=>state.job)
   const [statsOption, setStatsOption] = useState()
+  const [randomJobs, setRandomJobs] = useState([]);
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   useEffect(() => {
     if (user?.role === 'admin') {
       dispatch(getAdminData())
@@ -46,8 +52,20 @@ const DashboardHome = () => {
     }
   }, [adminDetails, user])
 
+  useEffect(()=>{
+    dispatch(getJobs({title:'',category:'',country:''}))
+  },[dispatch])
+
+  // Pick random jobs
+  useEffect(() => {
+    if (jobs?.length > 0) {
+      const shuffled = [...jobs].sort(() => 0.5 - Math.random());
+      setRandomJobs(shuffled.slice(0, 5)); // Pick 5 random jobs
+    }
+  }, [jobs]);
+
   return (
-    <section className='pb-4 md:h-[calc(100vh-20px)]'>
+    <section className='pb-4 md:h-[calc(100vh)]'>
       <h1 className='text-4xl m-7'>Dashboard</h1>
       <div className=' py-5 flex justify-center w-full'>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-x-10 gap-y-5  px-5 mb-4'>
@@ -77,8 +95,8 @@ const DashboardHome = () => {
           <div className='flex justify-center'>
             <div className='border-2 lg:h-[400px]  mt-3 overflow-y-auto bg-white mx-10 w-3/4 rounded-xl pt-5'>
               {/* similar jobs */}
-              {array.map((item, index) => (
-                <div className='cursor-pointer' key={index}>
+              {randomJobs.map((item, index) => (
+                <div onClick={()=>navigate(`/apply-job/${item?._id}`)}  className='cursor-pointer' key={index}>
                   <div className='flex px-5 hover:font-semibold'>
                     <div>
                       <img
@@ -88,22 +106,22 @@ const DashboardHome = () => {
                     </div>
                     <div className='ml-5'>
                       <h2 className='card-title hover:text-blue-700'>
-                        Software Engineer
+                        {item?.title}
                       </h2>
                       <div className='flex text-sm my-1'>
                         <div className='flex items-center text-gray-600'>
                           <IoBagHandleOutline />
-                          <p className='ml-1'>Full Time</p>
+                          <p className='ml-1'>{item?.salary?.salary}</p>
                         </div>
                         <div className='flex items-center text-gray-600 ml-10'>
                           <CiClock2 />
-                          <p className='ml-1'>Posted 2 years ago</p>
+                          <p className='ml-1'>{dateDifference(item?.createdAt)}</p>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className='flex justify-end items-center pr-8 text-sm text-gray-600 mb-2'>
-                    <CiLocationOn /> <span className='ml-2'>Denmark</span>
+                    <CiLocationOn /> <span className='ml-2'>{item?.address?.country}</span>
                   </div>
                   <div className='my-3 px-5'>
                     <hr />
