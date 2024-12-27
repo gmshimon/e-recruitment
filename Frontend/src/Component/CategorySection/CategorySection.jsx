@@ -40,13 +40,13 @@ const CategorySection = () => {
     {
       id: 6,
       icon:<FaRegFolderOpen />,
-      name: 'Retail & Product',
+      name: 'Retail Product',
       job: 0
     },
     {
       id: 7,
       icon:<MdProductionQuantityLimits />,
-      name: 'Market & Sale',
+      name: 'Market Sale',
       job: 0
     },
     {

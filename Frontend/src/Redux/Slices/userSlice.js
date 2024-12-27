@@ -137,7 +137,7 @@ const userSlice = createSlice({
     reset: state => {
       state.userDetails = null
       state.adminDetails = null
-      state.isLoading = true
+      // state.isLoading = true
       state.isLoginLoading = false
       state.isLoginError = false
       state.isLoginSuccess = false
@@ -256,6 +256,7 @@ const userSlice = createSlice({
         state.isUpdateUserSuccess = true
         state.isUpdateUserLoading = false
         state.user = action.payload
+        state.isLoading = false
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isUpdateUserLoading = false

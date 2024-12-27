@@ -241,7 +241,7 @@ export const evaluateApplication = async (req, res, next) => {
       })
     }
 
-    applicants?.forEach(async item => {
+    for (const item of applicants) {
       const url = item?.resume
       // // Extract the file name from the URL
       const fileName = url.split('/')[6]
@@ -286,8 +286,7 @@ export const evaluateApplication = async (req, res, next) => {
           }
         }
       )
-      console.log(result)
-    })
+    }
 
     const getApplicants = await Application.find({ job: id }).sort({ats_score:1}).populate({
       path: 'job'

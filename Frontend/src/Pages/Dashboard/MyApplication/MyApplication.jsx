@@ -15,6 +15,8 @@ const MyApplication = () => {
     dispatch(getMyApplications())
   }, [dispatch])
 
+console.log(applications);
+
   return (
     <section className='h-[calc(100vh-29px)]'>
       <h1 className='text-4xl m-7'>My Applications</h1>
@@ -46,7 +48,9 @@ const MyApplication = () => {
                           <div className='badge badge-accent my-2 p-2'>
                             {app?.status}
                           </div>
-                        ) : (
+                        ): app?.status==='offered'?<div className='badge badge-success my-2 p-2'>
+                        {app?.status}
+                      </div>: (
                           app?.status === 'rejected' && (
                             <div className='badge badge-error my-2 p-2'>
                               {app?.status}

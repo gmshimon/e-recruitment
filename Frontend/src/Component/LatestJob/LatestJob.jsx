@@ -50,13 +50,13 @@ const tabs = [
   {
     id: 6,
     icon: <FaRegFolderOpen />,
-    name: 'Retail & Product',
+    name: 'Retail Product',
     job: 0
   },
   {
     id: 7,
     icon: <MdProductionQuantityLimits />,
-    name: 'Market & Sale',
+    name: 'Market Sale',
     job: 0
   },
   {
@@ -123,7 +123,10 @@ const LatestJob = () => {
       </Tabs>
 
       <div className='flex justify-center mt-10'>
-        <button onClick={()=>navigate(`/jobs/?category=${tabs[tabIndex].name}`)} className='btn btn-active btn-neutral btn-md'>
+        <button onClick={()=>{
+          console.log(`/jobs/?category=${tabs[tabIndex].name}`);
+          navigate(`/jobs/?category=${tabs[tabIndex].name}`)
+        }} className='btn btn-active btn-neutral btn-md'>
           See More <FaAngleRight />
         </button>
       </div>

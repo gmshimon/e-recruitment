@@ -22,7 +22,8 @@ export const createJob = async (req, res, next) => {
 
 export const getJobList = async (req, res, next) => {
   try {
-    const { title, category } = req.query
+    const { title, category ,country} = req.query
+   
     const result = await Job.find({
       title: {
         $regex: title?title:'',
@@ -31,6 +32,10 @@ export const getJobList = async (req, res, next) => {
       job_category: {
         $regex: category?category:'',
         $options: 'i'
+      },
+      'address.country':{
+        $regex: country?country:'',
+        $options: 'i' // case-insensitive search
       }
     }).populate({
       path: 'createdBy',
