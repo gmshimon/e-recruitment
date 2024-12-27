@@ -59,15 +59,15 @@ const categories = [
 const JobSearchBar = () => {
   const [jobCategory,setJobCategory] = useState('')
   const [searchText,setSearchText] = useState('')
+  const [country,setCountry] = useState('')
 
   const navigate = useNavigate()
 
   const handleSearch = () =>{
-    navigate(`/search-job?title=${searchText}&category=${jobCategory}`)
+    navigate(`/search-job?title=${searchText}&category=${jobCategory}&country=${country}`)
   }
-
   return (
-    <div className='flex items-center gap-5 p-4 bg-base-100 shadow-md rounded-lg md:w-2/3'>
+    <div className='flex items-center gap-5 p-4 bg-base-100 shadow-md rounded-lg md:w-6/7'>
       {/* Job Categories Dropdown */}
       <div className='flex flex-col'>
         <label className='text-sm text-gray-600 mb-1'>Job Categories</label>
@@ -83,25 +83,23 @@ const JobSearchBar = () => {
         </select>
       </div>
 
-      {/* Location Dropdown */}
-      {/* <div className='flex flex-col'>
-        <label className='text-sm text-gray-600'>Location</label>
-        <select className='select select-bordered w-full max-w-xs'>
-          <option selected>California, CA</option>
-          <option>New York, NY</option>
-          <option>Texas, TX</option>
-          <option>Florida, FL</option>
-        </select>
-      </div> */}
-
       {/* Keywords or Title Input */}
       <div className='flex flex-col'>
         <label className='text-sm text-gray-600 mb-1'>Keywords or Title</label>
         <input
           type='text'
-          placeholder='Design, branding'
+          placeholder='e.g. Software, Devops'
           className='input input-bordered w-full max-w-xs'
           onChange={e=>setSearchText(e.target.value)} 
+        />
+      </div>
+      <div className='flex flex-col'>
+        <label className='text-sm text-gray-600 mb-1'>Country</label>
+        <input
+          type='text'
+          placeholder='Country Name'
+          className='input input-bordered w-full max-w-xs'
+          onChange={e=>setCountry(e.target.value)} 
         />
       </div>
 

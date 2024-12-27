@@ -128,7 +128,6 @@ const GenerateOfferLetter = () => {
     }
     setData(data)
   }
-  console.log(singleApplication?.offer_letter)
   return (
     <section>
       <h1 className='text-center text-xl font-semibold'>
