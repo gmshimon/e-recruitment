@@ -87,7 +87,7 @@ const Jobs = () => {
   }, [jobs, tabIndex])
 
   useEffect(() => {
-    dispatch(getJobs({ title: '', category: '' }))
+    dispatch(getJobs({ title: '', category: '',country:'' }))
   }, [dispatch])
 
   return (
