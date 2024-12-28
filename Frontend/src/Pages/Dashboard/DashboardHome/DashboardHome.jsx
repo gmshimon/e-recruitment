@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react'
 import { CiClock2, CiLocationOn } from 'react-icons/ci'
-import { FaUser, FaBookmark, FaEye, FaPen } from 'react-icons/fa'
+import { FaUser, FaBookmark, FaEye, FaListOl } from 'react-icons/fa'
+import { TiTick } from "react-icons/ti";
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
 import AdminHome from '../../../Component/AdminHome/AdminHome'
 import { getAdminData } from '../../../Redux/Slices/userSlice'
-import { MdError } from 'react-icons/md'
+import { MdError, MdErrorOutline } from 'react-icons/md'
 import { getJobs } from '../../../Redux/Slices/jobSlice'
 import { useNavigate } from 'react-router-dom'
 import dateDifference from '../../../utilis/formattedDate'
 
 const stats = [
-  { value: '1.7k+', label: 'Total Visitor', icon: <FaUser /> },
-  { value: '03', label: 'Shortlisted', icon: <FaBookmark /> },
-  { value: '2.1k', label: 'Views', icon: <FaEye /> },
-  { value: '07', label: 'Applied Job', icon: <FaPen /> }
+  { value: '0', label: 'Total Applications', icon: <FaListOl /> },
+  { value: '0', label: 'Shortlisted', icon: <FaBookmark /> },
+  { value: '0', label: 'Offered', icon: <TiTick/>},
+  { value: '0', label: 'Rejected', icon: <MdErrorOutline /> }
 ]
 
 const adminStats = [
@@ -24,7 +25,6 @@ const adminStats = [
   { value: '07', label: 'Offered', icon: <MdError /> }
 ]
 
-const array = ['1', '2', '3', '4', '5', '6']
 const DashboardHome = () => {
   const { user, adminDetails } = useSelector(state => state.user)
   const {jobs} = useSelector(state=>state.job)
@@ -49,6 +49,17 @@ const DashboardHome = () => {
       adminStats[3]['value'] =
         adminDetails?.applications?.statuses?.offered || 0
       setStatsOption(adminStats)
+    }
+    if(user?.role==='user'){
+      stats[0]['value'] = user?.application?.totalCount
+      user.application?.groupedStatus?.map(item=>{
+        if(item?._id==='interviewing')
+          stats[1]['value'] = item?.count?item?.count:0
+        if(item?._id==='offered')
+          stats[2]['value'] = item?.count?item?.count:0
+        if(item?._id==='rejected')
+          stats[3]['value'] = item?.count?item?.count:0
+      })
     }
   }, [adminDetails, user])
 
