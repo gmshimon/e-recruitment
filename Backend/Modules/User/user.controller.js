@@ -191,6 +191,49 @@ export const fetchUser = async (req, res, next) => {
       })
     }
 
+    if (user?.role === 'user') {
+      const result = await Application.aggregate([
+        {
+          $match: {
+            candidate: user?._id, // Filter applications by user ID
+          },
+        },
+        {
+          $facet: {
+            // Group by status and count the number of occurrences for each
+            groupedStatus: [
+              {
+                $group: {
+                  _id: '$status',
+                  count: { $sum: 1 },
+                },
+              },
+            ],
+            // Count the total number of applications
+            totalCount: [
+              {
+                $count: 'total',
+              },
+            ],
+          },
+        },
+      ]);
+      const groupedStatus = result[0]?.groupedStatus || []
+      const totalCount = result[0]?.totalCount?.[0]?.total || 0
+
+      const userData = user.toObject() // Convert to a plain object
+      userData.application = {
+        groupedStatus,
+        totalCount
+      }
+
+      return res.status(200).json({
+        status: 'Success',
+        message: 'User fetched successfully',
+        data: userData
+      })
+    }
+
     res.status(200).json({
       status: 'Success',
       message: 'User fetched successfully',

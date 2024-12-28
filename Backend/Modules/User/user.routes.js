@@ -12,6 +12,6 @@ router.post('/get-user',fetchUser)
 router.post('/',createUser)
 router.route('/update-image').post(userImageUploader.single('image') ,updateImage)
 router.route('/update-resume').post(verifyToken,userResumeUploader.single('resume'), userResumeUpdate)
-router.route('/admin-data').get(adminData)
+router.route('/admin-data').get(verifyAdminToken,adminData)
 
 export default router
