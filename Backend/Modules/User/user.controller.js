@@ -293,7 +293,8 @@ export const adminData = async (req, res, next) => {
   try {
     const getJobs = await Job.find({
       createdBy: '6742a527788197b93657ec03'
-    })
+    });
+    
     const result = await Application.aggregate([
       {
         $group: {
@@ -301,20 +302,20 @@ export const adminData = async (req, res, next) => {
           count: { $sum: 1 } // Count the number of occurrences for each status
         }
       }
-    ])
+    ]);
 
     // Convert the array into the desired object structure in JavaScript
     const statuses = result.reduce((acc, item) => {
-      acc[item._id] = item.count
-      return acc
-    }, {})
+      acc[item._id] = item.count;
+      return acc;
+    }, {});
 
     const totalApplications = Object.values(statuses).reduce(
       (sum, count) => sum + count,
       0
-    )
+    );
 
-    const getApplications = await Application.find({})
+    const getApplications = await Application.find({});
     const monthNames = [
       'January',
       'February',
@@ -328,22 +329,30 @@ export const adminData = async (req, res, next) => {
       'October',
       'November',
       'December'
-    ]
+    ];
 
-    // Mapping the application count according to the month name
-    const applicationsByMonth = getApplications.reduce((acc, application) => {
-      const createdAt = new Date(application.createdAt) // Parse the creation date
-      const month = monthNames[createdAt.getMonth()] // Get the month name
+    const currentYear = new Date().getFullYear(); // Get the current year
 
-      acc[month] = (acc[month] || 0) + 1 // Increment the count for this month
-      return acc
-    }, {})
+    // Filter applications to only include those created in the current year
+    const applicationsThisYear = getApplications.filter(application => {
+      const createdAt = new Date(application.createdAt);
+      return createdAt.getFullYear() === currentYear; // Check if the year matches the current year
+    });
+
+    // Mapping the application count according to the month name for the current year
+    const applicationsByMonth = applicationsThisYear.reduce((acc, application) => {
+      const createdAt = new Date(application.createdAt); // Parse the creation date
+      const month = monthNames[createdAt.getMonth()]; // Get the month name
+
+      acc[month] = (acc[month] || 0) + 1; // Increment the count for this month
+      return acc;
+    }, {});
 
     // Ensure all months are represented
     const applicationOfMonth = monthNames.map(month => ({
       month,
       count: applicationsByMonth[month] || 0 // Use 0 if no applications for the month
-    }))
+    }));
 
     // Example list of all possible job categories (you can modify this based on your database or requirements)
     const allJobCategories = [
@@ -355,17 +364,17 @@ export const adminData = async (req, res, next) => {
       'Retail & Product',
       'Market & Sale',
       'Software'
-    ]
+    ];
 
     // Count the total number of jobs
-    const totalJobs = getJobs.length
+    const totalJobs = getJobs.length;
 
     // Calculate counts for each job category
     const categoryCounts = getJobs.reduce((acc, job) => {
-      const category = job.job_category
-      acc[category] = (acc[category] || 0) + 1
-      return acc
-    }, {})
+      const category = job.job_category;
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {});
 
     // Ensure all categories are represented, even if they have no jobs
     const categoryPercentages = allJobCategories.map(category => ({
@@ -373,19 +382,20 @@ export const adminData = async (req, res, next) => {
       percentage: (((categoryCounts[category] || 0) / totalJobs) * 100).toFixed(
         2
       ) // Format percentage to 2 decimal places
-    }))
+    }));
 
     const jobs = {
       totalJobs: getJobs.length,
       categories: categoryPercentages
-    }
+    };
 
     // format the application object
     const applications = {
       totalApplications,
       statuses,
       month: applicationOfMonth
-    }
+    };
+    
     res.status(200).json({
       status: 'Success',
       message: 'User fetched successfully',
@@ -393,12 +403,13 @@ export const adminData = async (req, res, next) => {
         jobs,
         applications
       }
-    })
+    });
   } catch (error) {
     res.status(400).json({
       status: 'Failed',
       message: 'Failed to fetch users',
       error: error.message
-    })
+    });
   }
-}
+};
+
