@@ -291,9 +291,7 @@ export const deleteResume = async (req, res, next) => {
 
 export const adminData = async (req, res, next) => {
   try {
-    const getJobs = await Job.find({
-      createdBy: '6742a527788197b93657ec03'
-    });
+    const getJobs = await Job.find();
     
     const result = await Application.aggregate([
       {
