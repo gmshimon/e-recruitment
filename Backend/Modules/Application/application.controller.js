@@ -158,7 +158,7 @@ export const getApplicantsOfJob = async (req, res, next) => {
     const { job_id } = req.params
     const applicants = await Application.find({
       job: job_id
-    })
+    }).sort({ats_score:-1})
       .populate({
         path: 'job'
       })
@@ -288,7 +288,7 @@ export const evaluateApplication = async (req, res, next) => {
       )
     }
 
-    const getApplicants = await Application.find({ job: id }).sort({ats_score:1}).populate({
+    const getApplicants = await Application.find({ job: id }).sort({ats_score:-1}).populate({
       path: 'job'
     })
     .populate({
