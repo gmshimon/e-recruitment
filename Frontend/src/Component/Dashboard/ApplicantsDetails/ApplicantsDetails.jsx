@@ -208,7 +208,7 @@ const ApplicantsDetails = () => {
                 {item?.status}
               </span>
               <p className='md:text-sm text-xs'>
-                {item?.startDate.split('T')[0]} - {item?.endDate.split('T')[0]}
+                {item?.startDate?.split('T')[0]} - {item?.endDate?.split('T')[0]}
               </p>
             </p>
           </div>
