@@ -3,14 +3,16 @@ import pkg from 'multer';
 const { StorageEngine } = pkg;
 import path from 'path';
 
-const storage = multer.diskStorage({
-    destination: 'images/application/',
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
-        cb(null, `${uniqueSuffix}-${file?.originalname}`);
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: 'images/application/',
+//     filename: (req, file, cb) => {
+//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+//         cb(null, `${uniqueSuffix}-${file?.originalname}`);
+//     }
+// });
 
+
+const storage = multer.memoryStorage();
 
 // Create the uploader with TypeScript
 const offerLetterUploader = multer({

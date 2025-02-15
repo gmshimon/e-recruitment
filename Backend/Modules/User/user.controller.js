@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 import fs from 'fs'
 import Job from '../Job/job.model.js'
 import Application from '../Application/application.model.js'
+import { deleteUserImage, uploadUserImage, uploadUserResume } from './user.cloudinary.js'
 
 // Define __dirname in ES6 modules
 const __filename = fileURLToPath(import.meta.url)
@@ -62,20 +63,24 @@ export const createUser = async (req, res, next) => {
 }
 
 export const updateImage = async (req, res) => {
+  let newImageUrl = null
   try {
-    const image =
-      req.protocol +
-      '://' +
-      req.get('host') +
-      '/images/User/image/' +
-      req?.file.filename
+    const file = req.file
+    const image = await uploadUserImage(file)
+    newImageUrl = image; 
+    // const image =
+    //   req.protocol +
+    //   '://' +
+    //   req.get('host') +
+    //   '/images/User/image/' +
+    //   req?.file.filename
 
     const { email } = req.body
     const user = await Users.findOne({ email })
 
     if (user.photo) {
-      const fileName = user.photo.split('/')[6]
-      deleteImage('image', fileName)
+      const oldImageUrl = user.photo;
+      await deleteUserImage(oldImageUrl)
     }
     const updateUser = await Users.updateOne(
       { _id: user?.id },
@@ -91,8 +96,8 @@ export const updateImage = async (req, res) => {
       message: 'Category image updated successfully'
     })
   } catch (error) {
-    if (req.file) {
-      deleteImage('image', req.file.filename)
+    if (newImageUrl) {
+      await deleteUserImage(newImageUrl);
     }
     res.status(400).json({
       status: 'Failed',
@@ -102,13 +107,16 @@ export const updateImage = async (req, res) => {
 }
 
 export const userResumeUpdate = async (req, res, next) => {
+  let resume;
   try {
-    const resume =
-      req.protocol +
-      '://' +
-      req.get('host') +
-      '/images/User/resume/' +
-      req?.file.filename
+    // const resume =
+    //   req.protocol +
+    //   '://' +
+    //   req.get('host') +
+    //   '/images/User/resume/' +
+    //   req?.file.filename
+    const file = req.file;
+    resume = await uploadUserResume(file)
 
     const { email } = req.user
     const user = await Users.findOne({ email })
@@ -133,7 +141,7 @@ export const userResumeUpdate = async (req, res, next) => {
     })
   } catch (error) {
     if (req.file) {
-      deleteImage('resume', req.file.filename)
+      await deleteUserImage(resume)
     }
     res.status(400).json({
       status: 'Failed',
@@ -252,7 +260,7 @@ export const deleteResume = async (req, res, next) => {
   try {
     const { resume } = req.body
     const { email } = req.user
-    console.log(resume)
+
     const findResume = await Users.findOne({
       email: email,
       resume: resume.toString()
@@ -272,7 +280,7 @@ export const deleteResume = async (req, res, next) => {
       }
     )
     if (deleteResume.modifiedCount == 1) {
-      deleteImage('resume', resume.split('/')[6])
+      await deleteUserImage(resume)
     }
     const user = await Users.findOne({ _id: findResume._id })
     res.status(200).json({
@@ -292,7 +300,7 @@ export const deleteResume = async (req, res, next) => {
 export const adminData = async (req, res, next) => {
   try {
     const getJobs = await Job.find();
-    
+
     const result = await Application.aggregate([
       {
         $group: {
@@ -329,16 +337,17 @@ export const adminData = async (req, res, next) => {
       'December'
     ];
 
-    const currentYear = new Date().getFullYear(); // Get the current year
+    const currentYear = new Date().getFullYear();
+    const lastYear = currentYear - 1; // Get the last year
 
-    // Filter applications to only include those created in the current year
-    const applicationsThisYear = getApplications.filter(application => {
+    // Filter applications to only include those created in the last year
+    const applicationsLastYear = getApplications.filter(application => {
       const createdAt = new Date(application.createdAt);
-      return createdAt.getFullYear() === currentYear; // Check if the year matches the current year
+      return createdAt.getFullYear() === lastYear; // Check if the year matches the last year
     });
 
-    // Mapping the application count according to the month name for the current year
-    const applicationsByMonth = applicationsThisYear.reduce((acc, application) => {
+    // Mapping the application count according to the month name for the last year
+    const applicationsByMonth = applicationsLastYear.reduce((acc, application) => {
       const createdAt = new Date(application.createdAt); // Parse the creation date
       const month = monthNames[createdAt.getMonth()]; // Get the month name
 
@@ -393,7 +402,7 @@ export const adminData = async (req, res, next) => {
       statuses,
       month: applicationOfMonth
     };
-    
+
     res.status(200).json({
       status: 'Success',
       message: 'User fetched successfully',
@@ -410,4 +419,5 @@ export const adminData = async (req, res, next) => {
     });
   }
 };
+
 

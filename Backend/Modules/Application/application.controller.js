@@ -9,6 +9,7 @@ import {
   parseExperience,
   parseSkills
 } from '../../Utilis/resumeDataExtraction.js'
+import { deleteApplicationV2, uploadApplicationV2 } from './application.cloudinary.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -314,14 +315,15 @@ export const evaluateApplication = async (req, res, next) => {
 export const uploadOfferLetter = async(req,res,next)=>{
   try {
     const {id} =  req.params;
-    const file = req.file;
 
-    const image =
-      req.protocol +
-      '://' +
-      req.get('host') +
-      '/images/application/' +
-      req?.file.filename
+    const file = req.file;
+    const image = await uploadApplicationV2(file)
+    // const image =
+    //   req.protocol +
+    //   '://' +
+    //   req.get('host') +
+    //   '/images/application/' +
+    //   req?.file.filename
 
     const isApplicationExist = await Application.findOne({_id:id})
     if(!isApplicationExist){
@@ -331,8 +333,7 @@ export const uploadOfferLetter = async(req,res,next)=>{
       })
     }
     if(isApplicationExist?.offer_letter){
-      const fileData = isApplicationExist?.offer_letter?.split('/')[5]
-      deleteImage(fileData)
+      await deleteApplicationV2(isApplicationExist?.offer_letter)
     }
     const uploadApplication = await Application.updateOne(
       {_id:id},

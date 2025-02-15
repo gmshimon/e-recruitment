@@ -3,14 +3,15 @@ import pkg from 'multer';
 const { StorageEngine } = pkg;
 import path from 'path';
 
-const storage = multer.diskStorage({
-    destination: 'images/User/resume/',
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-';
-        cb(null, file.originalname);
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: 'images/User/resume/',
+//     filename: (req, file, cb) => {
+//         const uniqueSuffix = Date.now() + '-';
+//         cb(null, file.originalname);
+//     }
+// });
 
+const storage = multer.memoryStorage();
 
 // Create the uploader with TypeScript
 const userResumeUploader = multer({

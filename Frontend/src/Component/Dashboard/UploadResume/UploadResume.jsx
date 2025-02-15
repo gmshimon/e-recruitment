@@ -52,7 +52,7 @@ const UploadResume = () => {
           >
             <a href={item} target='_blank'>
               <p className='text-gray-800 text-md hover:text-blue-500'>
-                {item?.split('/')[6]}
+                {item?.split('/')[7]}
               </p>
             </a>
             <button
