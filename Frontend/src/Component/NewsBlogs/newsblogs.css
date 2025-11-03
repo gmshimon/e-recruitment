@@ -1,17 +1,10 @@
-.swiper {
-    width: 100%;
-    padding-top: 50px;
-    padding-bottom: 50px;
-  }
-  
-  .swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 350px;
-    height: 450px;
-  }
-  
-  .swiper-slide img {
-    display: block;
-    width: 100%;
-  }
+.news-swiper {
+  width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.news-swiper .swiper-slide {
+  width: min(360px, 80vw);
+  height: auto;
+}

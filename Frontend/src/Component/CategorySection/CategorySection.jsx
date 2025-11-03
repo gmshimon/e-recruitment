@@ -126,7 +126,7 @@ const CategorySection = () => {
           })}
         </div>
 
-        <div className='mt-10 rounded-3xl border border-slate-200 bg-white/90 p-6 text-center shadow-sm backdrop-blur sm:flex sm:items-center sm:justify-between sm:text-left'>
+        {/* <div className='mt-10 rounded-3xl border border-slate-200 bg-white/90 p-6 text-center shadow-sm backdrop-blur sm:flex sm:items-center sm:justify-between sm:text-left'>
           <div>
             <p className='text-sm font-semibold uppercase tracking-wide text-blue-600'>
               Not sure where to start?
@@ -142,7 +142,7 @@ const CategorySection = () => {
           >
             Take the quick assessment
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
   )
