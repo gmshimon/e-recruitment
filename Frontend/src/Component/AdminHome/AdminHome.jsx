@@ -18,7 +18,6 @@ const [pieData,setPieData] = useState()
     setPieData(newData)
  },[adminDetails])
 
- console.log(pieData)
   return (
     <section>
       <div className='md:flex mx-5 md:gap-x-5'>

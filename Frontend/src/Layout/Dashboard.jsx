@@ -5,10 +5,10 @@ import {
   MdOutlinePerson,
   MdOutlineSettingsApplications
 } from 'react-icons/md'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import CurrentUser from '../utilis/CurrentUser'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FaPen } from 'react-icons/fa'
 import { logOut } from '../Redux/Slices/userSlice'
 
@@ -16,177 +16,242 @@ const navbarOptions = [
   {
     label: 'Dashboard',
     to: '/dashboard/home',
-    icon: <MdOutlineDashboard />
+    icon: MdOutlineDashboard
   },
   {
     label: 'Profile',
     to: '/dashboard/profile',
-    icon: <MdOutlinePerson />
+    icon: MdOutlinePerson
   },
   {
     label: 'Resume',
     to: '/dashboard/resume',
-    icon: <IoMdPaper />
+    icon: IoMdPaper
   },
   {
     label: 'My Applications',
     to: '/dashboard/applications',
-    icon: <MdOutlineSettingsApplications />
-  },
+    icon: MdOutlineSettingsApplications
+  }
 ]
 
-const adminNavbarOptions =[
+const adminNavbarOptions = [
   {
     label: 'Dashboard',
     to: '/dashboard/home',
-    icon: <MdOutlineDashboard />
+    icon: MdOutlineDashboard
   },
   {
     label: 'Profile',
     to: '/dashboard/profile',
-    icon: <MdOutlinePerson />
+    icon: MdOutlinePerson
   },
   {
     label: 'My Jobs',
     to: '/dashboard/my-jobs',
-    icon: <IoMdPaper />
+    icon: IoMdPaper
   },
   {
-    label:'Post Job',
+    label: 'Post Job',
     to: '/dashboard/post-job',
-    icon: <FaPen />
+    icon: FaPen
   },
   {
     label: 'Applicants',
     to: '/dashboard/applicants',
-    icon: <MdOutlineSettingsApplications />
-  },
+    icon: MdOutlineSettingsApplications
+  }
 ]
 
 const Dashboard = () => {
   const { user } = useSelector(state => state.user)
-  const [activeTab,setActiveTab] = useState('Dashboard')
-  const [navs,setNavs] = useState(navbarOptions)
-  
+  const location = useLocation()
   const dispatch = useDispatch()
 
   CurrentUser()
 
-  useEffect(()=>{
-    if(user?.role === 'admin'){
-      setNavs(adminNavbarOptions)
-    }else{
-      setNavs(navbarOptions)
-    }
-  },[user])
+  const navItems = useMemo(
+    () => (user?.role === 'admin' ? adminNavbarOptions : navbarOptions),
+    [user?.role]
+  )
 
- // eslint-disable-next-line react-hooks/exhaustive-deps
- const checkTokenExpiration = () => {
-  const storedToken = localStorage.getItem('userToken');
-  if (storedToken) {
-    const { expiration } = JSON.parse(storedToken);
-    const currentTime = new Date().getTime();
-    if (currentTime > expiration) {
-      // Token has expired, log out the user
-      localStorage.removeItem('userToken');
-      // Redirect to the login page or show a logged-out state
-      dispatch(logOut());
-      window.location.href = "/";
-      // history.push('/login');
+  const userName = useMemo(() => {
+    if (!user) return 'Guest'
+    return user?.name || user?.fullName || user?.username || 'Guest user'
+  }, [user])
+
+  const userRoleLabel = useMemo(() => {
+    if (!user?.role) return null
+    return user.role === 'admin' ? 'Administrator' : 'Candidate'
+  }, [user?.role])
+
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const storedToken = localStorage.getItem('userToken')
+      if (!storedToken) return
+
+      const { expiration } = JSON.parse(storedToken)
+      const currentTime = new Date().getTime()
+
+      if (currentTime > expiration) {
+        localStorage.removeItem('userToken')
+        dispatch(logOut())
+        window.location.href = '/'
+      }
     }
+
+    const tokenExpirationInterval = setInterval(checkTokenExpiration, 1000)
+    return () => clearInterval(tokenExpirationInterval)
+  }, [dispatch])
+
+  const handleLogout = () => {
+    dispatch(logOut())
+    localStorage.removeItem('userToken')
   }
-};
 
-useEffect(() => {
-  // Call checkTokenExpiration every sec (1 * 1000 milliseconds)
-  const tokenExpirationInterval = setInterval(checkTokenExpiration, 1 * 1000);
-  // Clean up the interval on component unmount
-  return () => clearInterval(tokenExpirationInterval);
-}, [checkTokenExpiration]);
+  const isActiveRoute = targetPath => {
+    if (targetPath === '/dashboard/home') {
+      return location.pathname === targetPath
+    }
+    return location.pathname.startsWith(targetPath)
+  }
 
   return (
-    <div className='drawer lg:drawer-open'>
+    <div className='drawer lg:drawer-open min-h-screen bg-slate-100'>
       <input id='my-drawer-3' type='checkbox' className='drawer-toggle' />
-      <div className='drawer-content flex flex-col'>
-        {/* Navbar */}
-        <div className='navbar bg-base-300 w-full lg:hidden'>
-          <div className='flex-none lg:hidden'>
+      <div className='drawer-content flex min-h-screen flex-col'>
+        <header className='sticky top-0 z-20 flex items-center justify-between border-b border-slate-200 bg-white/80 px-4 py-3 backdrop-blur lg:hidden'>
+          <div className='flex items-center gap-3'>
             <label
               htmlFor='my-drawer-3'
-              aria-label='open sidebar'
-              className='btn btn-square btn-ghost'
+              aria-label='Open sidebar navigation'
+              className='btn btn-ghost btn-square'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
                 viewBox='0 0 24 24'
-                className='inline-block h-6 w-6 stroke-current'
+                className='inline-block h-6 w-6 stroke-current text-slate-700'
               >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
                   strokeWidth='2'
                   d='M4 6h16M4 12h16M4 18h16'
-                ></path>
+                />
               </svg>
             </label>
+            <div>
+              <p className='text-xs font-semibold uppercase tracking-wide text-blue-600'>
+                Talent IQ
+              </p>
+              <p className='text-sm font-medium text-slate-600'>
+                {userRoleLabel || 'Dashboard'}
+              </p>
+            </div>
           </div>
-          <div className='mx-2 flex-1 px-2'>Talent IQ</div>
-        </div>
-        {/* Page content here */}
-        <div className='bg-base-300'>
-          <Outlet />
-        </div>
-      </div>
-      <div
-        className='drawer-side'
-        style={{
-          overflowY: 'scroll',
-          scrollbarWidth: 'none', // For Firefox
-          msOverflowStyle: 'none' // For IE and Edge
-        }}
-      >
-        <label
-          htmlFor='my-drawer-3'
-          aria-label='close sidebar'
-          className='drawer-overlay'
-        ></label>
-        <div className='menu bg-white min-h-full w-60 p-4 '>
-          <div className='text-3xl text-center my-10 h-[30px]'>
-           <Link to="/">
-           <p className='cursor-pointer hover:bg-gray-100 hover:rounded-lg'>Talent IQ</p>
-           </Link>
-          </div>
-          <div className='flex justify-center'>
-            <div className='avatar online'>
-              <div className='w-20 rounded-full'>
+          <div className='flex items-center gap-2'>
+            <span className='hidden text-sm font-medium text-slate-600 sm:block'>
+              {userName}
+            </span>
+            <div className='avatar'>
+              <div className='w-10 rounded-full ring ring-blue-500 ring-offset-2 ring-offset-white'>
                 <img
                   src={
                     user?.photo
-                      ? user?.photo
+                      ? user.photo
                       : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
                   }
+                  alt='User avatar'
                 />
               </div>
             </div>
           </div>
-          <p className='text-center mt-2 text-xl mb-10'>{user?.name}</p>
-          {/* Sidebar content here */}
-          {navs.map((option, index) => (
-            <Link key={index} to={option?.to}>
-              <div onClick={()=>setActiveTab(option?.label)} className={`flex items-center text-xl cursor-pointer mb-7 hover:text-green-600  p-2 ${activeTab==option?.label?'border rounded-md bg-green-700 text-white':''}`}>
-                {/* border rounded-md bg-green-700 text-white */}
-                <p>{option?.icon}</p>
-                <p className='ml-2'>{option?.label}</p>
-              </div>
+        </header>
+        <main className='flex-1 overflow-y-auto bg-gradient-to-br from-slate-100 via-white to-slate-100'>
+          <div className=' px-4 py-6 sm:px-6 lg:px-8'>
+            <Outlet />
+          </div>
+        </main>
+      </div>
+      <div className='drawer-side z-40'>
+        <label
+          htmlFor='my-drawer-3'
+          aria-label='close sidebar'
+          className='drawer-overlay'
+        />
+        <div className='flex min-h-full w-72 flex-col justify-between bg-white/95 px-6 pb-8 pt-10 shadow-2xl backdrop-blur lg:shadow-none'>
+          <div>
+            <Link
+              to='/'
+              className='flex items-center justify-center gap-2 text-2xl font-semibold tracking-tight text-slate-900 hover:text-blue-600'
+            >
+              Talent IQ
             </Link>
-          ))}
+            <div className='mt-10 rounded-2xl bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10 p-6 text-center'>
+              <div className='flex justify-center'>
+                <div className='avatar'>
+                  <div className='w-20 rounded-full border-4 border-white shadow-lg'>
+                    <img
+                      src={
+                        user?.photo
+                          ? user.photo
+                          : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                      }
+                      alt='User avatar'
+                    />
+                  </div>
+                </div>
+              </div>
+              <p className='mt-4 text-lg font-semibold text-slate-900'>
+                {userName}
+              </p>
+              {userRoleLabel && (
+                <span className='mt-2 inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-600'>
+                  {userRoleLabel}
+                </span>
+              )}
+              {user?.email && (
+                <p className='mt-3 text-xs text-slate-500'>{user.email}</p>
+              )}
+            </div>
+            <nav className='mt-10 space-y-2'>
+              {navItems.map(option => {
+                const Icon = option.icon
+                const active = isActiveRoute(option.to)
 
-          <div onClick={()=>dispatch(logOut())} className='flex items-center text-xl cursor-pointer mt-5 hover:text-green-600'>
-            <p>Logout</p>
-            <p className='ml-2'>
-              <IoIosLogOut />
-            </p>
+                return (
+                  <Link
+                    key={option.label}
+                    to={option.to}
+                    className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+                      active
+                        ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/10'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    <span
+                      className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                        active ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
+                      }`}
+                    >
+                      <Icon className='h-5 w-5' />
+                    </span>
+                    <span>{option.label}</span>
+                  </Link>
+                )
+              })}
+            </nav>
+          </div>
+          <div className='mt-8 border-t border-slate-200 pt-6'>
+            <button
+              onClick={handleLogout}
+              type='button'
+              className='flex w-full items-center justify-center gap-3 rounded-xl border border-transparent bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600 transition hover:bg-rose-100 hover:text-rose-700'
+            >
+              <IoIosLogOut className='h-5 w-5' />
+              Log out
+            </button>
           </div>
         </div>
       </div>
