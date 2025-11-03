@@ -1,176 +1,199 @@
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+
+const statusTokens = {
+  pending: {
+    label: 'Pending review',
+    badgeClass: 'bg-amber-50 text-amber-600 border border-amber-100'
+  },
+  applied: {
+    label: 'Application received',
+    badgeClass: 'bg-blue-50 text-blue-600 border border-blue-100'
+  },
+  interviewing: {
+    label: 'Interview in progress',
+    badgeClass: 'bg-indigo-50 text-indigo-600 border border-indigo-100'
+  },
+  offered: {
+    label: 'Offer extended',
+    badgeClass: 'bg-emerald-50 text-emerald-600 border border-emerald-100'
+  },
+  rejected: {
+    label: 'No longer moving forward',
+    badgeClass: 'bg-rose-50 text-rose-600 border border-rose-100'
+  }
+}
 
 const ApplicationStatus = () => {
   const { singleApplication } = useSelector(state => state.application)
+
+  const statusMeta = useMemo(() => statusTokens[singleApplication?.application_status] || null, [singleApplication])
+
+  const salaryRange =
+    singleApplication?.job?.salary?.min && singleApplication?.job?.salary?.max
+      ? `${Number(singleApplication.job.salary.min).toLocaleString()} - ${Number(
+          singleApplication.job.salary.max
+        ).toLocaleString()}`
+      : singleApplication?.job?.salary?.salary || 'Salary undisclosed'
+
+  const getFileName = url => {
+    if (typeof url !== 'string') return 'Attachment'
+    try {
+      const parts = url.split('/')
+      return parts[parts.length - 1] || 'Attachment'
+    } catch {
+      return 'Attachment'
+    }
+  }
+
+  const attachments = [
+    singleApplication?.resume && {
+      label: 'Submitted resume',
+      url: singleApplication.resume
+    },
+    singleApplication?.offer_letter && {
+      label: 'Offer letter',
+      url: singleApplication.offer_letter
+    }
+  ].filter(Boolean)
+
+  const interview = singleApplication?.interview
+  const messages = singleApplication?.messages || []
+
   return (
-    <section>
-      <h1 className='text-center text-2xl font-bold'>Application Details</h1>
-      <h1 className='text-center italic mt-3 text-xl'>
-        {singleApplication?.job?.title}
-      </h1>
-      <div className='flex justify-center'>
-        {singleApplication?.application_status === 'pending' ? (
-          <div className='badge badge-warning mt-2 badge-sm p-2'>
-            {singleApplication?.application_status}
+    <section className='space-y-8'>
+      <header className='space-y-4 text-center'>
+        <p className='text-xs font-semibold uppercase tracking-[0.3em] text-blue-600'>Application details</p>
+        <h1 className='text-2xl font-semibold text-slate-900 sm:text-3xl'>
+          {singleApplication?.job?.title || 'Role information unavailable'}
+        </h1>
+        <div className='flex flex-wrap items-center justify-center gap-3 text-sm text-slate-500'>
+          <span className='inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600'>
+            {singleApplication?.job?.job_type || 'Job type unavailable'}
+          </span>
+          <span className='text-slate-300'>•</span>
+          <span>{singleApplication?.job?.company_name || 'Company pending'}</span>
+          <span className='text-slate-300'>•</span>
+          <span>{singleApplication?.job?.address?.country || singleApplication?.job?.address?.city || 'Location TBD'}</span>
+        </div>
+
+        {statusMeta && (
+          <div className='flex justify-center'>
+            <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold ${statusMeta.badgeClass}`}>
+              <span className='inline-block h-2 w-2 rounded-full bg-current' />
+              {statusMeta.label}
+            </span>
           </div>
-        ) : singleApplication?.application_status === 'interviewing' ? (
-          <div className='badge badge-accent mt-2 badge-sm p-2'>
-            {singleApplication?.application_status}
+        )}
+        <p className='text-xs uppercase tracking-wide text-slate-400'>
+          Applied on {singleApplication?.createdAt ? singleApplication.createdAt.split('T')[0] : '—'}
+        </p>
+      </header>
+
+      <div className='grid gap-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2'>
+        <div>
+          <p className='text-xs font-semibold uppercase tracking-wide text-slate-400'>Compensation</p>
+          <p className='mt-2 text-sm font-medium text-slate-700'>{salaryRange}</p>
+          {singleApplication?.job?.salary?.salary && (
+            <p className='mt-1 text-xs text-slate-400'>Salary band: {singleApplication.job.salary.salary}</p>
+          )}
+        </div>
+        <div>
+          <p className='text-xs font-semibold uppercase tracking-wide text-slate-400'>Experience</p>
+          <p className='mt-2 text-sm font-medium text-slate-700'>{singleApplication?.job?.experience || 'Not specified'}</p>
+        </div>
+      </div>
+
+      {attachments.length > 0 && (
+        <section className='space-y-4 rounded-3xl border border-slate-200 bg-slate-50/60 p-6'>
+          <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>Attachments</h2>
+          <div className='space-y-3'>
+            {attachments.map(item => (
+              <a
+                key={item.url}
+                href={item.url}
+                target='_blank'
+                rel='noreferrer'
+                className='flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-blue-600 shadow-sm transition hover:border-blue-300 hover:bg-blue-50/60 hover:text-blue-700'
+              >
+                <div className='flex flex-col'>
+                  <span className='text-xs uppercase tracking-wide text-slate-400'>{item.label}</span>
+                  <span>{getFileName(item.url)}</span>
+                </div>
+                <span className='text-xs font-semibold uppercase tracking-wide'>View file</span>
+              </a>
+            ))}
           </div>
-        ) : singleApplication?.application_status === 'offered' ? (
-          <div className='badge badge-success mt-2 badge-sm p-2'>
-            {singleApplication?.application_status}
+        </section>
+      )}
+
+      {interview?.date && (
+        <section className='space-y-4 rounded-3xl border border-blue-200 bg-blue-50/70 p-6'>
+          <h2 className='text-sm font-semibold uppercase tracking-wide text-blue-600'>Interview details</h2>
+          <div className='flex flex-wrap gap-6 text-sm text-blue-900'>
+            <div>
+              <p className='text-xs uppercase tracking-wide text-blue-500'>Scheduled for</p>
+              <p className='mt-1 font-semibold'>
+                {interview.date}
+                {interview.time && ` at ${interview.time}`}
+              </p>
+            </div>
+            <div>
+              <p className='text-xs uppercase tracking-wide text-blue-500'>Format</p>
+              <p className='mt-1 font-semibold'>{interview.type || 'To be confirmed'}</p>
+            </div>
+            <div className='min-w-[180px]'>
+              <p className='text-xs uppercase tracking-wide text-blue-500'>Joining details</p>
+              <p className='mt-1 font-semibold'>
+                {interview.type === 'Offline' ? (
+                  <>
+                    {interview.location}
+                    {interview.phone && (
+                      <>
+                        <br />
+                        <span className='text-sm font-medium text-blue-700'>Contact: {interview.phone}</span>
+                      </>
+                    )}
+                  </>
+                ) : interview.location ? (
+                  <a href={interview.location} className='text-blue-600 underline hover:text-blue-700'>
+                    Join call
+                  </a>
+                ) : (
+                  'Link pending'
+                )}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <section className='space-y-4 rounded-3xl border border-slate-200 bg-white p-6'>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-sm font-semibold uppercase tracking-wide text-slate-500'>Updates &amp; messages</h2>
+          <span className='text-xs text-slate-400'>
+            {messages.length} {messages.length === 1 ? 'message' : 'messages'}
+          </span>
+        </div>
+
+        {messages.length > 0 ? (
+          <div className='max-h-72 space-y-3 overflow-y-auto pr-1'>
+            {messages.map((message, index) => (
+              <article key={`${message?.message_date || index}-${index}`} className='rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-sm'>
+                <div className='flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-slate-400'>
+                  <span>{message?.createdBy?.name || 'Recruiter'}</span>
+                  <span>{message?.message_date || 'Date pending'}</span>
+                </div>
+                <p className='mt-3 text-sm text-slate-600'>{message?.text || 'No message content available.'}</p>
+              </article>
+            ))}
           </div>
         ) : (
-          singleApplication?.application_status === 'rejected' && (
-            <div className='badge badge-error mt-2 badge-sm p-2'>
-              {singleApplication?.application_status}
-            </div>
-          )
+          <div className='rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-10 text-center text-sm text-slate-400'>
+            No updates yet. We&apos;ll notify you here as soon as the hiring team shares feedback.
+          </div>
         )}
-      </div>
-      <p className='text-black font-bold text-lg text-center'>
-        {singleApplication?.createdAt.split('T')[0]}
-      </p>
-      <div className='flex flex-col w-full items-center gap-1 mt-2'>
-        {/* Job type */}
-        <span className='text-red-500 font-semibold'>
-          {singleApplication?.job?.job_type}
-        </span>
-        {/* Salary and other details */}
-        <span className='text-black font-bold text-lg'>
-          ${singleApplication?.job?.salary?.min.split('.')[0]}-$
-          {singleApplication?.job?.salary?.max.split('.')[0]}{' '}
-          <span className='text-gray-500 font-normal text-base'>
-            / {singleApplication?.job.salary?.salary}.{' '}
-            {singleApplication?.job?.experience}
-          </span>
-        </span>
-      </div>
-      <div className='text-center mt-5'>
-        {/* Additional details */}
-        <p className='text-gray-500 text-lg'>
-          Company: {singleApplication?.job?.company_name} <br />
-          Location: {singleApplication?.job?.address?.country}
-        </p>
-      </div>
-      {/* Attachment Section */}
-      {singleApplication?.resume && (
-        <div className='mt-5 flex justify-center'>
-          <div className='flex items-center gap-2 border border-gray-300 rounded-md p-3 shadow-md bg-gray-100'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-6 w-6 text-blue-500'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M15.172 7l-6.586 6.586a2 2 0 002.828 2.828L18 11.828m0 0L19.414 10.414a2 2 0 00-2.828-2.828L11 14.586M12 20h9m-9-4h6'
-              />
-            </svg>
-            <a
-              target='_blank'
-              href={singleApplication?.resume}
-              className='text-blue-600 font-semibold hover:underline'
-              rel='noopener noreferrer'
-            >
-              {singleApplication?.resume?.split('/')[6]}
-            </a>
-          </div>
-        </div>
-      )}
-      {singleApplication?.offer_letter && (
-        <div className='mt-5 flex justify-center'>
-          <div className='flex items-center gap-2 border border-gray-300 rounded-md p-3 shadow-md bg-gray-100'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='h-6 w-6 text-blue-500'
-              fill='none'
-              viewBox='0 0 24 24'
-              stroke='currentColor'
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                d='M15.172 7l-6.586 6.586a2 2 0 002.828 2.828L18 11.828m0 0L19.414 10.414a2 2 0 00-2.828-2.828L11 14.586M12 20h9m-9-4h6'
-              />
-            </svg>
-            <a
-              target='_blank'
-              href={singleApplication?.offer_letter}
-              className='text-blue-600 font-semibold hover:underline'
-              rel='noopener noreferrer'
-            >
-              {singleApplication?.offer_letter?.split('/')[5]}
-            </a>
-          </div>
-        </div>
-      )}
-      {/* Interview Details */}
-      {singleApplication?.interview?.date && (
-        <h2 className='mt-5 text-center text-xl font-semibold'>
-          Interview Details
-        </h2>
-      )}
-      <div className='flex justify-center mt-3'>
-        <div>
-          <div className='flex'>
-            <div className='w-[70px]'>
-              <p>Date</p>
-            </div>
-            <div className='mx-10'>
-              <p>:</p>
-            </div>
-            <div className='w-[160px]'>
-              {singleApplication?.interview?.date}{' '}
-              {singleApplication?.interview?.time}
-            </div>
-          </div>
-          <div className='flex'>
-            <div className='w-[70px]'>
-              <p>Details</p>
-            </div>
-            <div className='mx-10'>
-              <p>:</p>
-            </div>
-            <div className='w-[150px]'>
-              {singleApplication?.interview?.type === 'Offline' ? (
-                <p>
-                  {singleApplication?.interview?.location}{' '}
-                  {singleApplication?.interview?.phone}
-                </p>
-              ) : (
-                <a href={singleApplication?.interview?.location}>Meet Link</a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Messages Section */}
-      <h2 className='mt-5 text-center text-xl font-semibold'>Messages</h2>
-      <div className=' max-h-96 overflow-y-auto'>
-        <div className='mt-4 space-y-4'>
-          {singleApplication?.messages?.map((message, index) => (
-            <div
-              key={index}
-              className='flex flex-col bg-gray-100 p-4 rounded-lg shadow-md'
-            >
-              <div className='flex justify-between text-sm text-gray-500'>
-                <span className='font-semibold'>
-                  {message?.createdBy?.name}
-                </span>
-                <span>{message?.message_date}</span>
-              </div>
-              <p className='text-gray-700 mt-2'>{message?.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      </section>
     </section>
   )
 }
