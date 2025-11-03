@@ -1,20 +1,40 @@
 .custom-quill {
-    border: 1px solid black; /* Match the input field's border */
-    border-radius: 4px; /* Match the input field's border radius */
-    padding: 4px; /* Add padding similar to the input fields */
-  }
-  
-  .custom-quill .ql-container {
-    border: none; /* Remove the inner border from ReactQuill */
-    font-family: inherit; /* Optional: Use the same font as your inputs */
-  }
-  
-  .custom-quill .ql-toolbar {
-    border-bottom: 1px solid black; /* Add border to separate the toolbar */
-    border-radius: 4px 4px 0 0; /* Align toolbar with outer border */
-  }
-  
-  .custom-quill .ql-editor {
-    min-height: 150px; /* Adjust as needed */
-    padding: 8px; /* Add padding inside the editor */
-  }
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.custom-quill .ql-toolbar {
+  border: none;
+  background-color: #0f172a;
+  color: #cbd5f5;
+  padding: 0.75rem 1rem;
+}
+
+.custom-quill .ql-toolbar button {
+  color: #cbd5f5;
+}
+
+.custom-quill .ql-toolbar button:hover,
+.custom-quill .ql-toolbar button.ql-active {
+  color: #38bdf8;
+}
+
+.custom-quill .ql-container {
+  border: none;
+  font-family: inherit;
+  background-color: #fff;
+}
+
+.custom-quill .ql-editor {
+  min-height: 220px;
+  padding: 1.5rem;
+  color: #0f172a;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.custom-quill .ql-editor::selection {
+  background-color: rgba(56, 189, 248, 0.18);
+}

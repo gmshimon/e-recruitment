@@ -245,22 +245,22 @@ export const evaluateApplication = async (req, res, next) => {
     for (const item of applicants) {
       const url = item?.resume
       // // Extract the file name from the URL
-      const fileName = url.split('/')[6]
-      if (!fileName) {
-        throw new Error('Invalid URL format. Unable to extract file name.')
-      }
+      // const fileName = url.split('/')[6]
+      // if (!fileName) {
+      //   throw new Error('Invalid URL format. Unable to extract file name.')
+      // }
 
-      // Construct file path
-      const filePath = path.join(
-        __dirname,
-        '../../images/User/resume/',
-        fileName
-      )
+      // // Construct file path
+      // const filePath = path.join(
+      //   __dirname,
+      //   '../../images/User/resume/',
+      //   fileName
+      // )
 
-      // Check if the file exists
-      if (!fs.existsSync(filePath)) {
-        throw new Error(`File not found at path: ${filePath}`)
-      }
+      // // Check if the file exists
+      // if (!fs.existsSync(filePath)) {
+      //   throw new Error(`File not found at path: ${filePath}`)
+      // }
 
       const file = await ResumeParser.parseResumeUrl(url)
       const skillsList = parseSkills(file.skills)
