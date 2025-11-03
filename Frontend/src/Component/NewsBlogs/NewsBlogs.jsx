@@ -139,7 +139,7 @@ const NewsBlogs = () => {
                           <p>{card.readTime}</p>
                         </div>
                       </div>
-                      <span className='text-sm font-semibold text-blue-600 transition group-hover:text-blue-700'>
+                      <span className='cursor-pointer text-sm font-semibold text-blue-600 transition group-hover:text-blue-700'>
                         Read story
                       </span>
                     </div>
